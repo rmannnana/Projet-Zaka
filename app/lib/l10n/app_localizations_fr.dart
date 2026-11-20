@@ -418,4 +418,60 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get roleEditor => 'Éditeur';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get notificationsEmpty => 'Aucune notification pour le moment.';
+
+  @override
+  String get deleteAccount => 'Supprimer mon compte';
+
+  @override
+  String get deleteAccountPending => 'Demande en cours de traitement';
+
+  @override
+  String get deleteAccountExplain =>
+      'Votre profil, vos favoris, vos photos et votre compte seront effacés sous 30 jours. Votre nom sera retiré de vos demandes passées, mais leurs dates et montants restent conservés pour la comptabilité et d\'éventuels litiges. Si vous êtes le seul propriétaire d\'un compte pro, ajoutez d\'abord un autre propriétaire.';
+
+  @override
+  String get deleteAccountReason => 'Motif (facultatif)';
+
+  @override
+  String get deleteAccountConfirm => 'Demander la suppression';
+
+  @override
+  String get deleteAccountSent =>
+      'Demande envoyée. Vous serez informé de son traitement.';
+
+  @override
+  String get reportTitle => 'Signaler';
+
+  @override
+  String get reportFraud => 'Arnaque ou fraude';
+
+  @override
+  String get reportWrongInfo => 'Informations fausses ou trompeuses';
+
+  @override
+  String get reportUnavailable => 'N\'est plus disponible';
+
+  @override
+  String get reportInappropriate => 'Contenu inapproprié';
+
+  @override
+  String get reportDuplicate => 'Annonce en double';
+
+  @override
+  String get reportOther => 'Autre';
+
+  @override
+  String get reportDetails => 'Précisions (facultatif)';
+
+  @override
+  String get reportSend => 'Envoyer';
+
+  @override
+  String get reportSent => 'Merci, l\'équipe ZAKA va examiner ce signalement.';
 }

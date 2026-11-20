@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/account/presentation/account_screen.dart';
+import '../features/account/presentation/notifications_screen.dart';
 import '../features/admin/presentation/admin_dashboard_screen.dart';
 import '../features/auth/data/auth_repository.dart';
 import '../features/auth/presentation/sign_in_screen.dart';
@@ -32,7 +33,9 @@ final publicRouterProvider = Provider<GoRouter>((ref) {
     // Espaces pros et vérification du numéro : connexion obligatoire.
     redirect: (context, state) {
       final path = state.matchedLocation;
-      final needsAuth = path.startsWith('/pro') || path == '/compte/telephone';
+      final needsAuth = path.startsWith('/pro') ||
+          path == '/compte/telephone' ||
+          path == '/compte/notifications';
       final auth = ref.read(authStateProvider);
       if (!needsAuth || auth.isLoading || auth.value != null) return null;
       return '/connexion?retour=${Uri.encodeComponent(state.uri.toString())}';
@@ -61,6 +64,11 @@ final publicRouterProvider = Provider<GoRouter>((ref) {
               path: '/compte',
               builder: (_, _) => const AccountScreen(),
               routes: [
+                GoRoute(
+                  path: 'notifications',
+                  parentNavigatorKey: _rootKey,
+                  builder: (_, _) => const NotificationsScreen(),
+                ),
                 GoRoute(
                   path: 'telephone',
                   parentNavigatorKey: _rootKey,

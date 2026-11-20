@@ -825,6 +825,114 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Éditeur'**
   String get roleEditor;
+
+  /// No description provided for @notifications.
+  ///
+  /// In fr, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @notificationsEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune notification pour le moment.'**
+  String get notificationsEmpty;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer mon compte'**
+  String get deleteAccount;
+
+  /// No description provided for @deleteAccountPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'Demande en cours de traitement'**
+  String get deleteAccountPending;
+
+  /// No description provided for @deleteAccountExplain.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre profil, vos favoris, vos photos et votre compte seront effacés sous 30 jours. Votre nom sera retiré de vos demandes passées, mais leurs dates et montants restent conservés pour la comptabilité et d\'éventuels litiges. Si vous êtes le seul propriétaire d\'un compte pro, ajoutez d\'abord un autre propriétaire.'**
+  String get deleteAccountExplain;
+
+  /// No description provided for @deleteAccountReason.
+  ///
+  /// In fr, this message translates to:
+  /// **'Motif (facultatif)'**
+  String get deleteAccountReason;
+
+  /// No description provided for @deleteAccountConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Demander la suppression'**
+  String get deleteAccountConfirm;
+
+  /// No description provided for @deleteAccountSent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Demande envoyée. Vous serez informé de son traitement.'**
+  String get deleteAccountSent;
+
+  /// No description provided for @reportTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Signaler'**
+  String get reportTitle;
+
+  /// No description provided for @reportFraud.
+  ///
+  /// In fr, this message translates to:
+  /// **'Arnaque ou fraude'**
+  String get reportFraud;
+
+  /// No description provided for @reportWrongInfo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Informations fausses ou trompeuses'**
+  String get reportWrongInfo;
+
+  /// No description provided for @reportUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'N\'est plus disponible'**
+  String get reportUnavailable;
+
+  /// No description provided for @reportInappropriate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Contenu inapproprié'**
+  String get reportInappropriate;
+
+  /// No description provided for @reportDuplicate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annonce en double'**
+  String get reportDuplicate;
+
+  /// No description provided for @reportOther.
+  ///
+  /// In fr, this message translates to:
+  /// **'Autre'**
+  String get reportOther;
+
+  /// No description provided for @reportDetails.
+  ///
+  /// In fr, this message translates to:
+  /// **'Précisions (facultatif)'**
+  String get reportDetails;
+
+  /// No description provided for @reportSend.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer'**
+  String get reportSend;
+
+  /// No description provided for @reportSent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Merci, l\'équipe ZAKA va examiner ce signalement.'**
+  String get reportSent;
 }
 
 class _AppLocalizationsDelegate

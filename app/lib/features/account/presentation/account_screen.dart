@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/data/auth_repository.dart';
 import '../../organizations/data/organization_repository.dart';
+import '../data/account_requests_repository.dart';
 import '../data/user_repository.dart';
 
 class AccountScreen extends ConsumerWidget {
@@ -42,6 +43,8 @@ class AccountScreen extends ConsumerWidget {
 
     final name = profile?.displayName ?? user.displayName ?? '';
     final orgCount = ref.watch(myOrganizationsProvider).value?.length ?? 0;
+    final unread = ref.watch(unreadNotificationsProvider);
+    final deletionPending = ref.watch(pendingDeletionProvider).value ?? false;
     return Scaffold(
       appBar: AppBar(title: Text(l10n.navAccount)),
       body: ListView(
@@ -68,6 +71,16 @@ class AccountScreen extends ConsumerWidget {
               title: Text(l10n.accountAddPhone),
               onTap: () => context.push('/compte/telephone'),
             ),
+          ListTile(
+            leading: Badge(
+              isLabelVisible: unread > 0,
+              label: Text('$unread'),
+              child: const Icon(Icons.notifications_outlined),
+            ),
+            title: Text(l10n.notifications),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push('/compte/notifications'),
+          ),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.storefront_outlined),
@@ -82,9 +95,58 @@ class AccountScreen extends ConsumerWidget {
             title: Text(l10n.signOut),
             onTap: () => ref.read(authRepositoryProvider).signOut(),
           ),
+          ListTile(
+            leading: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
+            title: Text(l10n.deleteAccount),
+            subtitle: deletionPending ? Text(l10n.deleteAccountPending) : null,
+            enabled: !deletionPending,
+            onTap: () => _requestDeletion(context, ref, user.uid),
+          ),
         ],
       ),
     );
+  }
+
+  Future<void> _requestDeletion(BuildContext context, WidgetRef ref, String uid) async {
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final reason = TextEditingController();
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.deleteAccount),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.deleteAccountExplain),
+            const SizedBox(height: 12),
+            TextField(
+              controller: reason,
+              maxLines: 2,
+              decoration: InputDecoration(labelText: l10n.deleteAccountReason),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(l10n.cancel)),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.error),
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l10n.deleteAccountConfirm),
+          ),
+        ],
+      ),
+    );
+    final text = reason.text;
+    reason.dispose();
+    if (ok != true) return;
+    try {
+      await ref.read(accountRequestsRepositoryProvider).requestDeletion(uid, reason: text);
+      messenger.showSnackBar(SnackBar(content: Text(l10n.deleteAccountSent)));
+    } catch (_) {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.genericError)));
+    }
   }
 
   Future<void> _editName(BuildContext context, WidgetRef ref, String uid, String current) async {

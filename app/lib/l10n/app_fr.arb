@@ -177,5 +177,23 @@
     }
   },
   "roleOwner": "Propriétaire",
-  "roleEditor": "Éditeur"
+  "roleEditor": "Éditeur",
+  "notifications": "Notifications",
+  "notificationsEmpty": "Aucune notification pour le moment.",
+  "deleteAccount": "Supprimer mon compte",
+  "deleteAccountPending": "Demande en cours de traitement",
+  "deleteAccountExplain": "Votre profil, vos favoris, vos photos et votre compte seront effacés sous 30 jours. Votre nom sera retiré de vos demandes passées, mais leurs dates et montants restent conservés pour la comptabilité et d'éventuels litiges. Si vous êtes le seul propriétaire d'un compte pro, ajoutez d'abord un autre propriétaire.",
+  "deleteAccountReason": "Motif (facultatif)",
+  "deleteAccountConfirm": "Demander la suppression",
+  "deleteAccountSent": "Demande envoyée. Vous serez informé de son traitement.",
+  "reportTitle": "Signaler",
+  "reportFraud": "Arnaque ou fraude",
+  "reportWrongInfo": "Informations fausses ou trompeuses",
+  "reportUnavailable": "N'est plus disponible",
+  "reportInappropriate": "Contenu inapproprié",
+  "reportDuplicate": "Annonce en double",
+  "reportOther": "Autre",
+  "reportDetails": "Précisions (facultatif)",
+  "reportSend": "Envoyer",
+  "reportSent": "Merci, l'équipe ZAKA va examiner ce signalement."
 }
