@@ -1,0 +1,17 @@
+# Firebase
+.firebase/
+*-debug.log
+firebase-export-*/
+
+# Secrets : ne jamais versionner
+.env
+.env.*
+*.jks
+*.keystore
+key.properties
+service-account*.json
+
+# Éditeurs / OS
+.DS_Store
+Thumbs.db
+.idea/

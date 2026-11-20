@@ -1,0 +1,309 @@
+rules_version = '2';
+
+// Règles Firestore de ZAKA. Principes (docs/PLAN_CONCEPTION.md, section 3) :
+// - lecture publique uniquement des annonces publiées ;
+// - un pro n'écrit que sur les données de son organisation, si elle est vérifiée ;
+// - un particulier (publishingMode "review") ne publie jamais lui-même ;
+// - les champs sensibles (statuts, montants, audit) sont écrits par les Cloud Functions.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- Fonctions utilitaires ----------
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return signedIn() && request.auth.token.role == 'admin';
+    }
+
+    function isStaff() {
+      return signedIn() && request.auth.token.role in ['admin', 'moderator'];
+    }
+
+    function orgPath(orgId) {
+      return /databases/$(database)/documents/organizations/$(orgId);
+    }
+
+    function org(orgId) {
+      return get(orgPath(orgId)).data;
+    }
+
+    function memberPath(orgId) {
+      return /databases/$(database)/documents/organizations/$(orgId)/members/$(request.auth.uid);
+    }
+
+    function isMember(orgId) {
+      return signedIn() && exists(memberPath(orgId));
+    }
+
+    function isOrgOwner(orgId) {
+      return isMember(orgId) && get(memberPath(orgId)).data.role == 'owner';
+    }
+
+    // Membre d'une organisation vérifiée et non suspendue.
+    function canManage(orgId) {
+      return isMember(orgId) && org(orgId).verification.status == 'verified';
+    }
+
+    function changed() {
+      return request.resource.data.diff(resource.data).affectedKeys();
+    }
+
+    function onlyChanges(fields) {
+      return changed().hasOnly(fields);
+    }
+
+    function keeps(fields) {
+      return !changed().hasAny(fields);
+    }
+
+    // ---------- Utilisateurs ----------
+
+    match /users/{uid} {
+      allow read: if isSelf(uid) || isStaff();
+      // Créé par la fonction onUserCreated.
+      allow create, delete: if false;
+      allow update: if isSelf(uid)
+        && onlyChanges(['displayName', 'photoUrl', 'country', 'locale', 'fcmTokens', 'updatedAt']);
+
+      match /favorites/{targetId} {
+        allow read, write: if isSelf(uid);
+      }
+
+      match /notifications/{notificationId} {
+        allow read: if isSelf(uid);
+        allow update: if isSelf(uid) && onlyChanges(['read']);
+        allow create, delete: if false;
+      }
+    }
+
+    // ---------- Organisations ----------
+
+    match /organizations/{orgId} {
+      // Profil public du publieur (nom, contact). Les pièces sont dans Storage, en privé.
+      allow read: if true;
+      // Création, vérification, mode de publication : via Cloud Functions.
+      allow create, delete: if false;
+      allow update: if isOrgOwner(orgId)
+        && keeps(['type', 'verification', 'publishingMode', 'subscriptionId', 'createdAt']);
+
+      match /members/{memberUid} {
+        allow read: if isMember(orgId) || isStaff();
+        allow write: if false;
+      }
+    }
+
+    // ---------- Hôtellerie ----------
+
+    match /hotels/{hotelId} {
+      allow read: if resource.data.status == 'published'
+        || isMember(resource.data.orgId)
+        || isStaff();
+
+      allow create: if canManage(request.resource.data.orgId)
+        && org(request.resource.data.orgId).type == 'hotel'
+        && request.resource.data.status in ['draft', 'published', 'inactive']
+        && !request.resource.data.keys().hasAny(['minPricePerNight', 'featured']);
+
+      allow update: if canManage(resource.data.orgId)
+        && resource.data.status != 'suspended'
+        && request.resource.data.status in ['draft', 'published', 'inactive']
+        && keeps(['orgId', 'minPricePerNight', 'featured', 'createdAt']);
+
+      allow delete: if false;
+
+      function hotelOrg() {
+        return get(/databases/$(database)/documents/hotels/$(hotelId)).data.orgId;
+      }
+
+      match /roomTypes/{roomTypeId} {
+        allow read: if true;
+        allow write: if canManage(hotelOrg());
+
+        match /availability/{month} {
+          allow read: if true;
+          allow write: if canManage(hotelOrg());
+        }
+      }
+
+      match /offers/{offerId} {
+        allow read: if true;
+        allow write: if canManage(hotelOrg());
+      }
+    }
+
+    // ---------- Immobilier ----------
+
+    function directStatuses() {
+      return ['draft', 'published', 'under_offer', 'rented', 'sold', 'inactive'];
+    }
+
+    // Un particulier ne peut jamais écrire "published" : toute modification
+    // d'une annonce publiée la renvoie en "pending_review".
+    function reviewStatuses() {
+      return ['draft', 'pending_review', 'under_offer', 'rented', 'sold', 'inactive'];
+    }
+
+    function allowedStatuses(orgId) {
+      return org(orgId).publishingMode == 'direct' ? directStatuses() : reviewStatuses();
+    }
+
+    match /properties/{propertyId} {
+      allow read: if resource.data.status in ['published', 'under_offer']
+        || isMember(resource.data.orgId)
+        || isStaff();
+
+      allow create: if canManage(request.resource.data.orgId)
+        && org(request.resource.data.orgId).type in ['individual_owner', 'agency', 'developer']
+        && request.resource.data.status in ['draft', 'pending_review', 'published']
+        && request.resource.data.status in allowedStatuses(request.resource.data.orgId)
+        && !request.resource.data.keys().hasAny(['featured', 'moderation']);
+
+      allow update: if canManage(resource.data.orgId)
+        && !(resource.data.status in ['suspended', 'pending_review'])
+        && request.resource.data.status in allowedStatuses(resource.data.orgId)
+        && keeps(['orgId', 'featured', 'moderation', 'createdAt']);
+
+      allow delete: if false;
+    }
+
+    match /projects/{projectId} {
+      allow read: if resource.data.status in ['published', 'in_progress', 'delivered']
+        || isMember(resource.data.orgId)
+        || isStaff();
+
+      allow create: if canManage(request.resource.data.orgId)
+        && org(request.resource.data.orgId).type == 'developer'
+        && request.resource.data.status in ['draft', 'published'];
+
+      allow update: if canManage(resource.data.orgId)
+        && resource.data.status != 'suspended'
+        && request.resource.data.status in ['draft', 'published', 'in_progress', 'delivered', 'inactive']
+        && keeps(['orgId', 'createdAt']);
+
+      allow delete: if false;
+
+      match /units/{unitId} {
+        allow read: if true;
+        allow write: if canManage(get(/databases/$(database)/documents/projects/$(projectId)).data.orgId);
+      }
+    }
+
+    // ---------- Demandes ----------
+
+    // Réservations : créées et modifiées uniquement via Cloud Functions
+    // (contrôle des dates, expiration à 48 h, transitions de statut).
+    match /bookingRequests/{requestId} {
+      allow read: if isSelf(resource.data.clientUid) || isMember(resource.data.orgId) || isStaff();
+      allow write: if false;
+
+      match /messages/{messageId} {
+        function request_() {
+          return get(/databases/$(database)/documents/bookingRequests/$(requestId)).data;
+        }
+        allow read: if isSelf(request_().clientUid) || isMember(request_().orgId) || isStaff();
+        allow create: if request.resource.data.fromUid == request.auth.uid
+          && (isSelf(request_().clientUid) || isMember(request_().orgId));
+        allow update, delete: if false;
+      }
+    }
+
+    match /leads/{leadId} {
+      allow read: if isSelf(resource.data.clientUid) || isMember(resource.data.orgId) || isStaff();
+      allow create: if signedIn()
+        && request.resource.data.clientUid == request.auth.uid
+        && request.resource.data.status == 'new';
+      allow update: if isMember(resource.data.orgId)
+        && onlyChanges(['status', 'updatedAt'])
+        && request.resource.data.status in ['new', 'in_progress', 'visit_scheduled', 'closed'];
+      allow delete: if false;
+
+      match /messages/{messageId} {
+        function lead() {
+          return get(/databases/$(database)/documents/leads/$(leadId)).data;
+        }
+        allow read: if isSelf(lead().clientUid) || isMember(lead().orgId) || isStaff();
+        allow create: if request.resource.data.fromUid == request.auth.uid
+          && (isSelf(lead().clientUid) || isMember(lead().orgId));
+        allow update, delete: if false;
+      }
+    }
+
+    // ---------- Facturation (écritures via Cloud Functions) ----------
+
+    match /commissionRules/{ruleId} {
+      allow read: if isStaff();
+      allow write: if false;
+    }
+
+    match /subscriptionPlans/{planId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /subscriptions/{subscriptionId} {
+      allow read: if isMember(resource.data.orgId) || isStaff();
+      allow write: if false;
+    }
+
+    match /commissions/{commissionId} {
+      allow read: if isMember(resource.data.orgId) || isStaff();
+      allow write: if false;
+    }
+
+    match /payments/{paymentId} {
+      allow read: if isSelf(resource.data.payerUid) || isStaff();
+      allow write: if false;
+    }
+
+    // ---------- Modération et transverse ----------
+
+    match /reports/{reportId} {
+      allow create: if signedIn()
+        && request.resource.data.reporterUid == request.auth.uid
+        && request.resource.data.status == 'open';
+      allow read: if isStaff();
+      allow update: if isStaff() && onlyChanges(['status', 'resolution', 'handledBy', 'updatedAt']);
+      allow delete: if false;
+    }
+
+    match /deletionRequests/{requestId} {
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.status == 'pending';
+      allow read: if isSelf(resource.data.uid) || isStaff();
+      allow update, delete: if false;
+    }
+
+    match /catalog/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /config/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /auditLogs/{logId} {
+      allow read: if isStaff();
+      allow write: if false;
+    }
+
+    match /disputeExports/{exportId} {
+      allow read: if isStaff();
+      allow write: if false;
+    }
+
+    // File d'envoi de l'extension Trigger Email.
+    match /mail/{mailId} {
+      allow read, write: if false;
+    }
+  }
+}

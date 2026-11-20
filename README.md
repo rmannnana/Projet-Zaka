@@ -1,0 +1,89 @@
+# ZAKA
+
+Marketplace hôtellerie et immobilier pour la zone UEMOA (priorité Burkina Faso).
+Flutter (Android + web) · Firebase · Google Cloud (`europe-west1`).
+
+| Document | Contenu |
+|---|---|
+| [docs/PLAN_CONCEPTION.md](docs/PLAN_CONCEPTION.md) | Architecture, modèle de données, fonctionnalités, phases |
+| [docs/MISE_EN_PLACE.md](docs/MISE_EN_PLACE.md) | Comptes et services à créer |
+| [docs/CGU_ET_CONFIDENTIALITE.txt](docs/CGU_ET_CONFIDENTIALITE.txt) | Textes juridiques (brouillon) |
+
+## Organisation du dépôt
+
+```
+app/          Application Flutter
+  lib/main.dart          app publique (Android + web)
+  lib/main_admin.dart    back-office (web)
+functions/    Cloud Functions TypeScript + tests des règles
+firebase/     Règles Firestore et Storage, index
+docs/         Cahier des charges, plan, documents
+```
+
+## Prérequis
+
+- Flutter 3.44.8 (stable)
+- Node.js 22 (`nvm install 22 && nvm use 22`)
+- Java 21 (émulateurs Firebase)
+- Firebase CLI : `npm install -g firebase-tools`
+
+## Démarrer en local (sans compte Firebase)
+
+Tant que les projets `zaka-dev`, `zaka-staging` et `zaka-prod` n'existent pas, tout tourne sur les
+**émulateurs Firebase** avec le projet de démonstration `demo-zaka`.
+
+```bash
+# 1. Installer et compiler les Cloud Functions
+cd functions
+npm install
+npm run build
+
+# 2. Lancer les émulateurs (Auth, Firestore, Storage, Functions)
+#    Console : http://localhost:4000
+npm run serve
+
+# 3. Dans un autre terminal : lancer l'app
+cd app
+flutter pub get
+flutter run -d chrome --dart-define=FLAVOR=dev                          # app publique (web)
+flutter run -d chrome -t lib/main_admin.dart --dart-define=FLAVOR=dev   # back-office
+flutter run --flavor dev --dart-define=FLAVOR=dev --dart-define=EMULATOR_HOST=10.0.2.2   # émulateur Android
+```
+
+### Devenir admin en local
+
+1. Créer un compte depuis l'app (onglet **Compte**).
+2. Lui donner le rôle admin (émulateurs démarrés) :
+   ```bash
+   cd functions
+   npm run set-role -- votre@email.com admin
+   ```
+3. Se déconnecter puis se reconnecter sur le back-office.
+
+## Tests
+
+```bash
+cd app && flutter analyze && flutter test        # app
+cd functions && npm test                          # logique des Cloud Functions
+cd functions && npm run test:emulators            # règles de sécurité Firestore (émulateur)
+```
+
+## Génération de code
+
+Après toute modification d'un modèle `freezed` ou d'un fichier `.arb` :
+
+```bash
+cd app
+dart run build_runner build -d
+flutter gen-l10n
+```
+
+## Environnements
+
+| Flavor | Projet Firebase | Identifiant Android |
+|---|---|---|
+| `dev` | `demo-zaka` (émulateurs), puis `zaka-dev` | `com.zaka.app.dev` |
+| `staging` | `zaka-staging` | `com.zaka.app.staging` |
+| `prod` | `zaka-prod` | `com.zaka.app` |
+
+Brancher un vrai projet : voir `app/lib/app/firebase_options.dart`.

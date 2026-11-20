@@ -1,0 +1,47 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../l10n/app_localizations.dart';
+import 'flavor.dart';
+import 'router.dart';
+import 'theme.dart';
+
+/// Racine commune : seule la table de routes change entre l'app publique
+/// et le back-office.
+class ZakaApp extends ConsumerWidget {
+  const ZakaApp({super.key, required this.target});
+
+  final AppTarget target;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final GoRouter router = ref.watch(
+      target == AppTarget.admin ? adminRouterProvider : publicRouterProvider,
+    );
+    final flavor = Flavor.current;
+
+    return MaterialApp.router(
+      onGenerateTitle: (context) {
+        final l10n = AppLocalizations.of(context);
+        return target == AppTarget.admin ? l10n.adminTitle : l10n.appTitle;
+      },
+      theme: ZakaTheme.light(),
+      darkTheme: ZakaTheme.dark(),
+      locale: const Locale('fr'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      routerConfig: router,
+      debugShowCheckedModeBanner: false,
+      // Bandeau visible hors production pour ne jamais confondre les environnements.
+      builder: (context, child) => flavor == Flavor.prod
+          ? child!
+          : Banner(
+              message: flavor.name.toUpperCase(),
+              location: BannerLocation.topEnd,
+              color: flavor == Flavor.dev ? Colors.green.shade700 : Colors.orange.shade800,
+              child: child!,
+            ),
+    );
+  }
+}

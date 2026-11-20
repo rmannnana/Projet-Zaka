@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "demo-zaka",
+    "dev": "zaka-dev",
+    "staging": "zaka-staging",
+    "prod": "zaka-prod"
+  }
+}

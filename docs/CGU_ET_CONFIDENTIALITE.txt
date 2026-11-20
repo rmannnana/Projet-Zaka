@@ -1,0 +1,473 @@
+====================================================================
+NOTE INTERNE - À SUPPRIMER AVANT LA MISE EN LIGNE
+====================================================================
+- Ce fichier contient 2 pages à publier sur le Google Site :
+  PAGE 1 : Conditions générales d'utilisation
+  PAGE 2 : Politique de confidentialité
+- Remplacer tous les champs entre crochets [ ... ].
+- Faire relire l'ensemble par un juriste avant publication, en
+  particulier les références légales et la clause de responsabilité.
+- Version de travail du 20 novembre 2026.
+====================================================================
+
+
+
+====================================================================
+PAGE 1
+CONDITIONS GÉNÉRALES D'UTILISATION DE ZAKA
+====================================================================
+
+Dernière mise à jour : [date de mise en ligne]
+
+
+1. QUI SOMMES-NOUS ?
+
+ZAKA est une plateforme numérique (application mobile et site web)
+éditée par [raison sociale], [forme juridique] au capital de
+[montant] FCFA, immatriculée au RCCM sous le numéro [numéro RCCM],
+IFU [numéro IFU], dont le siège est situé [adresse complète],
+Burkina Faso.
+
+Contact : [adresse e-mail de contact] - [numéro de téléphone]
+
+Dans ces conditions, « ZAKA », « nous » et « notre » désignent
+l'éditeur de la plateforme.
+
+
+2. OBJET DE CES CONDITIONS
+
+Les présentes conditions générales d'utilisation (« CGU ») fixent
+les règles d'utilisation de la plateforme ZAKA.
+
+ZAKA est une place de marché qui met en relation :
+- des clients qui recherchent un hôtel ou un bien immobilier ;
+- des hôtels, des agences immobilières, des promoteurs et des
+  particuliers propriétaires qui publient leurs offres.
+
+En créant un compte ou en utilisant la plateforme, vous acceptez
+ces CGU. Si vous ne les acceptez pas, vous ne devez pas utiliser
+ZAKA.
+
+
+3. DÉFINITIONS
+
+- Utilisateur : toute personne qui utilise ZAKA, avec ou sans
+  compte.
+- Client : utilisateur qui recherche une offre, envoie une demande
+  de réservation, de contact ou de visite.
+- Partenaire : hôtel, agence immobilière, promoteur ou particulier
+  propriétaire qui publie des offres sur ZAKA.
+- Partenaire professionnel : hôtel, agence immobilière ou promoteur.
+- Particulier propriétaire : personne physique qui publie ses
+  propres biens immobiliers.
+- Annonce : toute offre publiée sur ZAKA (hôtel, chambre, offre
+  spéciale, bien immobilier, programme immobilier).
+
+
+4. ZONE GÉOGRAPHIQUE
+
+ZAKA est accessible aux utilisateurs des pays de l'Union économique
+et monétaire ouest-africaine (UEMOA) : Bénin, Burkina Faso, Côte
+d'Ivoire, Guinée-Bissau, Mali, Niger, Sénégal et Togo. Les prix sont
+exprimés en francs CFA (XOF).
+
+
+5. CRÉATION DE COMPTE
+
+5.1. Vous pouvez consulter les annonces sans compte. Un compte est
+nécessaire pour envoyer une demande, enregistrer des favoris ou
+publier une annonce.
+
+5.2. Vous devez avoir au moins 18 ans pour créer un compte.
+
+5.3. Vous vous engagez à fournir des informations exactes et à les
+tenir à jour. Votre numéro de téléphone peut être vérifié par SMS.
+
+5.4. Vous êtes responsable de la confidentialité de vos moyens de
+connexion et de toute activité réalisée depuis votre compte.
+Prévenez-nous immédiatement en cas d'utilisation non autorisée.
+
+
+6. COMPTES PARTENAIRES
+
+6.1. Partenaires professionnels
+Pour publier, un hôtel, une agence immobilière ou un promoteur doit
+fournir :
+- son Identifiant Financier Unique (IFU) ;
+- son immatriculation au Registre du Commerce et du Crédit Mobilier
+  (RCCM) ;
+- un contrat de bail ou tout autre justificatif de résidence.
+ZAKA examine ces documents avant d'activer le compte. ZAKA peut
+refuser un compte sans avoir à se justifier au-delà d'un motif
+sommaire. Une fois le compte validé, le partenaire publie et met à
+jour ses annonces lui-même.
+
+6.2. Particuliers propriétaires
+Un particulier propriétaire peut publier ses biens immobiliers sans
+fournir de document officiel. En contrepartie, chacune de ses
+annonces, ainsi que chaque modification, est examinée par ZAKA
+avant d'être visible. ZAKA peut refuser une annonce en indiquant le
+motif.
+
+6.3. Engagements des partenaires
+Chaque partenaire s'engage à :
+- publier uniquement des offres réelles, dont il a le droit de
+  disposer (propriétaire, mandataire ou exploitant) ;
+- fournir des descriptions, photos, prix et conditions exacts et
+  à jour ;
+- indiquer rapidement qu'un bien est loué, vendu ou indisponible ;
+- répondre aux demandes des clients dans les délais prévus ;
+- respecter les lois applicables, notamment en matière
+  d'hôtellerie, d'immobilier, de fiscalité et de protection des
+  consommateurs.
+
+Le partenaire est seul responsable du contenu de ses annonces et
+des offres qu'il propose.
+
+
+7. RÉSERVATIONS HÔTELIÈRES
+
+7.1. Une réservation faite sur ZAKA est d'abord une DEMANDE. Les
+disponibilités affichées sont déclarées par l'hôtel et ne sont pas
+garanties en temps réel.
+
+7.2. L'hôtel dispose de 48 heures pour accepter la demande, la
+refuser ou demander des précisions. Sans réponse dans ce délai, la
+demande expire automatiquement et le client en est informé.
+
+7.3. La réservation n'est confirmée qu'après l'acceptation de
+l'hôtel. Le contrat de séjour est conclu directement entre le
+client et l'hôtel.
+
+7.4. Les conditions de séjour, d'annulation et de remboursement sont
+celles fixées par l'hôtel et affichées sur sa fiche.
+
+
+8. ANNONCES IMMOBILIÈRES
+
+8.1. ZAKA permet aux clients de contacter les partenaires, de
+demander des informations ou une visite.
+
+8.2. ZAKA n'est ni agent immobilier, ni mandataire, ni partie aux
+contrats de location ou de vente. Toute location ou vente est
+conclue directement entre le client et le partenaire.
+
+8.3. Il appartient au client de vérifier par lui-même l'état du
+bien, les titres de propriété et les conditions proposées avant
+tout engagement ou versement d'argent.
+
+
+9. PAIEMENTS
+
+9.1. Lorsqu'un paiement en ligne est proposé, il est traité par un
+prestataire de paiement agréé. ZAKA ne conserve pas les données de
+votre carte bancaire ni les codes de votre compte Mobile Money.
+
+9.2. Certaines fonctionnalités de paiement peuvent être proposées en
+MODE TEST. Ce mode est clairement signalé à l'écran. Aucun débit
+réel n'est effectué en mode test, et un paiement en mode test ne
+vaut pas paiement de la réservation : le client règle alors
+directement l'hôtel selon ses conditions.
+
+9.3. Sauf mention contraire, les paiements des séjours et des biens
+sont dus directement au partenaire.
+
+
+10. ABONNEMENTS ET COMMISSIONS (PARTENAIRES)
+
+10.1. L'accès des partenaires à ZAKA peut être gratuit ou soumis à
+un abonnement, selon les formules affichées dans l'espace
+partenaire.
+
+10.2. ZAKA peut percevoir une commission sur certaines opérations,
+notamment sur les séjours hôteliers effectués à la suite d'une
+réservation faite sur ZAKA. La commission est due après la fin du
+séjour.
+
+10.3. Les tarifs des abonnements et les taux de commission en vigueur
+sont affichés dans l'espace partenaire. ZAKA peut les modifier ; le
+partenaire en est informé au moins [30] jours avant l'application
+des nouveaux tarifs. Les nouveaux tarifs ne s'appliquent pas aux
+opérations déjà réalisées.
+
+
+11. LITIGES ENTRE UTILISATEURS
+
+11.1. ZAKA est un intermédiaire technique de mise en relation. ZAKA
+n'est pas partie aux contrats conclus entre clients et partenaires
+et N'ASSUME AUCUNE RESPONSABILITÉ dans les litiges qui peuvent
+survenir entre eux (annulation, qualité du séjour ou du bien,
+paiement, remboursement, état des lieux, etc.).
+
+11.2. Le seul rôle de ZAKA en cas de litige est de fournir, à la
+demande d'une des parties ou d'une autorité compétente, les
+informations dont elle dispose et qui sont utiles à son règlement :
+dates des demandes, historique des statuts, messages échangés sur
+la plateforme et détails de l'annonce au moment de la demande.
+
+11.3. Les parties s'engagent à rechercher une solution amiable entre
+elles avant toute action.
+
+
+12. SIGNALEMENTS ET MODÉRATION
+
+12.1. Tout utilisateur peut signaler une annonce ou un comportement
+qui lui paraît frauduleux, trompeur ou contraire à ces CGU.
+
+12.2. ZAKA peut, sans préavis, masquer ou supprimer une annonce,
+suspendre ou fermer un compte en cas de :
+- fausse déclaration ou document falsifié ;
+- annonce frauduleuse, trompeuse ou illicite ;
+- comportement abusif envers d'autres utilisateurs ;
+- non-respect de ces CGU.
+
+
+13. CONTENUS PUBLIÉS
+
+13.1. Les partenaires restent propriétaires des textes et photos
+qu'ils publient. Ils accordent à ZAKA, pour la durée de publication,
+le droit gratuit de les reproduire et de les afficher sur la
+plateforme et dans sa communication.
+
+13.2. Il est interdit de publier des contenus faux, offensants,
+discriminatoires, ou sur lesquels on ne détient pas les droits.
+
+13.3. Le nom ZAKA, son logo, son design et son logiciel sont la
+propriété de [raison sociale] et ne peuvent pas être réutilisés
+sans autorisation.
+
+
+14. RESPONSABILITÉ DE ZAKA
+
+14.1. ZAKA s'efforce d'assurer l'accès à la plateforme en permanence,
+sans pouvoir le garantir. Des interruptions peuvent survenir pour
+maintenance ou pour des raisons techniques.
+
+14.2. ZAKA vérifie les documents des partenaires professionnels et
+les annonces des particuliers, mais ne peut pas garantir
+l'exactitude de toutes les informations publiées par les
+partenaires.
+
+14.3. ZAKA ne peut être tenue responsable des dommages résultant de
+l'utilisation de la plateforme par un utilisateur, d'une annonce
+inexacte ou des relations entre clients et partenaires.
+
+
+15. DONNÉES PERSONNELLES
+
+Le traitement de vos données personnelles est décrit dans notre
+Politique de confidentialité, disponible à l'adresse :
+[lien vers la page Politique de confidentialité]
+
+
+16. SUPPRESSION DU COMPTE
+
+Vous pouvez supprimer votre compte à tout moment depuis
+l'application (Profil > Supprimer mon compte) ou en écrivant à
+[adresse e-mail de contact]. Les demandes et réservations en cours
+doivent être terminées ou annulées au préalable.
+
+
+17. MODIFICATION DES CGU
+
+ZAKA peut modifier ces CGU. La nouvelle version est publiée sur
+cette page avec sa date de mise à jour. En cas de changement
+important, les utilisateurs sont prévenus dans l'application. Si
+vous continuez à utiliser ZAKA après la modification, vous acceptez
+la nouvelle version.
+
+
+18. DROIT APPLICABLE
+
+Ces CGU sont soumises au droit burkinabè. À défaut d'accord amiable,
+tout litige relatif à leur interprétation ou à leur exécution relève
+des tribunaux compétents de Ouagadougou (Burkina Faso).
+
+
+
+====================================================================
+PAGE 2
+POLITIQUE DE CONFIDENTIALITÉ DE ZAKA
+====================================================================
+
+Dernière mise à jour : [date de mise en ligne]
+
+
+1. RESPONSABLE DU TRAITEMENT
+
+Vos données personnelles sont traitées par [raison sociale],
+[adresse complète], Burkina Faso, éditeur de la plateforme ZAKA.
+
+Pour toute question sur vos données :
+[adresse e-mail dédiée aux données personnelles]
+
+Ce traitement respecte la législation applicable en matière de
+protection des données à caractère personnel, notamment la loi
+n° 001-2021/AN du 30 mars 2021 portant protection des personnes à
+l'égard du traitement des données à caractère personnel au Burkina
+Faso.
+
+
+2. QUELLES DONNÉES COLLECTONS-NOUS ?
+
+2.1. Pour tous les utilisateurs disposant d'un compte :
+- nom, prénom, numéro de téléphone, adresse e-mail, photo de profil
+  (facultative), pays ;
+- identifiants de connexion (nous ne voyons jamais votre mot de
+  passe).
+
+2.2. Lorsque vous utilisez la plateforme :
+- vos demandes de réservation, de contact et de visite (dates,
+  nombre de personnes, message) ;
+- les messages échangés avec les partenaires sur ZAKA ;
+- vos favoris et vos signalements ;
+- l'historique de vos paiements, le cas échéant (montant, date,
+  statut). Les données de carte ou de Mobile Money sont traitées par
+  le prestataire de paiement, pas par ZAKA.
+
+2.3. Pour les partenaires professionnels :
+- les informations de l'entreprise (nom, IFU, RCCM, représentant,
+  coordonnées) ;
+- les copies de l'IFU, du RCCM et du justificatif de résidence ;
+- les annonces publiées et les statistiques associées.
+
+2.4. Données techniques :
+- type d'appareil, version de l'application, données de connexion,
+  rapports de plantage ;
+- statistiques d'utilisation anonymes ou pseudonymes ;
+- identifiant de notification pour vous envoyer des alertes.
+
+2.5. Localisation : si vous l'autorisez, votre position sert
+uniquement à afficher les offres proches de vous. Elle n'est pas
+conservée.
+
+
+3. POURQUOI UTILISONS-NOUS VOS DONNÉES ?
+
+- Créer et gérer votre compte ;
+- vérifier l'identité et l'activité des partenaires professionnels ;
+- transmettre vos demandes aux partenaires et vous informer de leur
+  suivi ;
+- vous envoyer des notifications utiles (réponse à une demande,
+  expiration, rappel) ;
+- traiter les paiements et calculer les commissions des partenaires ;
+- assurer la sécurité de la plateforme et lutter contre la fraude ;
+- traiter les signalements et modérer les annonces ;
+- fournir les informations utiles au règlement d'un litige, à la
+  demande d'une partie ou d'une autorité ;
+- améliorer la plateforme grâce à des statistiques d'utilisation ;
+- respecter nos obligations légales.
+
+Nous ne vendons pas vos données personnelles.
+
+
+4. QUI A ACCÈS À VOS DONNÉES ?
+
+4.1. Les partenaires : lorsque vous envoyez une demande à un hôtel ou
+à un annonceur immobilier, il reçoit votre nom, votre numéro de
+téléphone, votre message et les détails de votre demande.
+
+4.2. L'équipe ZAKA : seulement les personnes habilitées
+(administration, modération, assistance), dans la limite de leurs
+missions. Les justificatifs des partenaires ne sont accessibles
+qu'aux modérateurs.
+
+4.3. Nos prestataires techniques, qui agissent selon nos
+instructions :
+- Google (Firebase / Google Cloud) : hébergement, base de données,
+  authentification, notifications, statistiques, rapports de
+  plantage ;
+- [Brevo] : envoi des e-mails ;
+- [CinetPay] : traitement des paiements, lorsque le paiement en
+  ligne est activé.
+
+4.4. Les autorités : lorsque la loi l'exige ou sur demande d'une
+autorité judiciaire ou administrative compétente.
+
+
+5. OÙ SONT STOCKÉES VOS DONNÉES ?
+
+Vos données sont hébergées par Google Cloud dans des centres de
+données situés dans l'Union européenne (Belgique). Ce transfert hors
+du Burkina Faso est encadré par les engagements de sécurité et de
+confidentialité de notre hébergeur, et [mention des formalités
+accomplies auprès de la CIL, à compléter avec le juriste].
+
+
+6. COMBIEN DE TEMPS CONSERVONS-NOUS VOS DONNÉES ?
+
+6.1. Nous conservons vos données tant que votre compte existe, et
+au-delà, afin de pouvoir fournir les informations nécessaires au
+règlement d'éventuels litiges entre utilisateurs.
+
+6.2. Vous pouvez à tout moment demander la suppression de vos
+données personnelles (voir l'article 7). Dans ce cas :
+- votre profil, vos photos, vos favoris et votre compte sont
+  supprimés ;
+- dans les demandes, réservations et messages déjà échangés, vos
+  informations personnelles sont remplacées par la mention
+  « Utilisateur supprimé » ;
+- seules les données dont la conservation est imposée par la loi
+  (par exemple les données comptables) sont gardées, sans
+  information permettant de vous identifier lorsque c'est possible.
+
+
+7. VOS DROITS
+
+Vous disposez des droits suivants sur vos données :
+- droit d'accès : savoir quelles données nous détenons sur vous ;
+- droit de rectification : corriger des données inexactes ;
+- droit d'opposition : vous opposer à certains traitements, par
+  exemple aux notifications non essentielles ;
+- droit de suppression : demander l'effacement de vos données.
+
+Comment exercer vos droits :
+- dans l'application : Profil > Mes données / Supprimer mon compte ;
+- par e-mail : [adresse e-mail dédiée aux données personnelles].
+
+Nous répondons dans un délai de [30] jours. Une preuve d'identité
+peut vous être demandée si nous avons un doute sur l'auteur de la
+demande.
+
+Si vous estimez que vos droits ne sont pas respectés, vous pouvez
+saisir la Commission de l'Informatique et des Libertés (CIL) du
+Burkina Faso ou l'autorité de protection des données de votre pays.
+
+
+8. SÉCURITÉ
+
+Nous protégeons vos données par des mesures techniques et
+organisationnelles adaptées : connexions chiffrées, accès limités
+selon les rôles, stockage privé des justificatifs, vérification de
+l'authenticité de l'application, journal des opérations sensibles et
+sauvegardes régulières.
+
+
+9. COOKIES ET TRACEURS (SITE WEB)
+
+Le site web de ZAKA utilise des traceurs nécessaires à son
+fonctionnement (maintien de la connexion, sécurité) et des outils de
+mesure d'audience (Google Analytics for Firebase). [Si requis :
+décrire le bandeau de consentement et la manière de refuser les
+traceurs non essentiels.]
+
+
+10. MINEURS
+
+ZAKA est réservée aux personnes âgées d'au moins 18 ans. Nous ne
+collectons pas sciemment de données concernant des mineurs.
+
+
+11. MODIFICATION DE CETTE POLITIQUE
+
+Nous pouvons modifier cette politique. La nouvelle version est
+publiée sur cette page avec sa date de mise à jour. En cas de
+changement important, vous en êtes informé dans l'application.
+
+
+12. CONTACT
+
+[raison sociale]
+[adresse complète]
+E-mail : [adresse e-mail dédiée aux données personnelles]
+Téléphone : [numéro de téléphone]
