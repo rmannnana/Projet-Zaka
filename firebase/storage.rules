@@ -21,6 +21,12 @@ service firebase.storage {
         && firestore.exists(/databases/(default)/documents/organizations/$(orgId)/members/$(request.auth.uid));
     }
 
+    function orgCanUpload(orgId) {
+      let org = firestore.get(/databases/(default)/documents/organizations/$(orgId)).data;
+      return org.type != 'individual_owner'
+        && org.verification.status in ['draft', 'rejected'];
+    }
+
     function isImage(maxMb) {
       return request.resource.contentType.matches('image/.*')
         && request.resource.size < maxMb * 1024 * 1024;
@@ -44,10 +50,17 @@ service firebase.storage {
       allow delete: if signedIn() && request.auth.uid == uid;
     }
 
+    // Pièces d'un compte pro : déposées tant que le dossier est en brouillon ou
+    // refusé, jamais écrasées ni supprimées (trace en cas de contrôle).
+    // Nom attendu : {ifu|rccm|proofOfAddress}_{horodatage}.{pdf|jpg|jpeg|png|webp}
     match /private/verification/{orgId}/{fileName} {
       allow read: if isMember(orgId) || isStaff();
-      allow create, update: if isMember(orgId) && isDocument(10);
-      allow delete: if false;
+      allow create: if resource == null
+        && isMember(orgId)
+        && isDocument(10)
+        && fileName.matches('(ifu|rccm|proofOfAddress)_[0-9]+[.](pdf|jpe?g|png|webp)')
+        && orgCanUpload(orgId);
+      allow update, delete: if false;
     }
 
     match /private/exports/{allPaths=**} {

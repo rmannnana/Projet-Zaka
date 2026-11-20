@@ -45,3 +45,5 @@ jobs:
       - run: npm run build
       - run: npm test
       - run: npx --yes firebase-tools@15 emulators:exec --project demo-zaka --only firestore,storage "npm run test:rules"
+      - name: Parcours complets (Auth, Firestore, Storage, Functions)
+        run: npx --yes firebase-tools@15 emulators:exec --project demo-zaka --only auth,firestore,storage,functions "npx vitest run test/integration --testTimeout=30000 --hookTimeout=30000"

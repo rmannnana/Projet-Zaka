@@ -7,7 +7,7 @@ import {
   initializeTestEnvironment,
   type RulesTestEnvironment,
 } from "@firebase/rules-unit-testing";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 
 // Lancer avec : npm run test:emulators (démarre l'émulateur Firestore).
@@ -135,6 +135,19 @@ describe("organisations et utilisateurs", () => {
     );
   });
 
+  it("les données légales sont figées une fois le dossier envoyé", async () => {
+    // hotel1 est "pending" : IFU non modifiable.
+    await assertFails(
+      updateDoc(doc(as("ali"), "organizations/hotel1"), { legal: { ifuNumber: "000" } }),
+    );
+    await env.withSecurityRulesDisabled((ctx) =>
+      updateDoc(doc(ctx.firestore(), "organizations/hotel1"), { "verification.status": "rejected" }),
+    );
+    await assertSucceeds(
+      updateDoc(doc(as("ali"), "organizations/hotel1"), { legal: { ifuNumber: "000" } }),
+    );
+  });
+
   it("un utilisateur modifie son nom mais pas ses organisations", async () => {
     await assertSucceeds(updateDoc(doc(as("awa"), "users/awa"), { displayName: "Awa K." }));
     await assertFails(updateDoc(doc(as("awa"), "users/awa"), { orgIds: ["agency1"] }));
@@ -151,6 +164,30 @@ describe("demandes", () => {
     await assertFails(
       setDoc(doc(as("awa"), "bookingRequests/b1"), { clientUid: "awa", orgId: "hotel1", status: "pending" }),
     );
+  });
+
+  it("un signalement est créé au nom de son auteur, avec des champs contrôlés", async () => {
+    const report = {
+      targetType: "property",
+      targetId: "published1",
+      reporterUid: "moussa",
+      reason: "fraud",
+      status: "open",
+      createdAt: serverTimestamp(),
+    };
+    await assertSucceeds(setDoc(doc(as("moussa"), "reports/r1"), report));
+    await assertFails(setDoc(doc(as("moussa"), "reports/r2"), { ...report, status: "resolved" }));
+    await assertFails(setDoc(doc(as("moussa"), "reports/r3"), { ...report, reporterUid: "awa" }));
+    await assertFails(setDoc(doc(as("moussa"), "reports/r4"), { ...report, handledBy: "moussa" }));
+    await assertFails(getDoc(doc(as("moussa"), "reports/r1")));
+  });
+
+  it("un utilisateur demande la suppression de ses propres données uniquement", async () => {
+    const req = { uid: "awa", status: "pending", requestedAt: serverTimestamp() };
+    await assertSucceeds(setDoc(doc(as("awa"), "deletionRequests/d1"), req));
+    await assertFails(setDoc(doc(as("moussa"), "deletionRequests/d2"), req));
+    await assertFails(setDoc(doc(as("awa"), "deletionRequests/d3"), { ...req, status: "done" }));
+    await assertFails(updateDoc(doc(as("awa"), "deletionRequests/d1"), { status: "done" }));
   });
 
   it("un client crée une demande de contact à son nom uniquement", async () => {

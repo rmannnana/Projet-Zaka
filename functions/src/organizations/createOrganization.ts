@@ -1,21 +1,15 @@
 import { FieldValue } from "firebase-admin/firestore";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
-import { z } from "zod";
 
 import { writeAudit } from "../shared/audit";
 import { db } from "../shared/config";
+import { parseInput, requireAuth } from "../shared/guards";
 import { CreateOrganizationInput, initialState } from "./schema";
 
 /** Crée une organisation dont l'appelant devient propriétaire (owner). */
 export const createOrganization = onCall(async (request) => {
-  const uid = request.auth?.uid;
-  if (!uid) throw new HttpsError("unauthenticated", "Connexion requise.");
-
-  const parsed = CreateOrganizationInput.safeParse(request.data);
-  if (!parsed.success) {
-    throw new HttpsError("invalid-argument", "Données invalides.", z.treeifyError(parsed.error));
-  }
-  const input = parsed.data;
+  const uid = requireAuth(request);
+  const input = parseInput(CreateOrganizationInput, request.data);
 
   if (input.type === "individual_owner") {
     // Seule garantie demandée à un particulier : un numéro vérifié par SMS.
@@ -55,6 +49,8 @@ export const createOrganization = onCall(async (request) => {
   batch.set(orgRef, org);
   batch.set(orgRef.collection("members").doc(uid), {
     role: "owner",
+    displayName: request.auth?.token.name ?? null,
+    email: request.auth?.token.email ?? null,
     addedAt: FieldValue.serverTimestamp(),
   });
   batch.set(
