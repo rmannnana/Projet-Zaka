@@ -267,6 +267,132 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Une erreur est survenue. Réessayez.'**
   String get genericError;
+
+  /// No description provided for @or.
+  ///
+  /// In fr, this message translates to:
+  /// **'ou'**
+  String get or;
+
+  /// No description provided for @save.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
+  String get save;
+
+  /// No description provided for @cancel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler'**
+  String get cancel;
+
+  /// No description provided for @methodPhone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléphone'**
+  String get methodPhone;
+
+  /// No description provided for @methodEmail.
+  ///
+  /// In fr, this message translates to:
+  /// **'E-mail'**
+  String get methodEmail;
+
+  /// No description provided for @continueWithGoogle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Continuer avec Google'**
+  String get continueWithGoogle;
+
+  /// No description provided for @phoneNumber.
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro de téléphone'**
+  String get phoneNumber;
+
+  /// No description provided for @phoneSendCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recevoir le code par SMS'**
+  String get phoneSendCode;
+
+  /// No description provided for @phoneSmsNotice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un SMS contenant un code à 6 chiffres vous sera envoyé. Numéros de la zone UEMOA uniquement.'**
+  String get phoneSmsNotice;
+
+  /// No description provided for @phoneInvalidForCountry.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce numéro ne correspond pas au pays choisi ({country}).'**
+  String phoneInvalidForCountry(String country);
+
+  /// No description provided for @phoneCodeSentTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code envoyé au {phone}.'**
+  String phoneCodeSentTo(String phone);
+
+  /// No description provided for @phoneCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code à 6 chiffres'**
+  String get phoneCode;
+
+  /// No description provided for @phoneVerify.
+  ///
+  /// In fr, this message translates to:
+  /// **'Valider'**
+  String get phoneVerify;
+
+  /// No description provided for @phoneChangeNumber.
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer de numéro'**
+  String get phoneChangeNumber;
+
+  /// No description provided for @phoneVerified.
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro vérifié'**
+  String get phoneVerified;
+
+  /// No description provided for @verifyPhoneTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérifier mon numéro'**
+  String get verifyPhoneTitle;
+
+  /// No description provided for @verifyPhoneIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un numéro vérifié est nécessaire pour publier une annonce en tant que particulier. Il permet aussi aux pros et aux clients de vous joindre.'**
+  String get verifyPhoneIntro;
+
+  /// No description provided for @accountAddPhone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un numéro de téléphone'**
+  String get accountAddPhone;
+
+  /// No description provided for @accountPhoneVerified.
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro vérifié'**
+  String get accountPhoneVerified;
+
+  /// No description provided for @accountEditName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier mon nom'**
+  String get accountEditName;
+
+  /// No description provided for @accountNoName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoutez votre nom'**
+  String get accountNoName;
 }
 
 class _AppLocalizationsDelegate

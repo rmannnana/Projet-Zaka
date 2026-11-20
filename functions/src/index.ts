@@ -3,6 +3,7 @@
 import "./shared/config";
 
 export { onUserCreated } from "./auth/onUserCreated";
+export { syncProfileFromAuth } from "./auth/syncProfileFromAuth";
 export { createOrganization } from "./organizations/createOrganization";
 export { submitOrgVerification } from "./organizations/submitOrgVerification";
 export { reviewOrg } from "./organizations/reviewOrg";

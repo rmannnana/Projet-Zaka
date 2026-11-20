@@ -26,10 +26,49 @@
   "alreadyHaveAccount": "Déjà un compte ? Connectez-vous",
   "signedInAs": "Connecté en tant que {name}",
   "@signedInAs": {
-    "placeholders": { "name": { "type": "String" } }
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   },
   "adminDashboard": "Tableau de bord",
   "adminForbidden": "Accès réservé à l'équipe ZAKA.",
   "testModeBanner": "Mode test : aucun paiement réel",
-  "genericError": "Une erreur est survenue. Réessayez."
+  "genericError": "Une erreur est survenue. Réessayez.",
+  "or": "ou",
+  "save": "Enregistrer",
+  "cancel": "Annuler",
+  "methodPhone": "Téléphone",
+  "methodEmail": "E-mail",
+  "continueWithGoogle": "Continuer avec Google",
+  "phoneNumber": "Numéro de téléphone",
+  "phoneSendCode": "Recevoir le code par SMS",
+  "phoneSmsNotice": "Un SMS contenant un code à 6 chiffres vous sera envoyé. Numéros de la zone UEMOA uniquement.",
+  "phoneInvalidForCountry": "Ce numéro ne correspond pas au pays choisi ({country}).",
+  "@phoneInvalidForCountry": {
+    "placeholders": {
+      "country": {
+        "type": "String"
+      }
+    }
+  },
+  "phoneCodeSentTo": "Code envoyé au {phone}.",
+  "@phoneCodeSentTo": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "phoneCode": "Code à 6 chiffres",
+  "phoneVerify": "Valider",
+  "phoneChangeNumber": "Changer de numéro",
+  "phoneVerified": "Numéro vérifié",
+  "verifyPhoneTitle": "Vérifier mon numéro",
+  "verifyPhoneIntro": "Un numéro vérifié est nécessaire pour publier une annonce en tant que particulier. Il permet aussi aux pros et aux clients de vous joindre.",
+  "accountAddPhone": "Ajouter un numéro de téléphone",
+  "accountPhoneVerified": "Numéro vérifié",
+  "accountEditName": "Modifier mon nom",
+  "accountNoName": "Ajoutez votre nom"
 }

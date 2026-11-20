@@ -98,4 +98,73 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get genericError => 'Une erreur est survenue. Réessayez.';
+
+  @override
+  String get or => 'ou';
+
+  @override
+  String get save => 'Enregistrer';
+
+  @override
+  String get cancel => 'Annuler';
+
+  @override
+  String get methodPhone => 'Téléphone';
+
+  @override
+  String get methodEmail => 'E-mail';
+
+  @override
+  String get continueWithGoogle => 'Continuer avec Google';
+
+  @override
+  String get phoneNumber => 'Numéro de téléphone';
+
+  @override
+  String get phoneSendCode => 'Recevoir le code par SMS';
+
+  @override
+  String get phoneSmsNotice =>
+      'Un SMS contenant un code à 6 chiffres vous sera envoyé. Numéros de la zone UEMOA uniquement.';
+
+  @override
+  String phoneInvalidForCountry(String country) {
+    return 'Ce numéro ne correspond pas au pays choisi ($country).';
+  }
+
+  @override
+  String phoneCodeSentTo(String phone) {
+    return 'Code envoyé au $phone.';
+  }
+
+  @override
+  String get phoneCode => 'Code à 6 chiffres';
+
+  @override
+  String get phoneVerify => 'Valider';
+
+  @override
+  String get phoneChangeNumber => 'Changer de numéro';
+
+  @override
+  String get phoneVerified => 'Numéro vérifié';
+
+  @override
+  String get verifyPhoneTitle => 'Vérifier mon numéro';
+
+  @override
+  String get verifyPhoneIntro =>
+      'Un numéro vérifié est nécessaire pour publier une annonce en tant que particulier. Il permet aussi aux pros et aux clients de vous joindre.';
+
+  @override
+  String get accountAddPhone => 'Ajouter un numéro de téléphone';
+
+  @override
+  String get accountPhoneVerified => 'Numéro vérifié';
+
+  @override
+  String get accountEditName => 'Modifier mon nom';
+
+  @override
+  String get accountNoName => 'Ajoutez votre nom';
 }

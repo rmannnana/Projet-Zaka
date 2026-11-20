@@ -7,6 +7,7 @@ import '../features/account/presentation/account_screen.dart';
 import '../features/admin/presentation/admin_dashboard_screen.dart';
 import '../features/auth/data/auth_repository.dart';
 import '../features/auth/presentation/sign_in_screen.dart';
+import '../features/auth/presentation/verify_phone_screen.dart';
 import '../features/home/presentation/home_screen.dart';
 import '../features/home/presentation/home_shell.dart';
 import '../core/widgets/coming_soon.dart';
@@ -39,7 +40,18 @@ final publicRouterProvider = Provider<GoRouter>((ref) {
             ),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/compte', builder: (_, _) => const AccountScreen()),
+            GoRoute(
+              path: '/compte',
+              builder: (_, _) => const AccountScreen(),
+              routes: [
+                GoRoute(
+                  path: 'telephone',
+                  parentNavigatorKey: _rootKey,
+                  builder: (_, state) =>
+                      VerifyPhoneScreen(redirectTo: state.uri.queryParameters['retour']),
+                ),
+              ],
+            ),
           ]),
         ],
       ),
