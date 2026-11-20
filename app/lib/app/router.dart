@@ -6,6 +6,12 @@ import 'package:go_router/go_router.dart';
 import '../features/account/presentation/account_screen.dart';
 import '../features/account/presentation/notifications_screen.dart';
 import '../features/admin/presentation/admin_dashboard_screen.dart';
+import '../features/admin/presentation/admin_shell.dart';
+import '../features/admin/presentation/audit_screen.dart';
+import '../features/admin/presentation/catalogs_screen.dart';
+import '../features/admin/presentation/org_review_screens.dart';
+import '../features/admin/presentation/requests_screens.dart';
+import '../features/admin/presentation/team_screen.dart';
 import '../features/auth/data/auth_repository.dart';
 import '../features/auth/presentation/sign_in_screen.dart';
 import '../features/auth/presentation/verify_phone_screen.dart';
@@ -147,10 +153,33 @@ final adminRouterProvider = Provider<GoRouter>((ref) {
       final isStaff = role.value == 'admin' || role.value == 'moderator';
       if (!isStaff) return goTo('/interdit');
 
+      final adminOnly = adminDestinations.where((d) => d.adminOnly).map((d) => d.path);
+      if (role.value != 'admin' && adminOnly.any(here.startsWith)) return '/';
+
       return const {'/connexion', '/interdit', '/chargement'}.contains(here) ? '/' : null;
     },
     routes: [
-      GoRoute(path: '/', builder: (_, _) => const AdminDashboardScreen()),
+      ShellRoute(
+        builder: (_, state, child) => AdminShell(location: state.matchedLocation, child: child),
+        routes: [
+          GoRoute(path: '/', builder: (_, _) => const AdminDashboardScreen()),
+          GoRoute(
+            path: '/comptes',
+            builder: (_, _) => const OrgReviewListScreen(),
+            routes: [
+              GoRoute(
+                path: ':orgId',
+                builder: (_, state) => OrgReviewScreen(orgId: state.pathParameters['orgId']!),
+              ),
+            ],
+          ),
+          GoRoute(path: '/signalements', builder: (_, _) => const ReportsScreen()),
+          GoRoute(path: '/suppressions', builder: (_, _) => const DeletionRequestsScreen()),
+          GoRoute(path: '/equipe', builder: (_, _) => const TeamScreen()),
+          GoRoute(path: '/catalogues', builder: (_, _) => const CatalogsScreen()),
+          GoRoute(path: '/journal', builder: (_, _) => const AuditScreen()),
+        ],
+      ),
       GoRoute(path: '/connexion', builder: (_, _) => const SignInScreen(redirectTo: '/')),
       GoRoute(path: '/interdit', builder: (_, _) => const AdminForbiddenScreen()),
       GoRoute(

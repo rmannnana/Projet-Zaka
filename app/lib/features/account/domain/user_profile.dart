@@ -19,6 +19,8 @@ abstract class UserProfile with _$UserProfile {
     @Default(<String>[]) List<String> orgIds,
     @Default(<String>[]) List<String> fcmTokens,
     @Default(UserStatus.active) UserStatus status,
+    /// Rôle staff (copie lisible du custom claim, écrite par setUserRole).
+    String? staffRole,
     @TimestampConverter() DateTime? createdAt,
     @TimestampConverter() DateTime? updatedAt,
   }) = _UserProfile;

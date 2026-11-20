@@ -16,7 +16,8 @@
     "test:integration": "npm run build && firebase emulators:exec --project demo-zaka --only auth,firestore,storage,functions \"vitest run test/integration --testTimeout=30000 --hookTimeout=30000\"",
     "serve": "npm run build && firebase emulators:start --project demo-zaka --only auth,firestore,storage,functions",
     "deploy": "firebase deploy --only functions",
-    "set-role": "node scripts/set-role.mjs"
+    "set-role": "node scripts/set-role.mjs",
+    "seed-catalog": "node scripts/seed-catalog.mjs"
   },
   "dependencies": {
     "firebase-admin": "^13.10.0",

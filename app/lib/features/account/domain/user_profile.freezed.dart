@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserProfile {
 
-@JsonKey(includeToJson: false) String get id; String get displayName; String? get email; String? get phone; String? get photoUrl; String get country; String get locale; List<String> get orgIds; List<String> get fcmTokens; UserStatus get status;@TimestampConverter() DateTime? get createdAt;@TimestampConverter() DateTime? get updatedAt;
+@JsonKey(includeToJson: false) String get id; String get displayName; String? get email; String? get phone; String? get photoUrl; String get country; String get locale; List<String> get orgIds; List<String> get fcmTokens; UserStatus get status;/// Rôle staff (copie lisible du custom claim, écrite par setUserRole).
+ String? get staffRole;@TimestampConverter() DateTime? get createdAt;@TimestampConverter() DateTime? get updatedAt;
 /// Create a copy of UserProfile
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +29,16 @@ $UserProfileCopyWith<UserProfile> get copyWith => _$UserProfileCopyWithImpl<User
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserProfile&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.email, email) || other.email == email)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.country, country) || other.country == country)&&(identical(other.locale, locale) || other.locale == locale)&&const DeepCollectionEquality().equals(other.orgIds, orgIds)&&const DeepCollectionEquality().equals(other.fcmTokens, fcmTokens)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserProfile&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.email, email) || other.email == email)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.country, country) || other.country == country)&&(identical(other.locale, locale) || other.locale == locale)&&const DeepCollectionEquality().equals(other.orgIds, orgIds)&&const DeepCollectionEquality().equals(other.fcmTokens, fcmTokens)&&(identical(other.status, status) || other.status == status)&&(identical(other.staffRole, staffRole) || other.staffRole == staffRole)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,displayName,email,phone,photoUrl,country,locale,const DeepCollectionEquality().hash(orgIds),const DeepCollectionEquality().hash(fcmTokens),status,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,displayName,email,phone,photoUrl,country,locale,const DeepCollectionEquality().hash(orgIds),const DeepCollectionEquality().hash(fcmTokens),status,staffRole,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'UserProfile(id: $id, displayName: $displayName, email: $email, phone: $phone, photoUrl: $photoUrl, country: $country, locale: $locale, orgIds: $orgIds, fcmTokens: $fcmTokens, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'UserProfile(id: $id, displayName: $displayName, email: $email, phone: $phone, photoUrl: $photoUrl, country: $country, locale: $locale, orgIds: $orgIds, fcmTokens: $fcmTokens, status: $status, staffRole: $staffRole, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -48,7 +49,7 @@ abstract mixin class $UserProfileCopyWith<$Res>  {
   factory $UserProfileCopyWith(UserProfile value, $Res Function(UserProfile) _then) = _$UserProfileCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id, String displayName, String? email, String? phone, String? photoUrl, String country, String locale, List<String> orgIds, List<String> fcmTokens, UserStatus status,@TimestampConverter() DateTime? createdAt,@TimestampConverter() DateTime? updatedAt
+@JsonKey(includeToJson: false) String id, String displayName, String? email, String? phone, String? photoUrl, String country, String locale, List<String> orgIds, List<String> fcmTokens, UserStatus status, String? staffRole,@TimestampConverter() DateTime? createdAt,@TimestampConverter() DateTime? updatedAt
 });
 
 
@@ -65,7 +66,7 @@ class _$UserProfileCopyWithImpl<$Res>
 
 /// Create a copy of UserProfile
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? displayName = null,Object? email = freezed,Object? phone = freezed,Object? photoUrl = freezed,Object? country = null,Object? locale = null,Object? orgIds = null,Object? fcmTokens = null,Object? status = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? displayName = null,Object? email = freezed,Object? phone = freezed,Object? photoUrl = freezed,Object? country = null,Object? locale = null,Object? orgIds = null,Object? fcmTokens = null,Object? status = null,Object? staffRole = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
@@ -77,7 +78,8 @@ as String,locale: null == locale ? _self.locale : locale // ignore: cast_nullabl
 as String,orgIds: null == orgIds ? _self.orgIds : orgIds // ignore: cast_nullable_to_non_nullable
 as List<String>,fcmTokens: null == fcmTokens ? _self.fcmTokens : fcmTokens // ignore: cast_nullable_to_non_nullable
 as List<String>,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as UserStatus,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as UserStatus,staffRole: freezed == staffRole ? _self.staffRole : staffRole // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
@@ -164,10 +166,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String displayName,  String? email,  String? phone,  String? photoUrl,  String country,  String locale,  List<String> orgIds,  List<String> fcmTokens,  UserStatus status, @TimestampConverter()  DateTime? createdAt, @TimestampConverter()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String displayName,  String? email,  String? phone,  String? photoUrl,  String country,  String locale,  List<String> orgIds,  List<String> fcmTokens,  UserStatus status,  String? staffRole, @TimestampConverter()  DateTime? createdAt, @TimestampConverter()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserProfile() when $default != null:
-return $default(_that.id,_that.displayName,_that.email,_that.phone,_that.photoUrl,_that.country,_that.locale,_that.orgIds,_that.fcmTokens,_that.status,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.displayName,_that.email,_that.phone,_that.photoUrl,_that.country,_that.locale,_that.orgIds,_that.fcmTokens,_that.status,_that.staffRole,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -185,10 +187,10 @@ return $default(_that.id,_that.displayName,_that.email,_that.phone,_that.photoUr
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String displayName,  String? email,  String? phone,  String? photoUrl,  String country,  String locale,  List<String> orgIds,  List<String> fcmTokens,  UserStatus status, @TimestampConverter()  DateTime? createdAt, @TimestampConverter()  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String displayName,  String? email,  String? phone,  String? photoUrl,  String country,  String locale,  List<String> orgIds,  List<String> fcmTokens,  UserStatus status,  String? staffRole, @TimestampConverter()  DateTime? createdAt, @TimestampConverter()  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _UserProfile():
-return $default(_that.id,_that.displayName,_that.email,_that.phone,_that.photoUrl,_that.country,_that.locale,_that.orgIds,_that.fcmTokens,_that.status,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.displayName,_that.email,_that.phone,_that.photoUrl,_that.country,_that.locale,_that.orgIds,_that.fcmTokens,_that.status,_that.staffRole,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -205,10 +207,10 @@ return $default(_that.id,_that.displayName,_that.email,_that.phone,_that.photoUr
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id,  String displayName,  String? email,  String? phone,  String? photoUrl,  String country,  String locale,  List<String> orgIds,  List<String> fcmTokens,  UserStatus status, @TimestampConverter()  DateTime? createdAt, @TimestampConverter()  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id,  String displayName,  String? email,  String? phone,  String? photoUrl,  String country,  String locale,  List<String> orgIds,  List<String> fcmTokens,  UserStatus status,  String? staffRole, @TimestampConverter()  DateTime? createdAt, @TimestampConverter()  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _UserProfile() when $default != null:
-return $default(_that.id,_that.displayName,_that.email,_that.phone,_that.photoUrl,_that.country,_that.locale,_that.orgIds,_that.fcmTokens,_that.status,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.displayName,_that.email,_that.phone,_that.photoUrl,_that.country,_that.locale,_that.orgIds,_that.fcmTokens,_that.status,_that.staffRole,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -220,7 +222,7 @@ return $default(_that.id,_that.displayName,_that.email,_that.phone,_that.photoUr
 @JsonSerializable()
 
 class _UserProfile implements UserProfile {
-  const _UserProfile({@JsonKey(includeToJson: false) this.id = '', this.displayName = '', this.email, this.phone, this.photoUrl, this.country = 'BF', this.locale = 'fr', final  List<String> orgIds = const <String>[], final  List<String> fcmTokens = const <String>[], this.status = UserStatus.active, @TimestampConverter() this.createdAt, @TimestampConverter() this.updatedAt}): _orgIds = orgIds,_fcmTokens = fcmTokens;
+  const _UserProfile({@JsonKey(includeToJson: false) this.id = '', this.displayName = '', this.email, this.phone, this.photoUrl, this.country = 'BF', this.locale = 'fr', final  List<String> orgIds = const <String>[], final  List<String> fcmTokens = const <String>[], this.status = UserStatus.active, this.staffRole, @TimestampConverter() this.createdAt, @TimestampConverter() this.updatedAt}): _orgIds = orgIds,_fcmTokens = fcmTokens;
   factory _UserProfile.fromJson(Map<String, dynamic> json) => _$UserProfileFromJson(json);
 
 @override@JsonKey(includeToJson: false) final  String id;
@@ -245,6 +247,8 @@ class _UserProfile implements UserProfile {
 }
 
 @override@JsonKey() final  UserStatus status;
+/// Rôle staff (copie lisible du custom claim, écrite par setUserRole).
+@override final  String? staffRole;
 @override@TimestampConverter() final  DateTime? createdAt;
 @override@TimestampConverter() final  DateTime? updatedAt;
 
@@ -261,16 +265,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserProfile&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.email, email) || other.email == email)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.country, country) || other.country == country)&&(identical(other.locale, locale) || other.locale == locale)&&const DeepCollectionEquality().equals(other._orgIds, _orgIds)&&const DeepCollectionEquality().equals(other._fcmTokens, _fcmTokens)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserProfile&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.email, email) || other.email == email)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.country, country) || other.country == country)&&(identical(other.locale, locale) || other.locale == locale)&&const DeepCollectionEquality().equals(other._orgIds, _orgIds)&&const DeepCollectionEquality().equals(other._fcmTokens, _fcmTokens)&&(identical(other.status, status) || other.status == status)&&(identical(other.staffRole, staffRole) || other.staffRole == staffRole)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,displayName,email,phone,photoUrl,country,locale,const DeepCollectionEquality().hash(_orgIds),const DeepCollectionEquality().hash(_fcmTokens),status,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,displayName,email,phone,photoUrl,country,locale,const DeepCollectionEquality().hash(_orgIds),const DeepCollectionEquality().hash(_fcmTokens),status,staffRole,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'UserProfile(id: $id, displayName: $displayName, email: $email, phone: $phone, photoUrl: $photoUrl, country: $country, locale: $locale, orgIds: $orgIds, fcmTokens: $fcmTokens, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'UserProfile(id: $id, displayName: $displayName, email: $email, phone: $phone, photoUrl: $photoUrl, country: $country, locale: $locale, orgIds: $orgIds, fcmTokens: $fcmTokens, status: $status, staffRole: $staffRole, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -281,7 +285,7 @@ abstract mixin class _$UserProfileCopyWith<$Res> implements $UserProfileCopyWith
   factory _$UserProfileCopyWith(_UserProfile value, $Res Function(_UserProfile) _then) = __$UserProfileCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id, String displayName, String? email, String? phone, String? photoUrl, String country, String locale, List<String> orgIds, List<String> fcmTokens, UserStatus status,@TimestampConverter() DateTime? createdAt,@TimestampConverter() DateTime? updatedAt
+@JsonKey(includeToJson: false) String id, String displayName, String? email, String? phone, String? photoUrl, String country, String locale, List<String> orgIds, List<String> fcmTokens, UserStatus status, String? staffRole,@TimestampConverter() DateTime? createdAt,@TimestampConverter() DateTime? updatedAt
 });
 
 
@@ -298,7 +302,7 @@ class __$UserProfileCopyWithImpl<$Res>
 
 /// Create a copy of UserProfile
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? displayName = null,Object? email = freezed,Object? phone = freezed,Object? photoUrl = freezed,Object? country = null,Object? locale = null,Object? orgIds = null,Object? fcmTokens = null,Object? status = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? displayName = null,Object? email = freezed,Object? phone = freezed,Object? photoUrl = freezed,Object? country = null,Object? locale = null,Object? orgIds = null,Object? fcmTokens = null,Object? status = null,Object? staffRole = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_UserProfile(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
@@ -310,7 +314,8 @@ as String,locale: null == locale ? _self.locale : locale // ignore: cast_nullabl
 as String,orgIds: null == orgIds ? _self._orgIds : orgIds // ignore: cast_nullable_to_non_nullable
 as List<String>,fcmTokens: null == fcmTokens ? _self._fcmTokens : fcmTokens // ignore: cast_nullable_to_non_nullable
 as List<String>,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as UserStatus,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as UserStatus,staffRole: freezed == staffRole ? _self.staffRole : staffRole // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));

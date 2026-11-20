@@ -172,6 +172,7 @@ erDiagram
 | orgIds | string[] | 🔒 organisations dont l'utilisateur est membre |
 | fcmTokens | string[] | appareils pour les notifications push |
 | status | enum | `active` · `suspended` 🔒 |
+| staffRole | string? | 🔒 copie lisible du custom claim (`admin` · `moderator`), pour lister l'équipe |
 
 - `users/{uid}/favorites/{targetId}` → `{ targetType: hotel|property|project, addedAt }`
 - `users/{uid}/notifications/{id}` → `{ title, body, link, read }`
@@ -185,7 +186,8 @@ erDiagram
 | legal | map | `{ ifuNumber, rccmNumber, representativeName }` |
 | verification.status | enum | 🔒 `draft` · `pending` · `verified` · `rejected` · `suspended` |
 | verification.documents | map | `{ ifu, rccm, proofOfAddress }` : chemins Storage privés (vide pour un particulier) |
-| verification.reviewedBy / reviewedAt / note | | 🔒 |
+| verification.submittedAt / reviewedBy / reviewedAt / note | | 🔒 |
+| createdBy | string | 🔒 uid du créateur |
 | publishingMode | enum | 🔒 `direct` (pro vérifié) · `review` (particulier : chaque annonce est validée) |
 | subscriptionId | string? | 🔒 abonnement en cours |
 
@@ -466,7 +468,9 @@ Le détail des champs figure dans la version précédente du plan et sera repris
 | `onUserCreated` | Auth | Crée `users/{uid}` |
 | `submitOrgVerification` | Callable | Vérifie que les 3 pièces sont présentes, passe le compte en `pending`, alerte les modérateurs |
 | `reviewOrg` | Callable (modérateur) | Valide ou refuse le compte, notifie le pro, écrit l'audit |
-| `createIndividualOwnerOrg` | Callable | Crée l'organisation d'un particulier (téléphone vérifié obligatoire), en mode `review` |
+| `createOrganization` | Callable | Crée l'espace d'un pro (`draft`) ou d'un particulier (téléphone vérifié obligatoire, vérifié d'office, mode `review`) |
+| `addOrgMember` / `removeOrgMember` | Callable (propriétaire) | Gère les membres d'un compte pro ; le dernier propriétaire ne peut pas être retiré |
+| `syncProfileFromAuth` | Callable | Recopie dans le profil le téléphone et l'e-mail vérifiés par Firebase Auth |
 | `submitListingForReview` / `reviewListing` | Callable | Le particulier soumet son annonce ; le modérateur la publie ou la refuse avec motif. Notification et audit |
 | `setUserRole` | Callable (admin) | Pose les custom claims |
 | `createBookingRequest` | Callable | Valide les dates et la capacité, calcule l'estimation, fixe `expiresAt` à +48 h, notifie l'hôtel |
@@ -509,8 +513,8 @@ Le détail des champs figure dans la version précédente du plan et sera repris
 
 | Phase | Contenu | Livrable |
 |---|---|---|
-| **0. Setup** | Comptes et projets ([MISE_EN_PLACE.md](MISE_EN_PLACE.md)), flavors, CI, structure du code, design system, i18n | App vide déployée en dev |
-| **1. Socle** | Auth, profils, organisations, vérification pro (IFU, RCCM, justificatif), comptes particuliers, rôles, catalogues, admin de base, signalements, suppression de compte | Un pro peut créer son compte et se faire valider |
+| **0. Setup** ✅ (en local) | Comptes et projets ([MISE_EN_PLACE.md](MISE_EN_PLACE.md)), flavors, CI, structure du code, design system, i18n | App vide déployée en dev |
+| **1. Socle** ✅ (en local) | Auth, profils, organisations, vérification pro (IFU, RCCM, justificatif), comptes particuliers, rôles, catalogues, admin de base, signalements, suppression de compte. *La file de validation des annonces de particuliers arrive avec les annonces (phase 4)* | Un pro peut créer son compte et se faire valider |
 | **2. Facturation (simulée)** | Plans d'abonnement et règles de commission éditables dans l'admin, paiement simulé, registre des commissions | L'admin pilote les tarifs sans développeur |
 | **3. Hôtellerie** | Fiche hôtel, chambres, offres, disponibilités, recherche, demandes avec expiration à 48 h, paiement simulé, notifications | Parcours de réservation complet |
 | **4. Immobilier** | Biens, programmes et lots, recherche, leads, visites, espace pro, validation des annonces de particuliers | Parcours immobilier complet |

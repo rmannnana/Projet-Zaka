@@ -45,7 +45,8 @@ Pour **chaque** projet :
 
 | Service | Réglages à faire |
 |---|---|
-| ☐ **Authentication** | Activer Téléphone, E-mail/mot de passe et Google. Dans *Paramètres → Politique de région SMS*, **autoriser uniquement** les 8 pays UEMOA. Ajouter des numéros de test en dev |
+| ☐ **Authentication** | Activer Téléphone, E-mail/mot de passe et Google. Dans *Paramètres → Politique de région SMS*, **autoriser uniquement** les 8 pays UEMOA. Ajouter des numéros de test en dev. Dans *Paramètres → Domaines autorisés*, ajouter les domaines des deux sites web |
+| ☐ **Empreintes Android** | Ajouter les empreintes **SHA-1 et SHA-256** de chaque clé de signature (debug, upload, et clé Google Play App Signing) dans les paramètres de l'app Android. Indispensable pour la connexion par SMS (Play Integrity) et Google |
 | ☐ **Firestore** | Déployer `firestore.rules` et `firestore.indexes.json` depuis le dépôt (jamais à la main dans la console) |
 | ☐ **Storage** | Déployer `storage.rules`. Dossiers : `public/` (photos d'annonces) et `private/verification/` (IFU, RCCM, justificatifs) |
 | ☐ **Cloud Functions** | Déployées depuis le dossier `functions/` |
@@ -154,10 +155,10 @@ La publication sur Google Play peut être automatisée plus tard (piste interne 
 
 ## 5. Données et comptes de départ
 
-- ☐ Script `scripts/seed.ts` : catalogue des villes des 8 pays UEMOA (en commençant par le Burkina Faso : Ouagadougou, Bobo-Dioulasso, Koudougou…), équipements, types de biens
+- ☑ Script `functions/scripts/seed-catalog.mjs` (`npm run seed-catalog`) : villes des 8 pays UEMOA (Burkina Faso en tête), équipements, types de biens. À lancer une fois par projet, puis les listes se gèrent dans le back-office
 - ☐ Plan d'abonnement **« Gratuit »** et règle de commission par défaut (valeurs provisoires, modifiables ensuite dans l'admin)
 - ☐ `config/app` avec `bookingExpiryHours: 48`
-- ☐ Premier compte **admin** (custom claim posé par un script, une seule fois)
+- ☐ Premier compte **admin** : `npm run set-role -- email admin` (script prêt), une seule fois par projet ; les rôles suivants se donnent depuis le back-office
 - ☐ Comptes de test en dev/staging : 1 client, 1 hôtel vérifié, 1 agence vérifiée, 1 particulier, 1 modérateur
 - ☐ Jeu de démonstration : quelques hôtels, chambres et biens avec photos
 

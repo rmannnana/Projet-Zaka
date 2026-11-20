@@ -23,6 +23,7 @@ _UserProfile _$UserProfileFromJson(Map<String, dynamic> json) => _UserProfile(
   status:
       $enumDecodeNullable(_$UserStatusEnumMap, json['status']) ??
       UserStatus.active,
+  staffRole: json['staffRole'] as String?,
   createdAt: const TimestampConverter().fromJson(json['createdAt']),
   updatedAt: const TimestampConverter().fromJson(json['updatedAt']),
 );
@@ -38,6 +39,7 @@ Map<String, dynamic> _$UserProfileToJson(_UserProfile instance) =>
       'orgIds': instance.orgIds,
       'fcmTokens': instance.fcmTokens,
       'status': _$UserStatusEnumMap[instance.status]!,
+      'staffRole': ?instance.staffRole,
       'createdAt': ?const TimestampConverter().toJson(instance.createdAt),
       'updatedAt': ?const TimestampConverter().toJson(instance.updatedAt),
     };

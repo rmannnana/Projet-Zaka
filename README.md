@@ -50,6 +50,18 @@ flutter run -d chrome -t lib/main_admin.dart --dart-define=FLAVOR=dev   # back-o
 flutter run --flavor dev --dart-define=FLAVOR=dev --dart-define=EMULATOR_HOST=10.0.2.2   # émulateur Android
 ```
 
+### Données de départ
+
+```bash
+cd functions
+npm run seed-catalog     # villes UEMOA, équipements, types de biens
+```
+
+### Connexion par SMS en local
+
+L'émulateur n'envoie pas de SMS : le code apparaît dans la console des émulateurs
+(http://localhost:4000/auth) et dans le terminal qui les a lancés.
+
 ### Devenir admin en local
 
 1. Créer un compte depuis l'app (onglet **Compte**).
@@ -65,7 +77,8 @@ flutter run --flavor dev --dart-define=FLAVOR=dev --dart-define=EMULATOR_HOST=10
 ```bash
 cd app && flutter analyze && flutter test        # app
 cd functions && npm test                          # logique des Cloud Functions
-cd functions && npm run test:emulators            # règles de sécurité Firestore (émulateur)
+cd functions && npm run test:emulators            # règles de sécurité Firestore et Storage (émulateurs)
+cd functions && npm run test:integration          # parcours complets sur les émulateurs (Functions comprises)
 ```
 
 ## Génération de code

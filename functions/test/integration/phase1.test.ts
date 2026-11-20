@@ -6,6 +6,7 @@ import {
   connectAuthEmulator,
   createUserWithEmailAndPassword,
   getAuth,
+  signInWithCustomToken,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import {
@@ -159,6 +160,34 @@ describe("vérification d'un compte pro", () => {
     expect(actions).toEqual(
       expect.arrayContaining(["organization.create", "organization.reject", "organization.verify"]),
     );
+  });
+});
+
+describe("particulier", () => {
+  it("le numéro vérifié est recopié dans le profil, puis l'espace est créé vérifié d'office", async () => {
+    const phone = `+22507${String(suffix).slice(-8)}`;
+    const record = await adminAuth.createUser({ phoneNumber: phone, displayName: "Awa" });
+    const app = initializeApp({ projectId, apiKey: "demo-api-key" }, `awa-${suffix}`);
+    apps.push(app);
+    const auth = getAuth(app);
+    connectAuthEmulator(auth, `http://${host}:9099`, { disableWarnings: true });
+    const functions = getFunctions(app, "europe-west1");
+    connectFunctionsEmulator(functions, host, 5001);
+    await signInWithCustomToken(auth, await adminAuth.createCustomToken(record.uid));
+
+    await httpsCallable(functions, "syncProfileFromAuth")();
+    const profile = await adminDb.doc(`users/${record.uid}`).get();
+    expect(profile.get("phone")).toBe(phone);
+    expect(profile.get("country")).toBe("CI");
+
+    const { data } = await httpsCallable(functions, "createOrganization")({
+      type: "individual_owner",
+      name: "Awa K.",
+      contact: { phone, city: "Abidjan", country: "CI" },
+    });
+    const org = await adminDb.doc(`organizations/${(data as { orgId: string }).orgId}`).get();
+    expect(org.get("verification.status")).toBe("verified");
+    expect(org.get("publishingMode")).toBe("review");
   });
 });
 
