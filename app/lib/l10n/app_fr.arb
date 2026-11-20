@@ -70,5 +70,112 @@
   "accountAddPhone": "Ajouter un numéro de téléphone",
   "accountPhoneVerified": "Numéro vérifié",
   "accountEditName": "Modifier mon nom",
-  "accountNoName": "Ajoutez votre nom"
+  "accountNoName": "Ajoutez votre nom",
+  "proSpaces": "Espaces pro",
+  "proSpacesEmptyHint": "Publiez vos biens ou votre hôtel sur ZAKA",
+  "proSpacesCount": "{count, plural, =1{1 espace} other{{count} espaces}}",
+  "@proSpacesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "proCreate": "Publier sur ZAKA",
+  "proEmpty": "Vous n'avez pas encore d'espace pour publier. Créez-en un pour proposer vos biens ou votre hôtel.",
+  "proChooseType": "Vous êtes :",
+  "proIndividualIntro": "En tant que particulier, vous publiez vos biens sans document officiel. Chaque annonce est vérifiée par ZAKA avant sa mise en ligne.",
+  "proBusinessIntro": "Créez le profil public de votre entreprise. Vous enverrez ensuite votre dossier de vérification (IFU, RCCM, justificatif de résidence).",
+  "proCreateSubmit": "Créer l'espace",
+  "orgTypeHotel": "Hôtel",
+  "orgTypeAgency": "Agence immobilière",
+  "orgTypeDeveloper": "Promoteur immobilier",
+  "orgTypeIndividual": "Particulier",
+  "orgTypeHotelHelp": "Publiez vos chambres et recevez des demandes de réservation.",
+  "orgTypeAgencyHelp": "Publiez des biens à louer ou à vendre pour vos clients.",
+  "orgTypeDeveloperHelp": "Présentez vos programmes immobiliers et leurs lots.",
+  "orgTypeIndividualHelp": "Louez ou vendez votre propre bien. Numéro de téléphone vérifié requis.",
+  "orgName": "Nom de l'entreprise",
+  "orgPublicName": "Nom affiché sur vos annonces",
+  "orgPublicNameHelp": "Par exemple votre prénom et l'initiale de votre nom.",
+  "orgDescription": "Présentation",
+  "country": "Pays",
+  "city": "Ville",
+  "address": "Adresse ou quartier",
+  "contactPhone": "Téléphone de contact",
+  "contactEmail": "E-mail de contact (facultatif)",
+  "orgNotFound": "Espace introuvable.",
+  "orgEditProfile": "Profil public",
+  "orgMembers": "Membres",
+  "orgListings": "Annonces",
+  "statusDraft": "Dossier à compléter",
+  "statusPending": "En vérification",
+  "statusVerified": "Vérifié",
+  "statusRejected": "Dossier refusé",
+  "statusSuspended": "Suspendu",
+  "statusDraftHelp": "Envoyez votre dossier (IFU, RCCM, justificatif de résidence) pour pouvoir publier.",
+  "statusPendingHelp": "Votre dossier est en cours de vérification par l'équipe ZAKA.",
+  "statusPendingSince": "Dossier envoyé le {date}. L'équipe ZAKA le vérifie.",
+  "@statusPendingSince": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "statusVerifiedHelp": "Votre compte est vérifié : vos annonces sont publiées directement.",
+  "statusVerifiedIndividualHelp": "Vous pouvez publier. Chaque annonce est vérifiée par ZAKA avant sa mise en ligne.",
+  "statusRejectedHelp": "Votre dossier n'a pas été validé. Motif : {note}",
+  "@statusRejectedHelp": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "statusSuspendedHelp": "Ce compte est suspendu. Motif : {note}. Contactez ZAKA pour plus d'informations.",
+  "@statusSuspendedHelp": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "verificationFile": "Dossier de vérification",
+  "verificationComplete": "Compléter le dossier",
+  "verificationFix": "Corriger le dossier",
+  "verificationIntro": "Ces informations servent uniquement à vérifier votre entreprise. Elles ne sont pas affichées sur vos annonces.",
+  "verificationLocked": "Le dossier ne peut plus être modifié à ce stade.",
+  "verificationSubmit": "Envoyer le dossier",
+  "verificationSent": "Dossier envoyé. Vous serez notifié de la décision.",
+  "verificationPrivacy": "Vos pièces sont stockées dans un espace privé, accessible uniquement à votre équipe et aux modérateurs ZAKA.",
+  "legalInfo": "Informations légales",
+  "ifuNumber": "Numéro IFU",
+  "rccmNumber": "Numéro RCCM",
+  "representativeName": "Nom du représentant légal",
+  "documents": "Pièces justificatives",
+  "documentsHelp": "PDF ou photo lisible, 10 Mo au maximum.",
+  "documentIfu": "Attestation IFU",
+  "documentRccm": "Extrait RCCM",
+  "documentProofOfAddress": "Contrat de bail ou justificatif de résidence",
+  "documentReceived": "Pièce reçue",
+  "documentMissing": "À fournir",
+  "documentsMissing": "Ajoutez les trois pièces avant d'envoyer le dossier.",
+  "documentBadType": "Format accepté : PDF, JPG, PNG ou WEBP.",
+  "documentTooLarge": "Fichier trop lourd (10 Mo au maximum).",
+  "choose": "Choisir",
+  "replace": "Remplacer",
+  "memberAdd": "Ajouter un membre",
+  "memberAddHelp": "La personne doit déjà avoir un compte ZAKA avec cette adresse e-mail.",
+  "memberRemove": "Retirer",
+  "memberRemoveConfirm": "Retirer {name} de cet espace ?",
+  "@memberRemoveConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "roleOwner": "Propriétaire",
+  "roleEditor": "Éditeur"
 }

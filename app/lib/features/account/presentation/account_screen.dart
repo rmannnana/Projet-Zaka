@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../auth/data/auth_repository.dart';
+import '../../organizations/data/organization_repository.dart';
 import '../data/user_repository.dart';
 
 class AccountScreen extends ConsumerWidget {
@@ -40,6 +41,7 @@ class AccountScreen extends ConsumerWidget {
     }
 
     final name = profile?.displayName ?? user.displayName ?? '';
+    final orgCount = ref.watch(myOrganizationsProvider).value?.length ?? 0;
     return Scaffold(
       appBar: AppBar(title: Text(l10n.navAccount)),
       body: ListView(
@@ -66,6 +68,14 @@ class AccountScreen extends ConsumerWidget {
               title: Text(l10n.accountAddPhone),
               onTap: () => context.push('/compte/telephone'),
             ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.storefront_outlined),
+            title: Text(l10n.proSpaces),
+            subtitle: Text(orgCount == 0 ? l10n.proSpacesEmptyHint : l10n.proSpacesCount(orgCount)),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(orgCount == 0 ? '/pro/nouveau' : '/pro'),
+          ),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.logout),

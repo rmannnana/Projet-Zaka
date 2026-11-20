@@ -10,16 +10,33 @@ import '../features/auth/presentation/sign_in_screen.dart';
 import '../features/auth/presentation/verify_phone_screen.dart';
 import '../features/home/presentation/home_screen.dart';
 import '../features/home/presentation/home_shell.dart';
+import '../features/organizations/presentation/create_org_screen.dart';
+import '../features/organizations/presentation/members_screen.dart';
+import '../features/organizations/presentation/org_screen.dart';
+import '../features/organizations/presentation/pro_home_screen.dart';
+import '../features/organizations/presentation/verification_screen.dart';
 import '../core/widgets/coming_soon.dart';
 
 final _rootKey = GlobalKey<NavigatorState>();
 
 /// Routes de l'app publique (clients et espaces pros).
 final publicRouterProvider = Provider<GoRouter>((ref) {
+  final refresh = ValueNotifier(0);
+  ref.listen(authStateProvider, (_, _) => refresh.value++);
+
   final router = GoRouter(
     navigatorKey: _rootKey,
     initialLocation: '/',
+    refreshListenable: refresh,
     debugLogDiagnostics: kDebugMode,
+    // Espaces pros et vérification du numéro : connexion obligatoire.
+    redirect: (context, state) {
+      final path = state.matchedLocation;
+      final needsAuth = path.startsWith('/pro') || path == '/compte/telephone';
+      final auth = ref.read(authStateProvider);
+      if (!needsAuth || auth.isLoading || auth.value != null) return null;
+      return '/connexion?retour=${Uri.encodeComponent(state.uri.toString())}';
+    },
     routes: [
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) => HomeShell(shell: shell),
@@ -60,9 +77,42 @@ final publicRouterProvider = Provider<GoRouter>((ref) {
         parentNavigatorKey: _rootKey,
         builder: (_, state) => SignInScreen(redirectTo: state.uri.queryParameters['retour']),
       ),
+      GoRoute(
+        path: '/pro',
+        parentNavigatorKey: _rootKey,
+        builder: (_, _) => const ProHomeScreen(),
+        routes: [
+          GoRoute(
+            path: 'nouveau',
+            builder: (_, state) =>
+                CreateOrgScreen(type: orgTypeFromParam(state.uri.queryParameters['type'])),
+          ),
+          GoRoute(
+            path: ':orgId',
+            builder: (_, state) => OrgScreen(orgId: state.pathParameters['orgId']!),
+            routes: [
+              GoRoute(
+                path: 'dossier',
+                builder: (_, state) => VerificationScreen(orgId: state.pathParameters['orgId']!),
+              ),
+              GoRoute(
+                path: 'profil',
+                builder: (_, state) => EditOrgScreen(orgId: state.pathParameters['orgId']!),
+              ),
+              GoRoute(
+                path: 'membres',
+                builder: (_, state) => MembersScreen(orgId: state.pathParameters['orgId']!),
+              ),
+            ],
+          ),
+        ],
+      ),
     ],
   );
-  ref.onDispose(router.dispose);
+  ref.onDispose(() {
+    router.dispose();
+    refresh.dispose();
+  });
   return router;
 });
 

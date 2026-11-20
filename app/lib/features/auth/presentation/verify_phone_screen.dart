@@ -32,7 +32,7 @@ class VerifyPhoneScreen extends StatelessWidget {
                     SnackBar(content: Text(l10n.phoneVerified)),
                   );
                   if (redirectTo != null) {
-                    context.go(redirectTo!);
+                    context.pushReplacement(redirectTo!);
                   } else {
                     context.pop();
                   }
