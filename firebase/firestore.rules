@@ -90,8 +90,11 @@ service cloud.firestore {
       allow read: if true;
       // Création, vérification, mode de publication : via Cloud Functions.
       allow create, delete: if false;
+      // Les données légales (IFU, RCCM, représentant) sont figées dès l'envoi du dossier.
       allow update: if isOrgOwner(orgId)
-        && keeps(['type', 'verification', 'publishingMode', 'subscriptionId', 'createdAt']);
+        && keeps(['type', 'verification', 'publishingMode', 'subscriptionId', 'createdBy',
+                  'createdAt', 'deletedAt'])
+        && (keeps(['legal']) || resource.data.verification.status in ['draft', 'rejected']);
 
       match /members/{memberUid} {
         allow read: if isMember(orgId) || isStaff();
@@ -266,8 +269,13 @@ service cloud.firestore {
 
     match /reports/{reportId} {
       allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(
+             ['targetType', 'targetId', 'reporterUid', 'reason', 'details', 'status', 'createdAt'])
         && request.resource.data.reporterUid == request.auth.uid
-        && request.resource.data.status == 'open';
+        && request.resource.data.status == 'open'
+        && request.resource.data.targetType in ['hotel', 'property', 'project', 'organization']
+        && request.resource.data.reason is string
+        && request.resource.data.createdAt == request.time;
       allow read: if isStaff();
       allow update: if isStaff() && onlyChanges(['status', 'resolution', 'handledBy', 'updatedAt']);
       allow delete: if false;
@@ -275,8 +283,10 @@ service cloud.firestore {
 
     match /deletionRequests/{requestId} {
       allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['uid', 'status', 'reason', 'requestedAt'])
         && request.resource.data.uid == request.auth.uid
-        && request.resource.data.status == 'pending';
+        && request.resource.data.status == 'pending'
+        && request.resource.data.requestedAt == request.time;
       allow read: if isSelf(resource.data.uid) || isStaff();
       allow update, delete: if false;
     }

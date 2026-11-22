@@ -1,64 +1,105 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../auth/data/auth_repository.dart';
+import '../data/admin_repository.dart';
 
-/// Accueil du back-office. Les files de travail (vérification des comptes,
-/// validation des annonces, signalements, suppressions) arrivent en phase 1.
+/// Accueil du back-office : files de travail en attente et chiffres clés.
 class AdminDashboardScreen extends ConsumerWidget {
   const AdminDashboardScreen({super.key});
 
-  static const _queues = [
-    (Icons.verified_user_outlined, 'Comptes pros à vérifier'),
-    (Icons.fact_check_outlined, 'Annonces de particuliers à valider'),
-    (Icons.flag_outlined, 'Signalements'),
-    (Icons.person_remove_outlined, 'Demandes de suppression de données'),
-    (Icons.percent, 'Commissions et abonnements'),
-    (Icons.history, "Journal d'activité"),
-  ];
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
-    final role = ref.watch(staffRoleProvider).value;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.adminTitle),
-        actions: [
-          if (role != null) Padding(padding: const EdgeInsets.only(right: 8), child: Chip(label: Text(role))),
-          IconButton(
-            tooltip: l10n.signOut,
-            icon: const Icon(Icons.logout),
-            onPressed: () => ref.read(authRepositoryProvider).signOut(),
-          ),
-        ],
+    final counters = ref.watch(adminCountersProvider);
+    return RefreshIndicator(
+      onRefresh: () => ref.refresh(adminCountersProvider.future),
+      child: counters.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(child: Text('Chargement impossible : $e')),
+        data: (c) => ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            Text('À traiter', style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              children: [
+                _Tile('Comptes pros à vérifier', c.pendingOrgs, Icons.verified_user_outlined, '/comptes'),
+                _Tile('Signalements ouverts', c.openReports, Icons.flag_outlined, '/signalements'),
+                _Tile('Demandes de suppression', c.pendingDeletions, Icons.person_remove_outlined, '/suppressions'),
+                const _Tile(
+                  'Annonces de particuliers à valider',
+                  null,
+                  Icons.fact_check_outlined,
+                  null,
+                  note: 'Avec les annonces immobilières (phase 4)',
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            Text('Plateforme', style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              children: [
+                _Tile('Utilisateurs inscrits', c.users, Icons.people_outline, null),
+                _Tile('Comptes pros vérifiés', c.verifiedOrgs, Icons.storefront_outlined, '/comptes'),
+              ],
+            ),
+          ],
+        ),
       ),
-      body: GridView.extent(
-        maxCrossAxisExtent: 320,
-        padding: const EdgeInsets.all(16),
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
-        childAspectRatio: 2.2,
-        children: [
-          for (final (icon, label) in _queues)
-            Card.outlined(
-              child: InkWell(
-                onTap: () => ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(l10n.comingSoon))),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
+    );
+  }
+}
+
+class _Tile extends StatelessWidget {
+  const _Tile(this.label, this.count, this.icon, this.path, {this.note});
+
+  final String label;
+  final int? count;
+  final IconData icon;
+  final String? path;
+  final String? note;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final highlight = (count ?? 0) > 0 && path != null;
+    return SizedBox(
+      width: 280,
+      child: Card.outlined(
+        child: InkWell(
+          onTap: path == null ? null : () => context.go(path!),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Icon(icon, size: 32, color: highlight ? theme.colorScheme.primary : null),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(icon, size: 32),
-                      const SizedBox(width: 12),
-                      Expanded(child: Text(label)),
+                      Text(
+                        count?.toString() ?? '-',
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          color: highlight ? theme.colorScheme.primary : null,
+                        ),
+                      ),
+                      Text(label),
+                      if (note != null) Text(note!, style: theme.textTheme.bodySmall),
                     ],
                   ),
                 ),
-              ),
+              ],
             ),
-        ],
+          ),
+        ),
       ),
     );
   }

@@ -22,6 +22,8 @@ abstract class Organization with _$Organization {
     @Default(Verification()) Verification verification,
     @Default(PublishingMode.direct) PublishingMode publishingMode,
     String? subscriptionId,
+    String? createdBy,
+    @TimestampConverter() DateTime? deletedAt,
     @TimestampConverter() DateTime? createdAt,
     @TimestampConverter() DateTime? updatedAt,
   }) = _Organization;
@@ -36,6 +38,12 @@ abstract class Organization with _$Organization {
   bool get canPublishHotels => type == OrgType.hotel;
   bool get canPublishProjects => type == OrgType.developer;
   bool get canPublishProperties => type != OrgType.hotel;
+
+  /// Un pro peut compléter et (re)envoyer son dossier.
+  bool get canEditVerification =>
+      type.requiresDocuments &&
+      (verification.status == VerificationStatus.draft ||
+          verification.status == VerificationStatus.rejected);
 }
 
 @JsonEnum(fieldRename: FieldRename.snake)
@@ -58,10 +66,11 @@ enum PublishingMode { direct, review }
 @freezed
 abstract class OrgContact with _$OrgContact {
   const factory OrgContact({
-    required String phone,
+    // Valeurs par défaut : un espace particulier anonymisé n'a plus de contact.
+    @Default('') String phone,
     String? email,
     String? address,
-    required String city,
+    @Default('') String city,
     @Default('BF') String country,
   }) = _OrgContact;
 
@@ -98,6 +107,7 @@ abstract class Verification with _$Verification {
   const factory Verification({
     @Default(VerificationStatus.draft) VerificationStatus status,
     @Default(VerificationDocuments()) VerificationDocuments documents,
+    @TimestampConverter() DateTime? submittedAt,
     String? reviewedBy,
     @TimestampConverter() DateTime? reviewedAt,
     String? note,
@@ -105,3 +115,19 @@ abstract class Verification with _$Verification {
 
   factory Verification.fromJson(Map<String, dynamic> json) => _$VerificationFromJson(json);
 }
+
+/// Document `organizations/{orgId}/members/{uid}`.
+@freezed
+abstract class OrgMember with _$OrgMember {
+  const factory OrgMember({
+    @JsonKey(includeToJson: false) @Default('') String id,
+    required OrgRole role,
+    String? displayName,
+    String? email,
+    @TimestampConverter() DateTime? addedAt,
+  }) = _OrgMember;
+
+  factory OrgMember.fromJson(Map<String, dynamic> json) => _$OrgMemberFromJson(json);
+}
+
+enum OrgRole { owner, editor }

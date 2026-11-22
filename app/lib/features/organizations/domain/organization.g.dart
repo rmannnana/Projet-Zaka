@@ -27,6 +27,8 @@ _Organization _$OrganizationFromJson(Map<String, dynamic> json) =>
           ) ??
           PublishingMode.direct,
       subscriptionId: json['subscriptionId'] as String?,
+      createdBy: json['createdBy'] as String?,
+      deletedAt: const TimestampConverter().fromJson(json['deletedAt']),
       createdAt: const TimestampConverter().fromJson(json['createdAt']),
       updatedAt: const TimestampConverter().fromJson(json['updatedAt']),
     );
@@ -42,6 +44,8 @@ Map<String, dynamic> _$OrganizationToJson(_Organization instance) =>
       'verification': instance.verification.toJson(),
       'publishingMode': _$PublishingModeEnumMap[instance.publishingMode]!,
       'subscriptionId': ?instance.subscriptionId,
+      'createdBy': ?instance.createdBy,
+      'deletedAt': ?const TimestampConverter().toJson(instance.deletedAt),
       'createdAt': ?const TimestampConverter().toJson(instance.createdAt),
       'updatedAt': ?const TimestampConverter().toJson(instance.updatedAt),
     };
@@ -59,10 +63,10 @@ const _$PublishingModeEnumMap = {
 };
 
 _OrgContact _$OrgContactFromJson(Map<String, dynamic> json) => _OrgContact(
-  phone: json['phone'] as String,
+  phone: json['phone'] as String? ?? '',
   email: json['email'] as String?,
   address: json['address'] as String?,
-  city: json['city'] as String,
+  city: json['city'] as String? ?? '',
   country: json['country'] as String? ?? 'BF',
 );
 
@@ -113,6 +117,7 @@ _Verification _$VerificationFromJson(Map<String, dynamic> json) =>
           : VerificationDocuments.fromJson(
               json['documents'] as Map<String, dynamic>,
             ),
+      submittedAt: const TimestampConverter().fromJson(json['submittedAt']),
       reviewedBy: json['reviewedBy'] as String?,
       reviewedAt: const TimestampConverter().fromJson(json['reviewedAt']),
       note: json['note'] as String?,
@@ -122,6 +127,7 @@ Map<String, dynamic> _$VerificationToJson(_Verification instance) =>
     <String, dynamic>{
       'status': _$VerificationStatusEnumMap[instance.status]!,
       'documents': instance.documents.toJson(),
+      'submittedAt': ?const TimestampConverter().toJson(instance.submittedAt),
       'reviewedBy': ?instance.reviewedBy,
       'reviewedAt': ?const TimestampConverter().toJson(instance.reviewedAt),
       'note': ?instance.note,
@@ -134,3 +140,21 @@ const _$VerificationStatusEnumMap = {
   VerificationStatus.rejected: 'rejected',
   VerificationStatus.suspended: 'suspended',
 };
+
+_OrgMember _$OrgMemberFromJson(Map<String, dynamic> json) => _OrgMember(
+  id: json['id'] as String? ?? '',
+  role: $enumDecode(_$OrgRoleEnumMap, json['role']),
+  displayName: json['displayName'] as String?,
+  email: json['email'] as String?,
+  addedAt: const TimestampConverter().fromJson(json['addedAt']),
+);
+
+Map<String, dynamic> _$OrgMemberToJson(_OrgMember instance) =>
+    <String, dynamic>{
+      'role': _$OrgRoleEnumMap[instance.role]!,
+      'displayName': ?instance.displayName,
+      'email': ?instance.email,
+      'addedAt': ?const TimestampConverter().toJson(instance.addedAt),
+    };
+
+const _$OrgRoleEnumMap = {OrgRole.owner: 'owner', OrgRole.editor: 'editor'};

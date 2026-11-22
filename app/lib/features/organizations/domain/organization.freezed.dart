@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Organization {
 
-@JsonKey(includeToJson: false) String get id; OrgType get type; String get name; String get description; String? get logoUrl; OrgContact get contact; OrgLegal? get legal; Verification get verification; PublishingMode get publishingMode; String? get subscriptionId;@TimestampConverter() DateTime? get createdAt;@TimestampConverter() DateTime? get updatedAt;
+@JsonKey(includeToJson: false) String get id; OrgType get type; String get name; String get description; String? get logoUrl; OrgContact get contact; OrgLegal? get legal; Verification get verification; PublishingMode get publishingMode; String? get subscriptionId; String? get createdBy;@TimestampConverter() DateTime? get deletedAt;@TimestampConverter() DateTime? get createdAt;@TimestampConverter() DateTime? get updatedAt;
 /// Create a copy of Organization
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $OrganizationCopyWith<Organization> get copyWith => _$OrganizationCopyWithImpl<O
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Organization&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl)&&(identical(other.contact, contact) || other.contact == contact)&&(identical(other.legal, legal) || other.legal == legal)&&(identical(other.verification, verification) || other.verification == verification)&&(identical(other.publishingMode, publishingMode) || other.publishingMode == publishingMode)&&(identical(other.subscriptionId, subscriptionId) || other.subscriptionId == subscriptionId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Organization&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl)&&(identical(other.contact, contact) || other.contact == contact)&&(identical(other.legal, legal) || other.legal == legal)&&(identical(other.verification, verification) || other.verification == verification)&&(identical(other.publishingMode, publishingMode) || other.publishingMode == publishingMode)&&(identical(other.subscriptionId, subscriptionId) || other.subscriptionId == subscriptionId)&&(identical(other.createdBy, createdBy) || other.createdBy == createdBy)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,type,name,description,logoUrl,contact,legal,verification,publishingMode,subscriptionId,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,type,name,description,logoUrl,contact,legal,verification,publishingMode,subscriptionId,createdBy,deletedAt,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'Organization(id: $id, type: $type, name: $name, description: $description, logoUrl: $logoUrl, contact: $contact, legal: $legal, verification: $verification, publishingMode: $publishingMode, subscriptionId: $subscriptionId, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'Organization(id: $id, type: $type, name: $name, description: $description, logoUrl: $logoUrl, contact: $contact, legal: $legal, verification: $verification, publishingMode: $publishingMode, subscriptionId: $subscriptionId, createdBy: $createdBy, deletedAt: $deletedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $OrganizationCopyWith<$Res>  {
   factory $OrganizationCopyWith(Organization value, $Res Function(Organization) _then) = _$OrganizationCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id, OrgType type, String name, String description, String? logoUrl, OrgContact contact, OrgLegal? legal, Verification verification, PublishingMode publishingMode, String? subscriptionId,@TimestampConverter() DateTime? createdAt,@TimestampConverter() DateTime? updatedAt
+@JsonKey(includeToJson: false) String id, OrgType type, String name, String description, String? logoUrl, OrgContact contact, OrgLegal? legal, Verification verification, PublishingMode publishingMode, String? subscriptionId, String? createdBy,@TimestampConverter() DateTime? deletedAt,@TimestampConverter() DateTime? createdAt,@TimestampConverter() DateTime? updatedAt
 });
 
 
@@ -65,7 +65,7 @@ class _$OrganizationCopyWithImpl<$Res>
 
 /// Create a copy of Organization
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? name = null,Object? description = null,Object? logoUrl = freezed,Object? contact = null,Object? legal = freezed,Object? verification = null,Object? publishingMode = null,Object? subscriptionId = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? name = null,Object? description = null,Object? logoUrl = freezed,Object? contact = null,Object? legal = freezed,Object? verification = null,Object? publishingMode = null,Object? subscriptionId = freezed,Object? createdBy = freezed,Object? deletedAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -77,7 +77,9 @@ as OrgContact,legal: freezed == legal ? _self.legal : legal // ignore: cast_null
 as OrgLegal?,verification: null == verification ? _self.verification : verification // ignore: cast_nullable_to_non_nullable
 as Verification,publishingMode: null == publishingMode ? _self.publishingMode : publishingMode // ignore: cast_nullable_to_non_nullable
 as PublishingMode,subscriptionId: freezed == subscriptionId ? _self.subscriptionId : subscriptionId // ignore: cast_nullable_to_non_nullable
-as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String?,createdBy: freezed == createdBy ? _self.createdBy : createdBy // ignore: cast_nullable_to_non_nullable
+as String?,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
@@ -194,10 +196,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  OrgType type,  String name,  String description,  String? logoUrl,  OrgContact contact,  OrgLegal? legal,  Verification verification,  PublishingMode publishingMode,  String? subscriptionId, @TimestampConverter()  DateTime? createdAt, @TimestampConverter()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  OrgType type,  String name,  String description,  String? logoUrl,  OrgContact contact,  OrgLegal? legal,  Verification verification,  PublishingMode publishingMode,  String? subscriptionId,  String? createdBy, @TimestampConverter()  DateTime? deletedAt, @TimestampConverter()  DateTime? createdAt, @TimestampConverter()  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Organization() when $default != null:
-return $default(_that.id,_that.type,_that.name,_that.description,_that.logoUrl,_that.contact,_that.legal,_that.verification,_that.publishingMode,_that.subscriptionId,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.type,_that.name,_that.description,_that.logoUrl,_that.contact,_that.legal,_that.verification,_that.publishingMode,_that.subscriptionId,_that.createdBy,_that.deletedAt,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -215,10 +217,10 @@ return $default(_that.id,_that.type,_that.name,_that.description,_that.logoUrl,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  OrgType type,  String name,  String description,  String? logoUrl,  OrgContact contact,  OrgLegal? legal,  Verification verification,  PublishingMode publishingMode,  String? subscriptionId, @TimestampConverter()  DateTime? createdAt, @TimestampConverter()  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  OrgType type,  String name,  String description,  String? logoUrl,  OrgContact contact,  OrgLegal? legal,  Verification verification,  PublishingMode publishingMode,  String? subscriptionId,  String? createdBy, @TimestampConverter()  DateTime? deletedAt, @TimestampConverter()  DateTime? createdAt, @TimestampConverter()  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Organization():
-return $default(_that.id,_that.type,_that.name,_that.description,_that.logoUrl,_that.contact,_that.legal,_that.verification,_that.publishingMode,_that.subscriptionId,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.type,_that.name,_that.description,_that.logoUrl,_that.contact,_that.legal,_that.verification,_that.publishingMode,_that.subscriptionId,_that.createdBy,_that.deletedAt,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -235,10 +237,10 @@ return $default(_that.id,_that.type,_that.name,_that.description,_that.logoUrl,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id,  OrgType type,  String name,  String description,  String? logoUrl,  OrgContact contact,  OrgLegal? legal,  Verification verification,  PublishingMode publishingMode,  String? subscriptionId, @TimestampConverter()  DateTime? createdAt, @TimestampConverter()  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id,  OrgType type,  String name,  String description,  String? logoUrl,  OrgContact contact,  OrgLegal? legal,  Verification verification,  PublishingMode publishingMode,  String? subscriptionId,  String? createdBy, @TimestampConverter()  DateTime? deletedAt, @TimestampConverter()  DateTime? createdAt, @TimestampConverter()  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Organization() when $default != null:
-return $default(_that.id,_that.type,_that.name,_that.description,_that.logoUrl,_that.contact,_that.legal,_that.verification,_that.publishingMode,_that.subscriptionId,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.type,_that.name,_that.description,_that.logoUrl,_that.contact,_that.legal,_that.verification,_that.publishingMode,_that.subscriptionId,_that.createdBy,_that.deletedAt,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -250,7 +252,7 @@ return $default(_that.id,_that.type,_that.name,_that.description,_that.logoUrl,_
 @JsonSerializable()
 
 class _Organization extends Organization {
-  const _Organization({@JsonKey(includeToJson: false) this.id = '', required this.type, required this.name, this.description = '', this.logoUrl, required this.contact, this.legal, this.verification = const Verification(), this.publishingMode = PublishingMode.direct, this.subscriptionId, @TimestampConverter() this.createdAt, @TimestampConverter() this.updatedAt}): super._();
+  const _Organization({@JsonKey(includeToJson: false) this.id = '', required this.type, required this.name, this.description = '', this.logoUrl, required this.contact, this.legal, this.verification = const Verification(), this.publishingMode = PublishingMode.direct, this.subscriptionId, this.createdBy, @TimestampConverter() this.deletedAt, @TimestampConverter() this.createdAt, @TimestampConverter() this.updatedAt}): super._();
   factory _Organization.fromJson(Map<String, dynamic> json) => _$OrganizationFromJson(json);
 
 @override@JsonKey(includeToJson: false) final  String id;
@@ -263,6 +265,8 @@ class _Organization extends Organization {
 @override@JsonKey() final  Verification verification;
 @override@JsonKey() final  PublishingMode publishingMode;
 @override final  String? subscriptionId;
+@override final  String? createdBy;
+@override@TimestampConverter() final  DateTime? deletedAt;
 @override@TimestampConverter() final  DateTime? createdAt;
 @override@TimestampConverter() final  DateTime? updatedAt;
 
@@ -279,16 +283,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Organization&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl)&&(identical(other.contact, contact) || other.contact == contact)&&(identical(other.legal, legal) || other.legal == legal)&&(identical(other.verification, verification) || other.verification == verification)&&(identical(other.publishingMode, publishingMode) || other.publishingMode == publishingMode)&&(identical(other.subscriptionId, subscriptionId) || other.subscriptionId == subscriptionId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Organization&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl)&&(identical(other.contact, contact) || other.contact == contact)&&(identical(other.legal, legal) || other.legal == legal)&&(identical(other.verification, verification) || other.verification == verification)&&(identical(other.publishingMode, publishingMode) || other.publishingMode == publishingMode)&&(identical(other.subscriptionId, subscriptionId) || other.subscriptionId == subscriptionId)&&(identical(other.createdBy, createdBy) || other.createdBy == createdBy)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,type,name,description,logoUrl,contact,legal,verification,publishingMode,subscriptionId,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,type,name,description,logoUrl,contact,legal,verification,publishingMode,subscriptionId,createdBy,deletedAt,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'Organization(id: $id, type: $type, name: $name, description: $description, logoUrl: $logoUrl, contact: $contact, legal: $legal, verification: $verification, publishingMode: $publishingMode, subscriptionId: $subscriptionId, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'Organization(id: $id, type: $type, name: $name, description: $description, logoUrl: $logoUrl, contact: $contact, legal: $legal, verification: $verification, publishingMode: $publishingMode, subscriptionId: $subscriptionId, createdBy: $createdBy, deletedAt: $deletedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -299,7 +303,7 @@ abstract mixin class _$OrganizationCopyWith<$Res> implements $OrganizationCopyWi
   factory _$OrganizationCopyWith(_Organization value, $Res Function(_Organization) _then) = __$OrganizationCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id, OrgType type, String name, String description, String? logoUrl, OrgContact contact, OrgLegal? legal, Verification verification, PublishingMode publishingMode, String? subscriptionId,@TimestampConverter() DateTime? createdAt,@TimestampConverter() DateTime? updatedAt
+@JsonKey(includeToJson: false) String id, OrgType type, String name, String description, String? logoUrl, OrgContact contact, OrgLegal? legal, Verification verification, PublishingMode publishingMode, String? subscriptionId, String? createdBy,@TimestampConverter() DateTime? deletedAt,@TimestampConverter() DateTime? createdAt,@TimestampConverter() DateTime? updatedAt
 });
 
 
@@ -316,7 +320,7 @@ class __$OrganizationCopyWithImpl<$Res>
 
 /// Create a copy of Organization
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? name = null,Object? description = null,Object? logoUrl = freezed,Object? contact = null,Object? legal = freezed,Object? verification = null,Object? publishingMode = null,Object? subscriptionId = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? name = null,Object? description = null,Object? logoUrl = freezed,Object? contact = null,Object? legal = freezed,Object? verification = null,Object? publishingMode = null,Object? subscriptionId = freezed,Object? createdBy = freezed,Object? deletedAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_Organization(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -328,7 +332,9 @@ as OrgContact,legal: freezed == legal ? _self.legal : legal // ignore: cast_null
 as OrgLegal?,verification: null == verification ? _self.verification : verification // ignore: cast_nullable_to_non_nullable
 as Verification,publishingMode: null == publishingMode ? _self.publishingMode : publishingMode // ignore: cast_nullable_to_non_nullable
 as PublishingMode,subscriptionId: freezed == subscriptionId ? _self.subscriptionId : subscriptionId // ignore: cast_nullable_to_non_nullable
-as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String?,createdBy: freezed == createdBy ? _self.createdBy : createdBy // ignore: cast_nullable_to_non_nullable
+as String?,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
@@ -371,6 +377,7 @@ $VerificationCopyWith<$Res> get verification {
 /// @nodoc
 mixin _$OrgContact {
 
+// Valeurs par défaut : un espace particulier anonymisé n'a plus de contact.
  String get phone; String? get email; String? get address; String get city; String get country;
 /// Create a copy of OrgContact
 /// with the given fields replaced by the non-null parameter values.
@@ -569,13 +576,14 @@ return $default(_that.phone,_that.email,_that.address,_that.city,_that.country);
 @JsonSerializable()
 
 class _OrgContact implements OrgContact {
-  const _OrgContact({required this.phone, this.email, this.address, required this.city, this.country = 'BF'});
+  const _OrgContact({this.phone = '', this.email, this.address, this.city = '', this.country = 'BF'});
   factory _OrgContact.fromJson(Map<String, dynamic> json) => _$OrgContactFromJson(json);
 
-@override final  String phone;
+// Valeurs par défaut : un espace particulier anonymisé n'a plus de contact.
+@override@JsonKey() final  String phone;
 @override final  String? email;
 @override final  String? address;
-@override final  String city;
+@override@JsonKey() final  String city;
 @override@JsonKey() final  String country;
 
 /// Create a copy of OrgContact
@@ -1184,7 +1192,7 @@ as String?,
 /// @nodoc
 mixin _$Verification {
 
- VerificationStatus get status; VerificationDocuments get documents; String? get reviewedBy;@TimestampConverter() DateTime? get reviewedAt; String? get note;
+ VerificationStatus get status; VerificationDocuments get documents;@TimestampConverter() DateTime? get submittedAt; String? get reviewedBy;@TimestampConverter() DateTime? get reviewedAt; String? get note;
 /// Create a copy of Verification
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1197,16 +1205,16 @@ $VerificationCopyWith<Verification> get copyWith => _$VerificationCopyWithImpl<V
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Verification&&(identical(other.status, status) || other.status == status)&&(identical(other.documents, documents) || other.documents == documents)&&(identical(other.reviewedBy, reviewedBy) || other.reviewedBy == reviewedBy)&&(identical(other.reviewedAt, reviewedAt) || other.reviewedAt == reviewedAt)&&(identical(other.note, note) || other.note == note));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Verification&&(identical(other.status, status) || other.status == status)&&(identical(other.documents, documents) || other.documents == documents)&&(identical(other.submittedAt, submittedAt) || other.submittedAt == submittedAt)&&(identical(other.reviewedBy, reviewedBy) || other.reviewedBy == reviewedBy)&&(identical(other.reviewedAt, reviewedAt) || other.reviewedAt == reviewedAt)&&(identical(other.note, note) || other.note == note));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,status,documents,reviewedBy,reviewedAt,note);
+int get hashCode => Object.hash(runtimeType,status,documents,submittedAt,reviewedBy,reviewedAt,note);
 
 @override
 String toString() {
-  return 'Verification(status: $status, documents: $documents, reviewedBy: $reviewedBy, reviewedAt: $reviewedAt, note: $note)';
+  return 'Verification(status: $status, documents: $documents, submittedAt: $submittedAt, reviewedBy: $reviewedBy, reviewedAt: $reviewedAt, note: $note)';
 }
 
 
@@ -1217,7 +1225,7 @@ abstract mixin class $VerificationCopyWith<$Res>  {
   factory $VerificationCopyWith(Verification value, $Res Function(Verification) _then) = _$VerificationCopyWithImpl;
 @useResult
 $Res call({
- VerificationStatus status, VerificationDocuments documents, String? reviewedBy,@TimestampConverter() DateTime? reviewedAt, String? note
+ VerificationStatus status, VerificationDocuments documents,@TimestampConverter() DateTime? submittedAt, String? reviewedBy,@TimestampConverter() DateTime? reviewedAt, String? note
 });
 
 
@@ -1234,11 +1242,12 @@ class _$VerificationCopyWithImpl<$Res>
 
 /// Create a copy of Verification
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? documents = null,Object? reviewedBy = freezed,Object? reviewedAt = freezed,Object? note = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? documents = null,Object? submittedAt = freezed,Object? reviewedBy = freezed,Object? reviewedAt = freezed,Object? note = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as VerificationStatus,documents: null == documents ? _self.documents : documents // ignore: cast_nullable_to_non_nullable
-as VerificationDocuments,reviewedBy: freezed == reviewedBy ? _self.reviewedBy : reviewedBy // ignore: cast_nullable_to_non_nullable
+as VerificationDocuments,submittedAt: freezed == submittedAt ? _self.submittedAt : submittedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,reviewedBy: freezed == reviewedBy ? _self.reviewedBy : reviewedBy // ignore: cast_nullable_to_non_nullable
 as String?,reviewedAt: freezed == reviewedAt ? _self.reviewedAt : reviewedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,note: freezed == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -1335,10 +1344,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( VerificationStatus status,  VerificationDocuments documents,  String? reviewedBy, @TimestampConverter()  DateTime? reviewedAt,  String? note)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( VerificationStatus status,  VerificationDocuments documents, @TimestampConverter()  DateTime? submittedAt,  String? reviewedBy, @TimestampConverter()  DateTime? reviewedAt,  String? note)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Verification() when $default != null:
-return $default(_that.status,_that.documents,_that.reviewedBy,_that.reviewedAt,_that.note);case _:
+return $default(_that.status,_that.documents,_that.submittedAt,_that.reviewedBy,_that.reviewedAt,_that.note);case _:
   return orElse();
 
 }
@@ -1356,10 +1365,10 @@ return $default(_that.status,_that.documents,_that.reviewedBy,_that.reviewedAt,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( VerificationStatus status,  VerificationDocuments documents,  String? reviewedBy, @TimestampConverter()  DateTime? reviewedAt,  String? note)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( VerificationStatus status,  VerificationDocuments documents, @TimestampConverter()  DateTime? submittedAt,  String? reviewedBy, @TimestampConverter()  DateTime? reviewedAt,  String? note)  $default,) {final _that = this;
 switch (_that) {
 case _Verification():
-return $default(_that.status,_that.documents,_that.reviewedBy,_that.reviewedAt,_that.note);case _:
+return $default(_that.status,_that.documents,_that.submittedAt,_that.reviewedBy,_that.reviewedAt,_that.note);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1376,10 +1385,10 @@ return $default(_that.status,_that.documents,_that.reviewedBy,_that.reviewedAt,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( VerificationStatus status,  VerificationDocuments documents,  String? reviewedBy, @TimestampConverter()  DateTime? reviewedAt,  String? note)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( VerificationStatus status,  VerificationDocuments documents, @TimestampConverter()  DateTime? submittedAt,  String? reviewedBy, @TimestampConverter()  DateTime? reviewedAt,  String? note)?  $default,) {final _that = this;
 switch (_that) {
 case _Verification() when $default != null:
-return $default(_that.status,_that.documents,_that.reviewedBy,_that.reviewedAt,_that.note);case _:
+return $default(_that.status,_that.documents,_that.submittedAt,_that.reviewedBy,_that.reviewedAt,_that.note);case _:
   return null;
 
 }
@@ -1391,11 +1400,12 @@ return $default(_that.status,_that.documents,_that.reviewedBy,_that.reviewedAt,_
 @JsonSerializable()
 
 class _Verification implements Verification {
-  const _Verification({this.status = VerificationStatus.draft, this.documents = const VerificationDocuments(), this.reviewedBy, @TimestampConverter() this.reviewedAt, this.note});
+  const _Verification({this.status = VerificationStatus.draft, this.documents = const VerificationDocuments(), @TimestampConverter() this.submittedAt, this.reviewedBy, @TimestampConverter() this.reviewedAt, this.note});
   factory _Verification.fromJson(Map<String, dynamic> json) => _$VerificationFromJson(json);
 
 @override@JsonKey() final  VerificationStatus status;
 @override@JsonKey() final  VerificationDocuments documents;
+@override@TimestampConverter() final  DateTime? submittedAt;
 @override final  String? reviewedBy;
 @override@TimestampConverter() final  DateTime? reviewedAt;
 @override final  String? note;
@@ -1413,16 +1423,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Verification&&(identical(other.status, status) || other.status == status)&&(identical(other.documents, documents) || other.documents == documents)&&(identical(other.reviewedBy, reviewedBy) || other.reviewedBy == reviewedBy)&&(identical(other.reviewedAt, reviewedAt) || other.reviewedAt == reviewedAt)&&(identical(other.note, note) || other.note == note));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Verification&&(identical(other.status, status) || other.status == status)&&(identical(other.documents, documents) || other.documents == documents)&&(identical(other.submittedAt, submittedAt) || other.submittedAt == submittedAt)&&(identical(other.reviewedBy, reviewedBy) || other.reviewedBy == reviewedBy)&&(identical(other.reviewedAt, reviewedAt) || other.reviewedAt == reviewedAt)&&(identical(other.note, note) || other.note == note));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,status,documents,reviewedBy,reviewedAt,note);
+int get hashCode => Object.hash(runtimeType,status,documents,submittedAt,reviewedBy,reviewedAt,note);
 
 @override
 String toString() {
-  return 'Verification(status: $status, documents: $documents, reviewedBy: $reviewedBy, reviewedAt: $reviewedAt, note: $note)';
+  return 'Verification(status: $status, documents: $documents, submittedAt: $submittedAt, reviewedBy: $reviewedBy, reviewedAt: $reviewedAt, note: $note)';
 }
 
 
@@ -1433,7 +1443,7 @@ abstract mixin class _$VerificationCopyWith<$Res> implements $VerificationCopyWi
   factory _$VerificationCopyWith(_Verification value, $Res Function(_Verification) _then) = __$VerificationCopyWithImpl;
 @override @useResult
 $Res call({
- VerificationStatus status, VerificationDocuments documents, String? reviewedBy,@TimestampConverter() DateTime? reviewedAt, String? note
+ VerificationStatus status, VerificationDocuments documents,@TimestampConverter() DateTime? submittedAt, String? reviewedBy,@TimestampConverter() DateTime? reviewedAt, String? note
 });
 
 
@@ -1450,11 +1460,12 @@ class __$VerificationCopyWithImpl<$Res>
 
 /// Create a copy of Verification
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? documents = null,Object? reviewedBy = freezed,Object? reviewedAt = freezed,Object? note = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? documents = null,Object? submittedAt = freezed,Object? reviewedBy = freezed,Object? reviewedAt = freezed,Object? note = freezed,}) {
   return _then(_Verification(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as VerificationStatus,documents: null == documents ? _self.documents : documents // ignore: cast_nullable_to_non_nullable
-as VerificationDocuments,reviewedBy: freezed == reviewedBy ? _self.reviewedBy : reviewedBy // ignore: cast_nullable_to_non_nullable
+as VerificationDocuments,submittedAt: freezed == submittedAt ? _self.submittedAt : submittedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,reviewedBy: freezed == reviewedBy ? _self.reviewedBy : reviewedBy // ignore: cast_nullable_to_non_nullable
 as String?,reviewedAt: freezed == reviewedAt ? _self.reviewedAt : reviewedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,note: freezed == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -1471,6 +1482,281 @@ $VerificationDocumentsCopyWith<$Res> get documents {
     return _then(_self.copyWith(documents: value));
   });
 }
+}
+
+
+/// @nodoc
+mixin _$OrgMember {
+
+@JsonKey(includeToJson: false) String get id; OrgRole get role; String? get displayName; String? get email;@TimestampConverter() DateTime? get addedAt;
+/// Create a copy of OrgMember
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$OrgMemberCopyWith<OrgMember> get copyWith => _$OrgMemberCopyWithImpl<OrgMember>(this as OrgMember, _$identity);
+
+  /// Serializes this OrgMember to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is OrgMember&&(identical(other.id, id) || other.id == id)&&(identical(other.role, role) || other.role == role)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.email, email) || other.email == email)&&(identical(other.addedAt, addedAt) || other.addedAt == addedAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,role,displayName,email,addedAt);
+
+@override
+String toString() {
+  return 'OrgMember(id: $id, role: $role, displayName: $displayName, email: $email, addedAt: $addedAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $OrgMemberCopyWith<$Res>  {
+  factory $OrgMemberCopyWith(OrgMember value, $Res Function(OrgMember) _then) = _$OrgMemberCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(includeToJson: false) String id, OrgRole role, String? displayName, String? email,@TimestampConverter() DateTime? addedAt
+});
+
+
+
+
+}
+/// @nodoc
+class _$OrgMemberCopyWithImpl<$Res>
+    implements $OrgMemberCopyWith<$Res> {
+  _$OrgMemberCopyWithImpl(this._self, this._then);
+
+  final OrgMember _self;
+  final $Res Function(OrgMember) _then;
+
+/// Create a copy of OrgMember
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? role = null,Object? displayName = freezed,Object? email = freezed,Object? addedAt = freezed,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as OrgRole,displayName: freezed == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
+as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String?,addedAt: freezed == addedAt ? _self.addedAt : addedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [OrgMember].
+extension OrgMemberPatterns on OrgMember {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _OrgMember value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _OrgMember() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _OrgMember value)  $default,){
+final _that = this;
+switch (_that) {
+case _OrgMember():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _OrgMember value)?  $default,){
+final _that = this;
+switch (_that) {
+case _OrgMember() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  OrgRole role,  String? displayName,  String? email, @TimestampConverter()  DateTime? addedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _OrgMember() when $default != null:
+return $default(_that.id,_that.role,_that.displayName,_that.email,_that.addedAt);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  OrgRole role,  String? displayName,  String? email, @TimestampConverter()  DateTime? addedAt)  $default,) {final _that = this;
+switch (_that) {
+case _OrgMember():
+return $default(_that.id,_that.role,_that.displayName,_that.email,_that.addedAt);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id,  OrgRole role,  String? displayName,  String? email, @TimestampConverter()  DateTime? addedAt)?  $default,) {final _that = this;
+switch (_that) {
+case _OrgMember() when $default != null:
+return $default(_that.id,_that.role,_that.displayName,_that.email,_that.addedAt);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _OrgMember implements OrgMember {
+  const _OrgMember({@JsonKey(includeToJson: false) this.id = '', required this.role, this.displayName, this.email, @TimestampConverter() this.addedAt});
+  factory _OrgMember.fromJson(Map<String, dynamic> json) => _$OrgMemberFromJson(json);
+
+@override@JsonKey(includeToJson: false) final  String id;
+@override final  OrgRole role;
+@override final  String? displayName;
+@override final  String? email;
+@override@TimestampConverter() final  DateTime? addedAt;
+
+/// Create a copy of OrgMember
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$OrgMemberCopyWith<_OrgMember> get copyWith => __$OrgMemberCopyWithImpl<_OrgMember>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$OrgMemberToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _OrgMember&&(identical(other.id, id) || other.id == id)&&(identical(other.role, role) || other.role == role)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.email, email) || other.email == email)&&(identical(other.addedAt, addedAt) || other.addedAt == addedAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,role,displayName,email,addedAt);
+
+@override
+String toString() {
+  return 'OrgMember(id: $id, role: $role, displayName: $displayName, email: $email, addedAt: $addedAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$OrgMemberCopyWith<$Res> implements $OrgMemberCopyWith<$Res> {
+  factory _$OrgMemberCopyWith(_OrgMember value, $Res Function(_OrgMember) _then) = __$OrgMemberCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(includeToJson: false) String id, OrgRole role, String? displayName, String? email,@TimestampConverter() DateTime? addedAt
+});
+
+
+
+
+}
+/// @nodoc
+class __$OrgMemberCopyWithImpl<$Res>
+    implements _$OrgMemberCopyWith<$Res> {
+  __$OrgMemberCopyWithImpl(this._self, this._then);
+
+  final _OrgMember _self;
+  final $Res Function(_OrgMember) _then;
+
+/// Create a copy of OrgMember
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? role = null,Object? displayName = freezed,Object? email = freezed,Object? addedAt = freezed,}) {
+  return _then(_OrgMember(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as OrgRole,displayName: freezed == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
+as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String?,addedAt: freezed == addedAt ? _self.addedAt : addedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
+  ));
+}
+
+
 }
 
 // dart format on
