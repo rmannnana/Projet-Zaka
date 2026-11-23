@@ -95,8 +95,34 @@ flutter gen-l10n
 
 | Flavor | Projet Firebase | Identifiant Android |
 |---|---|---|
-| `dev` | `demo-zaka` (émulateurs), puis `zaka-dev` | `com.zaka.app.dev` |
-| `staging` | `zaka-staging` | `com.zaka.app.staging` |
-| `prod` | `zaka-prod` | `com.zaka.app` |
+| `dev` | `demo-zaka` (émulateurs, par défaut) ou `zaka-dev-01` (`--dart-define=USE_EMULATORS=false`) | `com.zaka.app.dev` |
+| `staging` | `zaka-staging` (pas encore configuré) | `com.zaka.app.staging` |
+| `prod` | `zaka-prod-8c5c8` (pas encore configuré) | `com.zaka.app` |
 
 Brancher un vrai projet : voir `app/lib/app/firebase_options.dart`.
+
+### Sites de dev
+
+- App publique : https://zaka-dev-01.web.app
+- Back-office : https://zaka-admin-dev.web.app
+
+### Déployer sur zaka-dev-01 (PowerShell)
+
+Depuis la racine du dépôt :
+
+```powershell
+# Règles, index et Cloud Functions.
+# Le chargement du code des Functions dépasse parfois les 10 s par défaut sous Windows.
+$env:FUNCTIONS_DISCOVERY_TIMEOUT = "60"
+firebase deploy --only firestore,storage,functions -P dev
+```
+
+Sites web : compiler depuis `app/`, puis déployer depuis la racine :
+
+```powershell
+cd app
+flutter build web --dart-define=FLAVOR=dev --dart-define=USE_EMULATORS=false
+flutter build web -t lib/main_admin.dart --output build/web_admin --dart-define=FLAVOR=dev --dart-define=USE_EMULATORS=false
+cd ..
+firebase deploy --only hosting -P dev
+```

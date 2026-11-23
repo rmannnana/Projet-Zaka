@@ -37,22 +37,22 @@ Les ID `zaka-dev` et `zaka-prod` étant déjà pris, Firebase a ajouté un suffi
 
 Pour **chaque** projet :
 
-- ☐ Passer au plan **Blaze** et le rattacher au compte de facturation
-- ☐ Créer la base **Firestore** en mode natif, région **`europe-west1`** (⚠️ choix définitif)
-- ☐ Créer le bucket **Storage** en `europe-west1`
-- ☐ Fixer la région par défaut des **Cloud Functions** : `europe-west1`
+- ☑ (dev) Passer au plan **Blaze** et le rattacher au compte de facturation
+- ☑ (dev) Créer la base **Firestore** en mode natif, région **`europe-west1`** (⚠️ choix définitif)
+- ☑ (dev) Créer le bucket **Storage** en `europe-west1`
+- ☑ Fixer la région par défaut des **Cloud Functions** : `europe-west1`
 - ☐ Créer une **alerte de budget** (par exemple 20 €, 50 € et 100 € par mois en dev/staging, à ajuster en prod)
 
 ### 2.2 Services Firebase à activer
 
 | Service | Réglages à faire |
 |---|---|
-| ☐ **Authentication** | Activer Téléphone, E-mail/mot de passe et Google. Dans *Paramètres → Politique de région SMS*, **autoriser uniquement** les 8 pays UEMOA. Ajouter des numéros de test en dev. Dans *Paramètres → Domaines autorisés*, ajouter les domaines des deux sites web |
-| ☐ **Empreintes Android** | Ajouter les empreintes **SHA-1 et SHA-256** de chaque clé de signature (debug, upload, et clé Google Play App Signing) dans les paramètres de l'app Android. Indispensable pour la connexion par SMS (Play Integrity) et Google |
-| ☐ **Firestore** | Déployer `firestore.rules` et `firestore.indexes.json` depuis le dépôt (jamais à la main dans la console) |
-| ☐ **Storage** | Déployer `storage.rules`. Dossiers : `public/` (photos d'annonces) et `private/verification/` (IFU, RCCM, justificatifs) |
-| ☐ **Cloud Functions** | Déployées depuis le dossier `functions/` |
-| ☐ **Hosting** | Créer **2 sites** : `zaka-<env>` (site public + espace pro) et `zaka-admin-<env>` (back-office) |
+| ☑ (dev) **Authentication** | Activer Téléphone, E-mail/mot de passe et Google. Dans *Paramètres → Politique de région SMS*, **autoriser uniquement** les 8 pays UEMOA. Ajouter des numéros de test en dev. Dans *Paramètres → Domaines autorisés*, ajouter les domaines des deux sites web |
+| ◐ **Empreintes Android** | Fait pour la clé de debug en dev (`firebase apps:android:sha:create`). Ajouter les empreintes **SHA-1 et SHA-256** de chaque clé de signature (debug, upload, et clé Google Play App Signing) dans les paramètres de l'app Android. Indispensable pour la connexion par SMS (Play Integrity) et Google |
+| ☑ (dev) **Firestore** | Déployer `firestore.rules` et `firestore.indexes.json` depuis le dépôt (jamais à la main dans la console) |
+| ☑ (dev) **Storage** | Déployer `storage.rules`. Dossiers : `public/` (photos d'annonces) et `private/verification/` (IFU, RCCM, justificatifs) |
+| ☑ (dev) **Cloud Functions** | Déployées depuis le dossier `functions/` |
+| ☑ (dev) **Hosting** | Créer **2 sites** : `zaka-<env>` (site public + espace pro) et `zaka-admin-<env>` (back-office). En dev : `zaka-dev-01` et `zaka-admin-dev`, reliés aux cibles `public` et `admin` par `firebase target:apply` |
 | ☐ **Cloud Messaging (FCM)** | Rien à configurer pour Android. Pour le web : générer la **clé VAPID** (*Paramètres → Cloud Messaging → Web Push*) |
 | ☐ **App Check** | Play Integrity (Android), reCAPTCHA Enterprise (web). Commencer en mode « surveillance » avant de l'imposer |
 | ☐ **Remote Config** | Créer les paramètres `payments_provider` = `simulation`, `module_installments` = `false`, `module_investments` = `false`, `min_app_version` |

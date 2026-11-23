@@ -4,5 +4,18 @@
     "dev": "zaka-dev-01",
     "staging": "zaka-staging",
     "prod": "zaka-prod-8c5c8"
-  }
+  },
+  "targets": {
+    "zaka-dev-01": {
+      "hosting": {
+        "public": [
+          "zaka-dev-01"
+        ],
+        "admin": [
+          "zaka-admin-dev"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
