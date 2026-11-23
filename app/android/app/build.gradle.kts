@@ -1,5 +1,8 @@
 plugins {
     id("com.android.application")
+    // START: FlutterFire Configuration
+    id("com.google.gms.google-services")
+    // END: FlutterFire Configuration
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -24,7 +27,13 @@ android {
         versionName = flutter.versionName
     }
 
-    // Un flavor par projet Firebase : zaka-dev, zaka-staging, zaka-prod.
+    // Nécessaire depuis AGP 9 pour les resValue des flavors (nom de l'app).
+    buildFeatures {
+        resValues = true
+    }
+
+    // Un flavor par projet Firebase : zaka-dev-01, zaka-staging, zaka-prod-8c5c8.
+    // Le google-services.json de chaque flavor va dans src/<flavor>/.
     // Lancer avec : flutter run --flavor dev --dart-define=FLAVOR=dev
     flavorDimensions += "env"
     productFlavors {

@@ -1,8 +1,8 @@
 {
   "projects": {
     "default": "demo-zaka",
-    "dev": "zaka-dev",
+    "dev": "zaka-dev-01",
     "staging": "zaka-staging",
-    "prod": "zaka-prod"
+    "prod": "zaka-prod-8c5c8"
   }
 }

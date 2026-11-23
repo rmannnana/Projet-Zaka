@@ -29,9 +29,11 @@ Ouvrir ces comptes au nom de **la structure ZAKA**, avec une adresse e-mail part
 
 | Projet | Usage | Données |
 |---|---|---|
-| ☐ `zaka-dev` | Développement quotidien | Données factices |
-| ☐ `zaka-staging` | Tests avant mise en production, démos | Copie anonymisée ou jeu de test |
-| ☐ `zaka-prod` | Production | Données réelles |
+| ☑ `zaka-dev-01` | Développement quotidien | Données factices |
+| ☑ `zaka-staging` | Tests avant mise en production, démos | Copie anonymisée ou jeu de test |
+| ☑ `zaka-prod-8c5c8` | Production | Données réelles |
+
+Les ID `zaka-dev` et `zaka-prod` étant déjà pris, Firebase a ajouté un suffixe. Les alias `dev`, `staging` et `prod` de `.firebaserc` pointent vers ces ID : `firebase deploy -P dev`.
 
 Pour **chaque** projet :
 
@@ -106,7 +108,7 @@ zaka/
 
 - ☑ `flutter create --org com.zaka --platforms android,web app`
 - ☑ Configurer les **flavors** `dev`, `staging`, `prod` (identifiants d'app distincts, par exemple `com.zaka.app.dev`)
-- ☐ `flutterfire configure` une fois **par flavor**, ce qui génère un `firebase_options_<env>.dart` pour chacun
+- ◐ `flutterfire configure` une fois **par flavor** (fait pour dev, commande dans `lib/app/firebase_options.dart`), ce qui génère un `firebase_options_<env>.dart` et un `android/app/src/<env>/google-services.json` pour chacun
 - ☑ Deux points d'entrée : `lib/main.dart` (app publique) et `lib/main_admin.dart` (admin, build web avec `-t lib/main_admin.dart`)
 - ☐ Créer la **clé de signature Android** (upload key) et la conserver hors du dépôt, dans un coffre partagé
 
