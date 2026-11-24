@@ -3,8 +3,11 @@
 //
 // Sur les émulateurs (par défaut) :
 //   npm run seed-catalog
-// Sur un vrai projet (identifiants gcloud requis) :
-//   USE_EMULATORS=false GCLOUD_PROJECT=zaka-dev npm run seed-catalog
+// Sur un vrai projet, en PowerShell (identifiants gcloud requis :
+// gcloud auth application-default login) :
+//   $env:USE_EMULATORS = "false"; $env:GCLOUD_PROJECT = "zaka-dev-01"
+//   npm run seed-catalog
+//   Remove-Item Env:USE_EMULATORS, Env:GCLOUD_PROJECT
 // Option --force : remplace les listes existantes.
 import { initializeApp } from "firebase-admin/app";
 import { FieldValue, getFirestore } from "firebase-admin/firestore";

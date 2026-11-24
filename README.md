@@ -126,3 +126,6 @@ flutter build web -t lib/main_admin.dart --output build/web_admin --dart-define=
 cd ..
 firebase deploy --only hosting -P dev
 ```
+
+Catalogues et rôle du premier admin sur un vrai projet : voir le mode d'emploi
+en tête de `functions/scripts/seed-catalog.mjs` et `functions/scripts/set-role.mjs`.
