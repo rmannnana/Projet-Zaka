@@ -529,7 +529,7 @@ Le détail des champs figure dans la version précédente du plan et sera repris
 |---|---|---|
 | **0. Setup** ✅ (déployée sur `zaka-dev-01`) | Comptes et projets ([MISE_EN_PLACE.md](MISE_EN_PLACE.md)), flavors, CI, structure du code, design system, i18n | App vide déployée en dev |
 | **1. Socle** ✅ (déployée sur `zaka-dev-01`) | Auth, profils, organisations, vérification pro (IFU, RCCM, justificatif), comptes particuliers, rôles, catalogues, admin de base, signalements, suppression de compte. *La file de validation des annonces de particuliers arrive avec les annonces (phase 4)* | Un pro peut créer son compte et se faire valider |
-| **2. Facturation (simulée)** ✅ (en local) | Plans d'abonnement et règles de commission éditables dans l'admin, paiement simulé, registre des commissions | L'admin pilote les tarifs sans développeur |
+| **2. Facturation (simulée)** ✅ (déployée sur `zaka-dev-01`) | Plans d'abonnement et règles de commission éditables dans l'admin, paiement simulé, registre des commissions | L'admin pilote les tarifs sans développeur |
 | **3. Hôtellerie** | Fiche hôtel, chambres, offres, disponibilités, recherche, demandes avec expiration à 48 h, paiement simulé, notifications | Parcours de réservation complet |
 | **4. Immobilier** | Biens, programmes et lots, recherche, leads, visites, espace pro, validation des annonces de particuliers | Parcours immobilier complet |
 | **5. Lancement MVP** | Tests utilisateurs, sécurité, sauvegardes, statistiques, mise en ligne des CGU et de la politique de confidentialité, publication sur les stores et le web | **Lancement MVP** (focus Burkina Faso) |

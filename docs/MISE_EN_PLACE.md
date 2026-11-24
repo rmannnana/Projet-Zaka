@@ -159,7 +159,7 @@ La publication sur Google Play peut être automatisée plus tard (piste interne 
 ## 5. Données et comptes de départ
 
 - ☑ Script `functions/scripts/seed-catalog.mjs` (`npm run seed-catalog`) : villes des 8 pays UEMOA (Burkina Faso en tête), équipements, types de biens. À lancer une fois par projet, puis les listes se gèrent dans le back-office. Lancé sur `zaka-dev-01`
-- ◐ Plan d'abonnement **« Gratuit »** et règle de commission hôtelière par défaut : script `npm run seed-billing` (valeurs **provisoires** : 3 annonces, 10 % par réservation, à fixer par l'équipe dans *Facturation* du back-office). À lancer sur chaque projet
+- ◐ Plan d'abonnement **« Gratuit »** et règle de commission hôtelière par défaut : script `npm run seed-billing` (valeurs **provisoires** : 3 annonces, 10 % par réservation, à fixer par l'équipe dans *Facturation* du back-office). À lancer sur chaque projet ; fait sur `zaka-dev-01`
 - ☐ `config/app` avec `bookingExpiryHours: 48`
 - ◐ Premier compte **admin** : `npm run set-role -- email admin`, une seule fois par projet (mode d'emploi PowerShell en tête du script) ; les rôles suivants se donnent depuis le back-office. Fait sur `zaka-dev-01`
 - ☐ Comptes de test en dev/staging : 1 client, 1 hôtel vérifié, 1 agence vérifiée, 1 particulier, 1 modérateur
