@@ -19,6 +19,17 @@ const _actionLabels = {
   'user.setRole': 'Rôle modifié',
   'privacy.deleteUserData': 'Données personnelles effacées',
   'privacy.refuseDeletion': 'Demande de suppression refusée',
+  'subscriptionPlan.create': "Plan d'abonnement créé",
+  'subscriptionPlan.update': "Plan d'abonnement modifié",
+  'commissionRule.create': 'Règle de commission créée',
+  'commissionRule.update': 'Règle de commission modifiée',
+  'subscription.activate': 'Abonnement activé',
+  'subscription.renew': 'Abonnement renouvelé',
+  'subscription.expire': 'Abonnement arrivé à échéance',
+  'commission.invoiced': 'Commission facturée',
+  'commission.paid': 'Commission payée',
+  'commission.waived': 'Commission offerte',
+  'commission.due': 'Facture de commission annulée',
 };
 
 /// Journal d'activité complet (100 dernières opérations sensibles).

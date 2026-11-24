@@ -12,9 +12,13 @@ import '../features/admin/presentation/catalogs_screen.dart';
 import '../features/admin/presentation/org_review_screens.dart';
 import '../features/admin/presentation/requests_screens.dart';
 import '../features/admin/presentation/team_screen.dart';
+import '../features/admin/presentation/billing_admin_screen.dart';
 import '../features/auth/data/auth_repository.dart';
 import '../features/auth/presentation/sign_in_screen.dart';
 import '../features/auth/presentation/verify_phone_screen.dart';
+import '../features/billing/presentation/checkout_screen.dart';
+import '../features/billing/presentation/org_commissions_screen.dart';
+import '../features/billing/presentation/subscription_screen.dart';
 import '../features/home/presentation/home_screen.dart';
 import '../features/home/presentation/home_shell.dart';
 import '../features/organizations/presentation/create_org_screen.dart';
@@ -117,6 +121,21 @@ final publicRouterProvider = Provider<GoRouter>((ref) {
                 path: 'membres',
                 builder: (_, state) => MembersScreen(orgId: state.pathParameters['orgId']!),
               ),
+              GoRoute(
+                path: 'abonnement',
+                builder: (_, state) => SubscriptionScreen(orgId: state.pathParameters['orgId']!),
+              ),
+              GoRoute(
+                path: 'paiement/:paymentId',
+                builder: (_, state) => CheckoutScreen(
+                  orgId: state.pathParameters['orgId']!,
+                  paymentId: state.pathParameters['paymentId']!,
+                ),
+              ),
+              GoRoute(
+                path: 'commissions',
+                builder: (_, state) => OrgCommissionsScreen(orgId: state.pathParameters['orgId']!),
+              ),
             ],
           ),
         ],
@@ -177,6 +196,7 @@ final adminRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(path: '/suppressions', builder: (_, _) => const DeletionRequestsScreen()),
           GoRoute(path: '/equipe', builder: (_, _) => const TeamScreen()),
           GoRoute(path: '/catalogues', builder: (_, _) => const CatalogsScreen()),
+          GoRoute(path: '/facturation', builder: (_, _) => const BillingAdminScreen()),
           GoRoute(path: '/journal', builder: (_, _) => const AuditScreen()),
         ],
       ),

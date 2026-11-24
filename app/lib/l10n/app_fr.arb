@@ -195,5 +195,151 @@
   "reportOther": "Autre",
   "reportDetails": "Précisions (facultatif)",
   "reportSend": "Envoyer",
-  "reportSent": "Merci, l'équipe ZAKA va examiner ce signalement."
+  "reportSent": "Merci, l'équipe ZAKA va examiner ce signalement.",
+  "billingSubscription": "Abonnement",
+  "billingCurrentPlan": "Plan actuel",
+  "billingFreePlanHelp": "Le plan Gratuit s'applique tant qu'aucun abonnement payant n'est en cours.",
+  "billingActiveUntil": "Actif jusqu'au {date}",
+  "@billingActiveUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "billingPlanUntil": "{plan} · jusqu'au {date}",
+  "@billingPlanUntil": {
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "billingAvailablePlans": "Plans disponibles",
+  "billingNoPlans": "Aucun plan payant n'est proposé pour le moment.",
+  "billingFree": "Gratuit",
+  "billingPricePerMonth": "{price} par mois",
+  "@billingPricePerMonth": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "billingPricePerYear": "{price} par an",
+  "@billingPricePerYear": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "billingMaxListings": "{count, plural, =1{1 annonce publiée à la fois} other{{count} annonces publiées à la fois}}",
+  "@billingMaxListings": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "billingUnlimitedListings": "Annonces illimitées",
+  "billingFeaturedListings": "{count, plural, =0{Pas de mise en avant} =1{1 annonce mise en avant} other{{count} annonces mises en avant}}",
+  "@billingFeaturedListings": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "billingAdvancedStats": "Statistiques détaillées",
+  "billingChoose": "Choisir",
+  "billingRenew": "Renouveler",
+  "billingOwnerOnly": "Seul un propriétaire du compte peut changer d'abonnement.",
+  "billingNeedsVerification": "Les abonnements sont disponibles une fois votre compte vérifié.",
+  "billingConfirmTitle": "Plan {plan}",
+  "@billingConfirmTitle": {
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      }
+    }
+  },
+  "billingConfirmMonth": "{price} pour 1 mois.",
+  "@billingConfirmMonth": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "billingConfirmYear": "{price} pour 1 an.",
+  "@billingConfirmYear": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "billingRenewInfo": "La nouvelle période s'ajoutera à la période en cours, qui se termine le {date}.",
+  "@billingRenewInfo": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "billingReplaceWarning": "Votre abonnement {plan} sera remplacé dès le paiement, sans remboursement de la période restante.",
+  "@billingReplaceWarning": {
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      }
+    }
+  },
+  "billingContinueToPayment": "Continuer vers le paiement",
+  "billingPaymentHistory": "Historique des paiements",
+  "billingNoPayments": "Aucun paiement pour le moment.",
+  "paymentStatusPending": "En attente",
+  "paymentStatusSucceeded": "Réussi",
+  "paymentStatusFailed": "Échoué",
+  "paymentStatusCancelled": "Annulé",
+  "checkoutTitle": "Paiement",
+  "checkoutTestBanner": "Mode test : aucun paiement réel",
+  "checkoutTestExplain": "Le paiement par Mobile Money ou carte arrivera plus tard. Pour l'instant, choisissez l'issue à simuler : aucun argent ne circule.",
+  "checkoutSimulateSuccess": "Simuler un paiement réussi",
+  "checkoutSimulateFailure": "Simuler un échec",
+  "checkoutCancel": "Annuler le paiement",
+  "checkoutSucceeded": "Paiement accepté",
+  "checkoutSucceededUntil": "Votre abonnement est actif jusqu'au {date}.",
+  "@checkoutSucceededUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutFailed": "Paiement refusé",
+  "checkoutFailedBody": "Aucun montant n'a été débité. Vous pouvez réessayer depuis la page Abonnement.",
+  "checkoutCancelled": "Paiement annulé",
+  "checkoutBackToSubscription": "Retour à l'abonnement",
+  "checkoutNotFound": "Paiement introuvable.",
+  "commissionsTitle": "Commissions",
+  "commissionsHelp": "ZAKA perçoit une commission sur chaque séjour terminé, réservé via ZAKA. Elle est calculée avec le taux en vigueur à la fin du séjour.",
+  "commissionsOutstanding": "Reste à régler",
+  "commissionsEmpty": "Aucune commission pour le moment.",
+  "commissionOn": "Sur {amount}",
+  "@commissionOn": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "commissionStatusDue": "Due",
+  "commissionStatusInvoiced": "Facturée",
+  "commissionStatusPaid": "Payée",
+  "commissionStatusWaived": "Offerte"
 }

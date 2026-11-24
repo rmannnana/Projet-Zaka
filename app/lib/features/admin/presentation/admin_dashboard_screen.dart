@@ -13,6 +13,7 @@ class AdminDashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final counters = ref.watch(adminCountersProvider);
+    final isAdmin = ref.watch(staffRoleProvider).value == 'admin';
     return RefreshIndicator(
       onRefresh: () => ref.refresh(adminCountersProvider.future),
       child: counters.when(
@@ -48,6 +49,11 @@ class AdminDashboardScreen extends ConsumerWidget {
               children: [
                 _Tile('Utilisateurs inscrits', c.users, Icons.people_outline, null),
                 _Tile('Comptes pros vérifiés', c.verifiedOrgs, Icons.storefront_outlined, '/comptes'),
+                if (isAdmin) ...[
+                  _Tile('Abonnements payants actifs', c.activeSubscriptions, Icons.workspace_premium_outlined,
+                      '/facturation'),
+                  _Tile('Commissions dues', c.dueCommissions, Icons.percent, '/facturation'),
+                ],
               ],
             ),
           ],

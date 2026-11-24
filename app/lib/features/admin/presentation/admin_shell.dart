@@ -21,6 +21,7 @@ const adminDestinations = [
   AdminDestination('/signalements', 'Signalements', Icons.flag_outlined),
   AdminDestination('/suppressions', 'Suppressions', Icons.person_remove_outlined),
   AdminDestination('/equipe', 'Équipe et rôles', Icons.admin_panel_settings_outlined, adminOnly: true),
+  AdminDestination('/facturation', 'Facturation', Icons.payments_outlined, adminOnly: true),
   AdminDestination('/catalogues', 'Catalogues', Icons.list_alt, adminOnly: true),
   AdminDestination('/journal', "Journal d'activité", Icons.history),
 ];

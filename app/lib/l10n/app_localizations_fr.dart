@@ -474,4 +474,206 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get reportSent => 'Merci, l\'équipe ZAKA va examiner ce signalement.';
+
+  @override
+  String get billingSubscription => 'Abonnement';
+
+  @override
+  String get billingCurrentPlan => 'Plan actuel';
+
+  @override
+  String get billingFreePlanHelp =>
+      'Le plan Gratuit s\'applique tant qu\'aucun abonnement payant n\'est en cours.';
+
+  @override
+  String billingActiveUntil(String date) {
+    return 'Actif jusqu\'au $date';
+  }
+
+  @override
+  String billingPlanUntil(String plan, String date) {
+    return '$plan · jusqu\'au $date';
+  }
+
+  @override
+  String get billingAvailablePlans => 'Plans disponibles';
+
+  @override
+  String get billingNoPlans =>
+      'Aucun plan payant n\'est proposé pour le moment.';
+
+  @override
+  String get billingFree => 'Gratuit';
+
+  @override
+  String billingPricePerMonth(String price) {
+    return '$price par mois';
+  }
+
+  @override
+  String billingPricePerYear(String price) {
+    return '$price par an';
+  }
+
+  @override
+  String billingMaxListings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count annonces publiées à la fois',
+      one: '1 annonce publiée à la fois',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get billingUnlimitedListings => 'Annonces illimitées';
+
+  @override
+  String billingFeaturedListings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count annonces mises en avant',
+      one: '1 annonce mise en avant',
+      zero: 'Pas de mise en avant',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get billingAdvancedStats => 'Statistiques détaillées';
+
+  @override
+  String get billingChoose => 'Choisir';
+
+  @override
+  String get billingRenew => 'Renouveler';
+
+  @override
+  String get billingOwnerOnly =>
+      'Seul un propriétaire du compte peut changer d\'abonnement.';
+
+  @override
+  String get billingNeedsVerification =>
+      'Les abonnements sont disponibles une fois votre compte vérifié.';
+
+  @override
+  String billingConfirmTitle(String plan) {
+    return 'Plan $plan';
+  }
+
+  @override
+  String billingConfirmMonth(String price) {
+    return '$price pour 1 mois.';
+  }
+
+  @override
+  String billingConfirmYear(String price) {
+    return '$price pour 1 an.';
+  }
+
+  @override
+  String billingRenewInfo(String date) {
+    return 'La nouvelle période s\'ajoutera à la période en cours, qui se termine le $date.';
+  }
+
+  @override
+  String billingReplaceWarning(String plan) {
+    return 'Votre abonnement $plan sera remplacé dès le paiement, sans remboursement de la période restante.';
+  }
+
+  @override
+  String get billingContinueToPayment => 'Continuer vers le paiement';
+
+  @override
+  String get billingPaymentHistory => 'Historique des paiements';
+
+  @override
+  String get billingNoPayments => 'Aucun paiement pour le moment.';
+
+  @override
+  String get paymentStatusPending => 'En attente';
+
+  @override
+  String get paymentStatusSucceeded => 'Réussi';
+
+  @override
+  String get paymentStatusFailed => 'Échoué';
+
+  @override
+  String get paymentStatusCancelled => 'Annulé';
+
+  @override
+  String get checkoutTitle => 'Paiement';
+
+  @override
+  String get checkoutTestBanner => 'Mode test : aucun paiement réel';
+
+  @override
+  String get checkoutTestExplain =>
+      'Le paiement par Mobile Money ou carte arrivera plus tard. Pour l\'instant, choisissez l\'issue à simuler : aucun argent ne circule.';
+
+  @override
+  String get checkoutSimulateSuccess => 'Simuler un paiement réussi';
+
+  @override
+  String get checkoutSimulateFailure => 'Simuler un échec';
+
+  @override
+  String get checkoutCancel => 'Annuler le paiement';
+
+  @override
+  String get checkoutSucceeded => 'Paiement accepté';
+
+  @override
+  String checkoutSucceededUntil(String date) {
+    return 'Votre abonnement est actif jusqu\'au $date.';
+  }
+
+  @override
+  String get checkoutFailed => 'Paiement refusé';
+
+  @override
+  String get checkoutFailedBody =>
+      'Aucun montant n\'a été débité. Vous pouvez réessayer depuis la page Abonnement.';
+
+  @override
+  String get checkoutCancelled => 'Paiement annulé';
+
+  @override
+  String get checkoutBackToSubscription => 'Retour à l\'abonnement';
+
+  @override
+  String get checkoutNotFound => 'Paiement introuvable.';
+
+  @override
+  String get commissionsTitle => 'Commissions';
+
+  @override
+  String get commissionsHelp =>
+      'ZAKA perçoit une commission sur chaque séjour terminé, réservé via ZAKA. Elle est calculée avec le taux en vigueur à la fin du séjour.';
+
+  @override
+  String get commissionsOutstanding => 'Reste à régler';
+
+  @override
+  String get commissionsEmpty => 'Aucune commission pour le moment.';
+
+  @override
+  String commissionOn(String amount) {
+    return 'Sur $amount';
+  }
+
+  @override
+  String get commissionStatusDue => 'Due';
+
+  @override
+  String get commissionStatusInvoiced => 'Facturée';
+
+  @override
+  String get commissionStatusPaid => 'Payée';
+
+  @override
+  String get commissionStatusWaived => 'Offerte';
 }

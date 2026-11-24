@@ -933,6 +933,318 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Merci, l\'équipe ZAKA va examiner ce signalement.'**
   String get reportSent;
+
+  /// No description provided for @billingSubscription.
+  ///
+  /// In fr, this message translates to:
+  /// **'Abonnement'**
+  String get billingSubscription;
+
+  /// No description provided for @billingCurrentPlan.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plan actuel'**
+  String get billingCurrentPlan;
+
+  /// No description provided for @billingFreePlanHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le plan Gratuit s\'applique tant qu\'aucun abonnement payant n\'est en cours.'**
+  String get billingFreePlanHelp;
+
+  /// No description provided for @billingActiveUntil.
+  ///
+  /// In fr, this message translates to:
+  /// **'Actif jusqu\'au {date}'**
+  String billingActiveUntil(String date);
+
+  /// No description provided for @billingPlanUntil.
+  ///
+  /// In fr, this message translates to:
+  /// **'{plan} · jusqu\'au {date}'**
+  String billingPlanUntil(String plan, String date);
+
+  /// No description provided for @billingAvailablePlans.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plans disponibles'**
+  String get billingAvailablePlans;
+
+  /// No description provided for @billingNoPlans.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun plan payant n\'est proposé pour le moment.'**
+  String get billingNoPlans;
+
+  /// No description provided for @billingFree.
+  ///
+  /// In fr, this message translates to:
+  /// **'Gratuit'**
+  String get billingFree;
+
+  /// No description provided for @billingPricePerMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'{price} par mois'**
+  String billingPricePerMonth(String price);
+
+  /// No description provided for @billingPricePerYear.
+  ///
+  /// In fr, this message translates to:
+  /// **'{price} par an'**
+  String billingPricePerYear(String price);
+
+  /// No description provided for @billingMaxListings.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 annonce publiée à la fois} other{{count} annonces publiées à la fois}}'**
+  String billingMaxListings(int count);
+
+  /// No description provided for @billingUnlimitedListings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annonces illimitées'**
+  String get billingUnlimitedListings;
+
+  /// No description provided for @billingFeaturedListings.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Pas de mise en avant} =1{1 annonce mise en avant} other{{count} annonces mises en avant}}'**
+  String billingFeaturedListings(int count);
+
+  /// No description provided for @billingAdvancedStats.
+  ///
+  /// In fr, this message translates to:
+  /// **'Statistiques détaillées'**
+  String get billingAdvancedStats;
+
+  /// No description provided for @billingChoose.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir'**
+  String get billingChoose;
+
+  /// No description provided for @billingRenew.
+  ///
+  /// In fr, this message translates to:
+  /// **'Renouveler'**
+  String get billingRenew;
+
+  /// No description provided for @billingOwnerOnly.
+  ///
+  /// In fr, this message translates to:
+  /// **'Seul un propriétaire du compte peut changer d\'abonnement.'**
+  String get billingOwnerOnly;
+
+  /// No description provided for @billingNeedsVerification.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les abonnements sont disponibles une fois votre compte vérifié.'**
+  String get billingNeedsVerification;
+
+  /// No description provided for @billingConfirmTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plan {plan}'**
+  String billingConfirmTitle(String plan);
+
+  /// No description provided for @billingConfirmMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'{price} pour 1 mois.'**
+  String billingConfirmMonth(String price);
+
+  /// No description provided for @billingConfirmYear.
+  ///
+  /// In fr, this message translates to:
+  /// **'{price} pour 1 an.'**
+  String billingConfirmYear(String price);
+
+  /// No description provided for @billingRenewInfo.
+  ///
+  /// In fr, this message translates to:
+  /// **'La nouvelle période s\'ajoutera à la période en cours, qui se termine le {date}.'**
+  String billingRenewInfo(String date);
+
+  /// No description provided for @billingReplaceWarning.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre abonnement {plan} sera remplacé dès le paiement, sans remboursement de la période restante.'**
+  String billingReplaceWarning(String plan);
+
+  /// No description provided for @billingContinueToPayment.
+  ///
+  /// In fr, this message translates to:
+  /// **'Continuer vers le paiement'**
+  String get billingContinueToPayment;
+
+  /// No description provided for @billingPaymentHistory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Historique des paiements'**
+  String get billingPaymentHistory;
+
+  /// No description provided for @billingNoPayments.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun paiement pour le moment.'**
+  String get billingNoPayments;
+
+  /// No description provided for @paymentStatusPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente'**
+  String get paymentStatusPending;
+
+  /// No description provided for @paymentStatusSucceeded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réussi'**
+  String get paymentStatusSucceeded;
+
+  /// No description provided for @paymentStatusFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Échoué'**
+  String get paymentStatusFailed;
+
+  /// No description provided for @paymentStatusCancelled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annulé'**
+  String get paymentStatusCancelled;
+
+  /// No description provided for @checkoutTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement'**
+  String get checkoutTitle;
+
+  /// No description provided for @checkoutTestBanner.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mode test : aucun paiement réel'**
+  String get checkoutTestBanner;
+
+  /// No description provided for @checkoutTestExplain.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le paiement par Mobile Money ou carte arrivera plus tard. Pour l\'instant, choisissez l\'issue à simuler : aucun argent ne circule.'**
+  String get checkoutTestExplain;
+
+  /// No description provided for @checkoutSimulateSuccess.
+  ///
+  /// In fr, this message translates to:
+  /// **'Simuler un paiement réussi'**
+  String get checkoutSimulateSuccess;
+
+  /// No description provided for @checkoutSimulateFailure.
+  ///
+  /// In fr, this message translates to:
+  /// **'Simuler un échec'**
+  String get checkoutSimulateFailure;
+
+  /// No description provided for @checkoutCancel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler le paiement'**
+  String get checkoutCancel;
+
+  /// No description provided for @checkoutSucceeded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement accepté'**
+  String get checkoutSucceeded;
+
+  /// No description provided for @checkoutSucceededUntil.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre abonnement est actif jusqu\'au {date}.'**
+  String checkoutSucceededUntil(String date);
+
+  /// No description provided for @checkoutFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement refusé'**
+  String get checkoutFailed;
+
+  /// No description provided for @checkoutFailedBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun montant n\'a été débité. Vous pouvez réessayer depuis la page Abonnement.'**
+  String get checkoutFailedBody;
+
+  /// No description provided for @checkoutCancelled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement annulé'**
+  String get checkoutCancelled;
+
+  /// No description provided for @checkoutBackToSubscription.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retour à l\'abonnement'**
+  String get checkoutBackToSubscription;
+
+  /// No description provided for @checkoutNotFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement introuvable.'**
+  String get checkoutNotFound;
+
+  /// No description provided for @commissionsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commissions'**
+  String get commissionsTitle;
+
+  /// No description provided for @commissionsHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'ZAKA perçoit une commission sur chaque séjour terminé, réservé via ZAKA. Elle est calculée avec le taux en vigueur à la fin du séjour.'**
+  String get commissionsHelp;
+
+  /// No description provided for @commissionsOutstanding.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reste à régler'**
+  String get commissionsOutstanding;
+
+  /// No description provided for @commissionsEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune commission pour le moment.'**
+  String get commissionsEmpty;
+
+  /// No description provided for @commissionOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sur {amount}'**
+  String commissionOn(String amount);
+
+  /// No description provided for @commissionStatusDue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Due'**
+  String get commissionStatusDue;
+
+  /// No description provided for @commissionStatusInvoiced.
+  ///
+  /// In fr, this message translates to:
+  /// **'Facturée'**
+  String get commissionStatusInvoiced;
+
+  /// No description provided for @commissionStatusPaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payée'**
+  String get commissionStatusPaid;
+
+  /// No description provided for @commissionStatusWaived.
+  ///
+  /// In fr, this message translates to:
+  /// **'Offerte'**
+  String get commissionStatusWaived;
 }
 
 class _AppLocalizationsDelegate

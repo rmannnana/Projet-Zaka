@@ -37,6 +37,8 @@ class AdminCounters {
     required this.pendingDeletions,
     required this.users,
     required this.verifiedOrgs,
+    required this.activeSubscriptions,
+    required this.dueCommissions,
   });
 
   final int pendingOrgs;
@@ -44,6 +46,8 @@ class AdminCounters {
   final int pendingDeletions;
   final int users;
   final int verifiedOrgs;
+  final int activeSubscriptions;
+  final int dueCommissions;
 }
 
 class AdminRepository {
@@ -64,6 +68,8 @@ class AdminRepository {
       _count(_db.collection('deletionRequests').where('status', isEqualTo: 'pending')),
       _count(_db.collection('users')),
       _count(orgs.where('verification.status', isEqualTo: 'verified')),
+      _count(_db.collection('subscriptions').where('status', isEqualTo: 'active')),
+      _count(_db.collection('commissions').where('status', isEqualTo: 'due')),
     ]);
     return AdminCounters(
       pendingOrgs: results[0],
@@ -71,6 +77,8 @@ class AdminRepository {
       pendingDeletions: results[2],
       users: results[3],
       verifiedOrgs: results[4],
+      activeSubscriptions: results[5],
+      dueCommissions: results[6],
     );
   }
 

@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../billing/data/billing_repository.dart';
+import '../../billing/presentation/billing_labels.dart';
 import '../data/organization_repository.dart';
 import '../domain/organization.dart';
 import 'org_labels.dart';
@@ -61,6 +63,21 @@ class OrgScreen extends ConsumerWidget {
                   onTap: () => context.push('/pro/$orgId/membres'),
                 ),
               ListTile(
+                leading: const Icon(Icons.workspace_premium_outlined),
+                title: Text(l10n.billingSubscription),
+                subtitle: _SubscriptionSummary(orgId: orgId),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push('/pro/$orgId/abonnement'),
+              ),
+              // Au MVP, seules les réservations d'hôtel génèrent des commissions.
+              if (org.type == OrgType.hotel)
+                ListTile(
+                  leading: const Icon(Icons.percent),
+                  title: Text(l10n.commissionsTitle),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.push('/pro/$orgId/commissions'),
+                ),
+              ListTile(
                 enabled: false,
                 leading: const Icon(Icons.list_alt),
                 title: Text(l10n.orgListings),
@@ -69,6 +86,28 @@ class OrgScreen extends ConsumerWidget {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+/// « Gratuit » ou « Hôtel Pro · jusqu'au 24 décembre 2026 ».
+class _SubscriptionSummary extends ConsumerWidget {
+  const _SubscriptionSummary({required this.orgId});
+
+  final String orgId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final subscription = ref.watch(orgSubscriptionProvider(orgId)).value;
+    if (subscription == null || !subscription.isRunningAt(DateTime.now())) {
+      return Text(l10n.billingFree);
+    }
+    return Text(
+      l10n.billingPlanUntil(
+        subscription.planSnapshot.name,
+        billingDate.format(subscription.currentPeriodEnd!),
       ),
     );
   }
