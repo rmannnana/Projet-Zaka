@@ -7,7 +7,17 @@ import {
   initializeTestEnvironment,
   type RulesTestEnvironment,
 } from "@firebase/rules-unit-testing";
-import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 
 // Lancer avec : npm run test:emulators (démarre l'émulateur Firestore).
@@ -66,6 +76,20 @@ beforeEach(async () => {
     await setDoc(doc(db, "users/awa"), { displayName: "Awa", orgIds: ["owner1"], status: "active" });
     await setDoc(doc(db, "properties/published1"), { orgId: "owner1", status: "published", title: "Villa" });
     await setDoc(doc(db, "properties/draft1"), { orgId: "agency1", status: "draft", title: "F3" });
+
+    // Facturation : écrite uniquement par les Cloud Functions.
+    const xof = (amount: number) => ({ amount, currency: "XOF" });
+    await setDoc(doc(db, "subscriptionPlans/free"), { name: "Gratuit", price: xof(0), active: true });
+    await setDoc(doc(db, "commissionRules/rule1"), { scope: "hotel_booking", rate: 10, active: true });
+    await setDoc(doc(db, "subscriptions/sub1"), { orgId: "agency1", planId: "pro", status: "active" });
+    await setDoc(doc(db, "payments/pay1"), {
+      payerUid: "moussa",
+      payerOrgId: "agency1",
+      amount: xof(15000),
+      status: "succeeded",
+    });
+    await setDoc(doc(db, "commissions/com1"), { orgId: "hotel1", amount: xof(4500), status: "due" });
+    await setDoc(doc(db, "organizations/agency1/members/fatou"), { role: "editor" });
   });
 });
 
@@ -197,5 +221,42 @@ describe("demandes", () => {
     await assertFails(
       setDoc(doc(as("awa"), "leads/l2"), { clientUid: "moussa", orgId: "agency1", status: "new" }),
     );
+  });
+});
+
+describe("facturation", () => {
+  it("la grille des plans est publique, les règles de commission réservées à l'équipe", async () => {
+    await assertSucceeds(getDoc(doc(anon(), "subscriptionPlans/free")));
+    await assertFails(getDoc(doc(as("ali"), "commissionRules/rule1")));
+    await assertSucceeds(getDoc(doc(as("modo", { role: "moderator" }), "commissionRules/rule1")));
+  });
+
+  it("personne n'écrit les plans, règles, abonnements, paiements ou commissions depuis l'app", async () => {
+    const admin = as("boss", { role: "admin" });
+    await assertFails(setDoc(doc(admin, "subscriptionPlans/pro"), { name: "Pro", active: true }));
+    await assertFails(updateDoc(doc(admin, "commissionRules/rule1"), { rate: 1 }));
+    await assertFails(updateDoc(doc(as("moussa"), "subscriptions/sub1"), { status: "active" }));
+    await assertFails(updateDoc(doc(as("moussa"), "payments/pay1"), { status: "succeeded" }));
+    await assertFails(setDoc(doc(as("moussa"), "payments/pay2"), { payerUid: "moussa", status: "succeeded" }));
+    await assertFails(updateDoc(doc(as("ali"), "commissions/com1"), { status: "paid" }));
+  });
+
+  it("les membres d'un compte voient ses abonnements et paiements, pas les autres", async () => {
+    await assertSucceeds(getDoc(doc(as("fatou"), "subscriptions/sub1")));
+    await assertSucceeds(getDoc(doc(as("fatou"), "payments/pay1")));
+    await assertSucceeds(
+      getDocs(query(collection(as("fatou"), "payments"), where("payerOrgId", "==", "agency1"))),
+    );
+    await assertFails(getDoc(doc(as("awa"), "subscriptions/sub1")));
+    await assertFails(getDoc(doc(as("awa"), "payments/pay1")));
+    await assertFails(
+      getDocs(query(collection(as("awa"), "payments"), where("payerOrgId", "==", "agency1"))),
+    );
+  });
+
+  it("un hôtel voit ses commissions, pas celles des autres", async () => {
+    await assertSucceeds(getDoc(doc(as("ali"), "commissions/com1")));
+    await assertFails(getDoc(doc(as("moussa"), "commissions/com1")));
+    await assertSucceeds(getDocs(query(collection(as("ali"), "commissions"), where("orgId", "==", "hotel1"))));
   });
 });

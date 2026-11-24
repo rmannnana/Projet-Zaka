@@ -245,6 +245,7 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Grille tarifaire publique (affichée aux pros et sur le site).
     match /subscriptionPlans/{planId} {
       allow read: if true;
       allow write: if false;
@@ -260,8 +261,11 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Payeur, membres du compte payeur (historique des paiements) et équipe ZAKA.
     match /payments/{paymentId} {
-      allow read: if isSelf(resource.data.payerUid) || isStaff();
+      allow read: if isSelf(resource.data.payerUid)
+        || (resource.data.payerOrgId is string && isMember(resource.data.payerOrgId))
+        || isStaff();
       allow write: if false;
     }
 

@@ -1,88 +1,29 @@
-import { initializeApp as initAdmin } from "firebase-admin/app";
-import { getAuth as getAdminAuth } from "firebase-admin/auth";
-import { getFirestore as getAdminDb } from "firebase-admin/firestore";
-import { deleteApp, initializeApp, type FirebaseApp } from "firebase/app";
-import {
-  connectAuthEmulator,
-  createUserWithEmailAndPassword,
-  getAuth,
-  signInWithCustomToken,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import {
-  addDoc,
-  collection,
-  connectFirestoreEmulator,
-  doc,
-  getFirestore,
-  serverTimestamp,
-  updateDoc,
-} from "firebase/firestore";
+import { initializeApp } from "firebase/app";
+import { connectAuthEmulator, getAuth, signInWithCustomToken } from "firebase/auth";
+import { addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { connectFunctionsEmulator, getFunctions, httpsCallable } from "firebase/functions";
-import { connectStorageEmulator, getStorage, ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes } from "firebase/storage";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+
+import {
+  adminAuth,
+  adminDb,
+  client,
+  closeClients,
+  errorCode,
+  host,
+  projectId,
+  suffix,
+  track,
+  type Client,
+} from "./support";
 
 // Parcours complet de la phase 1 sur les émulateurs (Auth, Firestore, Storage, Functions).
 // Lancer avec : npm run test:integration
-const projectId = "demo-zaka";
-const host = "127.0.0.1";
-
-process.env.FIREBASE_AUTH_EMULATOR_HOST ??= `${host}:9099`;
-process.env.FIRESTORE_EMULATOR_HOST ??= `${host}:8080`;
-const admin = initAdmin({ projectId }, "admin");
-const adminAuth = getAdminAuth(admin);
-const adminDb = getAdminDb(admin);
-
-const apps: FirebaseApp[] = [];
-const suffix = Date.now();
-
-/** Un client connecté, avec son propre SDK (comme un téléphone différent). */
-async function client(name: string, opts: { signUp?: boolean; claims?: object } = {}) {
-  const app = initializeApp(
-    { projectId, apiKey: "demo-api-key", storageBucket: `${projectId}.appspot.com` },
-    `${name}-${suffix}`,
-  );
-  apps.push(app);
-  const auth = getAuth(app);
-  connectAuthEmulator(auth, `http://${host}:9099`, { disableWarnings: true });
-  const db = getFirestore(app);
-  connectFirestoreEmulator(db, host, 8080);
-  const storage = getStorage(app);
-  connectStorageEmulator(storage, host, 9199);
-  const functions = getFunctions(app, "europe-west1");
-  connectFunctionsEmulator(functions, host, 5001);
-
-  const email = `${name}-${suffix}@exemple.bf`;
-  if (opts.signUp === false) {
-    await adminAuth.createUser({ email, password: "secret123", displayName: name });
-  } else {
-    await createUserWithEmailAndPassword(auth, email, "secret123");
-  }
-  if (opts.claims) {
-    await adminAuth.setCustomUserClaims(auth.currentUser?.uid ?? (await adminAuth.getUserByEmail(email)).uid, opts.claims);
-  }
-  if (opts.signUp === false || opts.claims) {
-    await signInWithEmailAndPassword(auth, email, "secret123");
-  }
-  const uid = auth.currentUser!.uid;
-  const call = async (fn: string, data: unknown) =>
-    (await httpsCallable(functions, fn)(data)).data as Record<string, unknown>;
-  return { uid, email, db, storage, call };
-}
-
-/** Code d'erreur d'une fonction callable (ex. "functions/permission-denied"). */
-async function errorCode(promise: Promise<unknown>) {
-  try {
-    await promise;
-    return "ok";
-  } catch (e) {
-    return (e as { code: string }).code;
-  }
-}
 
 const pdf = new Uint8Array([37, 80, 68, 70]);
 
-async function uploadDossier(c: Awaited<ReturnType<typeof client>>, orgId: string) {
+async function uploadDossier(c: Client, orgId: string) {
   const documents: Record<string, string> = {};
   for (const kind of ["ifu", "rccm", "proofOfAddress"]) {
     const path = `private/verification/${orgId}/${kind}_${Date.now()}.pdf`;
@@ -92,10 +33,10 @@ async function uploadDossier(c: Awaited<ReturnType<typeof client>>, orgId: strin
   return documents;
 }
 
-let ali: Awaited<ReturnType<typeof client>>;
-let moussa: Awaited<ReturnType<typeof client>>;
-let modo: Awaited<ReturnType<typeof client>>;
-let boss: Awaited<ReturnType<typeof client>>;
+let ali: Client;
+let moussa: Client;
+let modo: Client;
+let boss: Client;
 let orgId: string;
 
 beforeAll(async () => {
@@ -105,9 +46,7 @@ beforeAll(async () => {
   boss = await client("boss", { claims: { role: "admin" } });
 });
 
-afterAll(async () => {
-  await Promise.all(apps.map((a) => deleteApp(a)));
-});
+afterAll(closeClients);
 
 describe("vérification d'un compte pro", () => {
   it("création de l'hôtel en brouillon", async () => {
@@ -167,8 +106,7 @@ describe("particulier", () => {
   it("le numéro vérifié est recopié dans le profil, puis l'espace est créé vérifié d'office", async () => {
     const phone = `+22507${String(suffix).slice(-8)}`;
     const record = await adminAuth.createUser({ phoneNumber: phone, displayName: "Awa" });
-    const app = initializeApp({ projectId, apiKey: "demo-api-key" }, `awa-${suffix}`);
-    apps.push(app);
+    const app = track(initializeApp({ projectId, apiKey: "demo-api-key" }, `awa-${suffix}`));
     const auth = getAuth(app);
     connectAuthEmulator(auth, `http://${host}:9099`, { disableWarnings: true });
     const functions = getFunctions(app, "europe-west1");

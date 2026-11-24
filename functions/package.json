@@ -13,11 +13,12 @@
     "test": "vitest run test/unit",
     "test:rules": "vitest run test/rules --no-file-parallelism",
     "test:emulators": "firebase emulators:exec --project demo-zaka --only firestore,storage \"npm run test:rules\"",
-    "test:integration": "npm run build && firebase emulators:exec --project demo-zaka --only auth,firestore,storage,functions \"vitest run test/integration --testTimeout=30000 --hookTimeout=30000\"",
-    "serve": "npm run build && firebase emulators:start --project demo-zaka --only auth,firestore,storage,functions",
-    "deploy": "firebase deploy --only functions",
+    "test:integration": "npm run build && cross-env FUNCTIONS_DISCOVERY_TIMEOUT=60 firebase emulators:exec --project demo-zaka --only auth,firestore,storage,functions \"vitest run test/integration --no-file-parallelism --testTimeout=30000 --hookTimeout=30000\"",
+    "serve": "npm run build && cross-env FUNCTIONS_DISCOVERY_TIMEOUT=60 firebase emulators:start --project demo-zaka --only auth,firestore,storage,functions",
+    "deploy": "cross-env FUNCTIONS_DISCOVERY_TIMEOUT=60 firebase deploy --only functions",
     "set-role": "node scripts/set-role.mjs",
-    "seed-catalog": "node scripts/seed-catalog.mjs"
+    "seed-catalog": "node scripts/seed-catalog.mjs",
+    "seed-billing": "node scripts/seed-billing.mjs"
   },
   "dependencies": {
     "firebase-admin": "^13.10.0",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^5.0.2",
+    "cross-env": "^7.0.3",
     "firebase": "^12.19.0",
     "typescript": "^7.0.2",
     "vitest": "^4.1.12"
