@@ -55,7 +55,14 @@ flutter run --flavor dev --dart-define=FLAVOR=dev --dart-define=EMULATOR_HOST=10
 ```bash
 cd functions
 npm run seed-catalog     # villes UEMOA, équipements, types de biens
+npm run seed-billing     # plan Gratuit et commission hôtelière par défaut (valeurs provisoires)
 ```
+
+### Paiements
+
+Au MVP, les paiements sont **simulés** : l'écran de paiement affiche « Mode test : aucun
+paiement réel » et l'on choisit l'issue (réussite, échec, annulation). Les tarifs se
+règlent dans le back-office, menu *Facturation* (admins).
 
 ### Connexion par SMS en local
 
