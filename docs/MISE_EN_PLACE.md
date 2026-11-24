@@ -41,7 +41,7 @@ Pour **chaque** projet :
 - ☑ (dev) Créer la base **Firestore** en mode natif, région **`europe-west1`** (⚠️ choix définitif)
 - ☑ (dev) Créer le bucket **Storage** en `europe-west1`
 - ☑ Fixer la région par défaut des **Cloud Functions** : `europe-west1`
-- ☐ Créer une **alerte de budget** (par exemple 20 €, 50 € et 100 € par mois en dev/staging, à ajuster en prod)
+- ☑ (dev) Créer une **alerte de budget** (par exemple 20 €, 50 € et 100 € par mois en dev/staging, à ajuster en prod)
 
 ### 2.2 Services Firebase à activer
 
