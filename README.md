@@ -108,6 +108,25 @@ flutter gen-l10n
 
 Brancher un vrai projet : voir `app/lib/app/firebase_options.dart`.
 
+Lancer l'app web en local sur `zaka-dev-01` plutôt que sur les émulateurs :
+
+```powershell
+flutter run -d chrome --web-port 5000 --dart-define=FLAVOR=dev --dart-define=USE_EMULATORS=false
+```
+
+### Clés d'API Firebase
+
+Les clés présentes dans `firebase_options_*.dart`, `google-services.json` et
+`web/firebase-messaging-sw.js` ne sont **pas des secrets** : elles identifient le projet
+et sont de toute façon lisibles dans le code de tout site web Firebase (voir
+https://firebase.google.com/docs/projects/api-keys). GitHub les signale quand même ; on
+ferme ces alertes avec « Won't fix ». Ce qui protège les données : les règles Firestore et
+Storage, les contrôles des Cloud Functions, puis App Check (phase 5). Chaque clé est
+restreinte dans Google Cloud (voir `docs/MISE_EN_PLACE.md`, « Clés d'API »).
+
+Les vrais secrets (comptes de service, clés CinetPay, mot de passe SMTP) ne vont jamais
+dans le dépôt : ils sont dans Secret Manager.
+
 ### Sites de dev
 
 - App publique : https://zaka-dev-01.web.app

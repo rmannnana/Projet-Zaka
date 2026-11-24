@@ -55,6 +55,7 @@ Pour **chaque** projet :
 | ☑ (dev) **Hosting** | Créer **2 sites** : `zaka-<env>` (site public + espace pro) et `zaka-admin-<env>` (back-office). En dev : `zaka-dev-01` et `zaka-admin-dev`, reliés aux cibles `public` et `admin` par `firebase target:apply` |
 | ☐ **Cloud Messaging (FCM)** | Rien à configurer pour Android. Pour le web : générer la **clé VAPID** (*Paramètres → Cloud Messaging → Web Push*) |
 | ☐ **App Check** | Play Integrity (Android), reCAPTCHA Enterprise (web). Commencer en mode « surveillance » avant de l'imposer |
+| ◐ **Clés d'API** | Dans *Google Cloud → API et services → Identifiants*, garder la restriction d'API posée par Firebase (API Firebase seulement) et ajouter une restriction d'application. **Clé web** : sites `https://<site>.web.app/*` et `https://<projet>.firebaseapp.com/*` de chaque site, plus `http://localhost:5000/*` en dev (fait sur `zaka-dev-01`). **Clé Android** : nom du paquet et SHA-1 de chaque clé de signature, **à faire après les premiers tests sur téléphone** (une restriction mal posée bloque la connexion par SMS) |
 | ☐ **Remote Config** | Créer les paramètres `payments_provider` = `simulation`, `module_installments` = `false`, `module_investments` = `false`, `min_app_version` |
 | ☐ **Crashlytics** + **Analytics** | Activés par défaut avec FlutterFire |
 

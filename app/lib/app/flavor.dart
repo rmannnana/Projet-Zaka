@@ -14,7 +14,8 @@ enum Flavor {
   }
 
   /// En dev, l'app parle aux émulateurs Firebase locaux par défaut.
-  /// Pour viser le vrai projet zaka-dev : `--dart-define=USE_EMULATORS=false`.
+  /// Pour viser le vrai projet zaka-dev-01 : `--dart-define=USE_EMULATORS=false`
+  /// (sur le web, avec `--web-port 5000` : la clé d'API n'accepte que ce port en local).
   bool get useEmulators =>
       this == Flavor.dev &&
       const bool.fromEnvironment('USE_EMULATORS', defaultValue: true);
