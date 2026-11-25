@@ -44,6 +44,7 @@ class _PropertySearchScreenState extends ConsumerState<PropertySearchScreen> wit
     final l10n = AppLocalizations.of(context);
     final sale = _tabs.index == 1;
     await showModalBottomSheet<void>(
+      useRootNavigator: true,
       context: context,
       showDragHandle: true,
       isScrollControlled: true,
@@ -63,7 +64,17 @@ class _PropertySearchScreenState extends ConsumerState<PropertySearchScreen> wit
                   Row(
                     children: [
                       Expanded(child: Text(l10n.filters, style: Theme.of(context).textTheme.titleLarge)),
-                      TextButton(onPressed: () => update(_query.copyWith(propertyType: () => null, maxPrice: () => null, minRooms: () => null, furnished: false)), child: Text(l10n.resetFilters)),
+                      TextButton(
+                        onPressed: () => update(
+                          _query.copyWith(
+                            propertyType: () => null,
+                            maxPrice: () => null,
+                            minRooms: () => null,
+                            furnished: false,
+                          ),
+                        ),
+                        child: Text(l10n.resetFilters),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -207,15 +218,20 @@ class _PropertySearchScreenState extends ConsumerState<PropertySearchScreen> wit
     );
   }
 
-  List<Widget> _properties(BuildContext context, AppLocalizations l10n, PropertyQuery query) =>
-      ref.watch(propertySearchProvider(query)).when(
+  List<Widget> _properties(BuildContext context, AppLocalizations l10n, PropertyQuery query) => ref
+      .watch(propertySearchProvider(query))
+      .when(
         loading: () => [const SliverFillRemaining(child: Center(child: CircularProgressIndicator()))],
         error: (e, _) => [SliverFillRemaining(child: Center(child: Text(l10n.genericError)))],
         data: (items) => items.isEmpty
             ? [
                 SliverFillRemaining(
                   hasScrollBody: false,
-                  child: EmptyState(icon: Icons.home_work_outlined, title: l10n.noPropertyFound, body: l10n.noPropertyFoundHint),
+                  child: EmptyState(
+                    icon: Icons.home_work_outlined,
+                    title: l10n.noPropertyFound,
+                    body: l10n.noPropertyFoundHint,
+                  ),
                 ),
               ]
             : [
@@ -226,8 +242,9 @@ class _PropertySearchScreenState extends ConsumerState<PropertySearchScreen> wit
               ],
       );
 
-  List<Widget> _projects(BuildContext context, AppLocalizations l10n) =>
-      ref.watch(projectSearchProvider(_query.city)).when(
+  List<Widget> _projects(BuildContext context, AppLocalizations l10n) => ref
+      .watch(projectSearchProvider(_query.city))
+      .when(
         loading: () => [const SliverFillRemaining(child: Center(child: CircularProgressIndicator()))],
         error: (e, _) => [SliverFillRemaining(child: Center(child: Text(l10n.genericError)))],
         data: (items) => items.isEmpty

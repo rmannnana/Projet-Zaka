@@ -75,7 +75,11 @@ class HomeScreen extends ConsumerWidget {
                         ),
                       ),
                     ],
-                    SectionTitle(l10n.homeFeaturedHotels, actionLabel: l10n.seeAll, onAction: () => context.go('/hotels')),
+                    SectionTitle(
+                      l10n.homeFeaturedHotels,
+                      actionLabel: l10n.seeAll,
+                      onAction: () => context.go('/hotels'),
+                    ),
                     if (hotels.isEmpty)
                       _Placeholder(l10n.homeNoHotelsYet, icon: Icons.hotel_outlined)
                     else
@@ -105,6 +109,7 @@ class HomeScreen extends ConsumerWidget {
   }
 
   Future<void> _openSearch(BuildContext context, List<City> cities) => showModalBottomSheet<void>(
+    useRootNavigator: true,
     context: context,
     isScrollControlled: true,
     builder: (_) => _SearchSheet(cities: cities),
@@ -335,7 +340,12 @@ class _ProBanner extends StatelessWidget {
                         children: [
                           Text(
                             l10n.homeProTitle,
-                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 18, height: 1.25),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 18,
+                              height: 1.25,
+                            ),
                           ),
                           const SizedBox(height: 6),
                           Text(
@@ -448,6 +458,7 @@ class CityPicker extends StatelessWidget {
 
   Future<void> _pick(BuildContext context) async {
     final picked = await showModalBottomSheet<String>(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       builder: (_) => _CitySheet(cities: cities, selected: value, allLabel: allLabel),
@@ -583,7 +594,10 @@ class _CityOption extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     return ListTile(
       leading: Icon(icon, color: selected ? scheme.primary : null),
-      title: Text(label, style: selected ? TextStyle(color: scheme.primary, fontWeight: FontWeight.w700) : null),
+      title: Text(
+        label,
+        style: selected ? TextStyle(color: scheme.primary, fontWeight: FontWeight.w700) : null,
+      ),
       trailing: selected ? Icon(Icons.check_circle, color: scheme.primary) : null,
       selected: selected,
       selectedTileColor: scheme.primaryContainer.withValues(alpha: 0.5),
@@ -614,7 +628,9 @@ class _Placeholder extends StatelessWidget {
           children: [
             IconTile(icon: icon, background: palette.mint, foreground: palette.onMint),
             const SizedBox(width: 14),
-            Expanded(child: Text(text, style: TextStyle(color: palette.muted))),
+            Expanded(
+              child: Text(text, style: TextStyle(color: palette.muted)),
+            ),
           ],
         ),
       ),

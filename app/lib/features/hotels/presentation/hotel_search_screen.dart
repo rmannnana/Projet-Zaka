@@ -75,6 +75,7 @@ class _HotelSearchScreenState extends ConsumerState<HotelSearchScreen> {
   Future<void> _filters(List<Amenity> amenities) async {
     final l10n = AppLocalizations.of(context);
     await showModalBottomSheet<void>(
+      useRootNavigator: true,
       context: context,
       showDragHandle: true,
       isScrollControlled: true,
@@ -95,10 +96,13 @@ class _HotelSearchScreenState extends ConsumerState<HotelSearchScreen> {
                   Row(
                     children: [
                       Expanded(child: Text(l10n.filters, style: Theme.of(context).textTheme.titleLarge)),
-                      TextButton(onPressed: () => update(() {
+                      TextButton(
+                        onPressed: () => update(() {
                           _maxPrice = null;
                           _amenities.clear();
-                        }), child: Text(l10n.resetFilters)),
+                        }),
+                        child: Text(l10n.resetFilters),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -238,7 +242,9 @@ class _HotelSearchScreenState extends ConsumerState<HotelSearchScreen> {
                     ),
                     SliverCrossAxisConstrained(
                       maxCrossAxisExtent: 1200,
-                      child: ListingGrid(children: [for (final h in hotels) hotelCard(context, h, query: _detailQuery)]),
+                      child: ListingGrid(
+                        children: [for (final h in hotels) hotelCard(context, h, query: _detailQuery)],
+                      ),
                     ),
                   ],
           ),
