@@ -33,3 +33,20 @@ const dateFormat = new Intl.DateTimeFormat("fr-FR", {
 export function formatDate(date: Date): string {
   return dateFormat.format(date);
 }
+
+const dateTimeFormat = new Intl.DateTimeFormat("fr-FR", {
+  dateStyle: "long",
+  timeStyle: "short",
+  timeZone: "Africa/Ouagadougou",
+});
+
+/** « 24 décembre 2026 à 14:30 » */
+export function formatDateTime(date: Date): string {
+  return dateTimeFormat.format(date);
+}
+
+/** Coupe un texte trop long pour une notification. */
+export function excerpt(text: string, max = 140): string {
+  const clean = text.replace(/\s+/g, " ").trim();
+  return clean.length <= max ? clean : `${clean.slice(0, max - 1)}…`;
+}

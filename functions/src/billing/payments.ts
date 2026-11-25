@@ -6,7 +6,9 @@ import { writeAudit } from "../shared/audit";
 import { db } from "../shared/config";
 import { type Money } from "../shared/format";
 import { parseInput, requireAuth } from "../shared/guards";
-import { notifyUser } from "../shared/notify";
+import { memberUids, notifyUser } from "../shared/notify";
+import { hotelLink } from "../bookings/bookingFunctions";
+import { bookingMessages, summaryOf } from "../bookings/lifecycle";
 import { activeGateway } from "./gateway";
 import {
   FREE_PLAN_ID,
@@ -18,10 +20,11 @@ import {
 } from "./plans";
 
 const StartPaymentInput = z.object({
-  orgId: z.string().min(1),
-  // Phase 3 : { type: "booking", bookingRequestId }.
+  /** Compte pro qui souscrit (abonnement uniquement). */
+  orgId: z.string().min(1).optional(),
   purpose: z.discriminatedUnion("type", [
     z.object({ type: z.literal("subscription"), planId: z.string().min(1) }),
+    z.object({ type: z.literal("booking"), bookingRequestId: z.string().min(1) }),
   ]),
 });
 
@@ -41,13 +44,92 @@ interface PlanSnapshot {
   features: Record<string, unknown>;
 }
 
+/** Paiement en ligne d'une réservation acceptée par l'hôtel (le client peut aussi payer sur place). */
+async function startBookingPayment(uid: string, bookingRequestId: string) {
+  const booking = await db.collection("bookingRequests").doc(bookingRequestId).get();
+  if (!booking.exists) throw new HttpsError("not-found", "Réservation introuvable.");
+  if (booking.get("clientUid") !== uid) {
+    throw new HttpsError("permission-denied", "Cette réservation ne vous appartient pas.");
+  }
+  if (booking.get("status") !== "accepted") {
+    throw new HttpsError("failed-precondition", "Seule une réservation acceptée par l'hôtel peut être payée.");
+  }
+  if (booking.get("paymentStatus") !== "unpaid") {
+    throw new HttpsError("failed-precondition", "Cette réservation est déjà payée.");
+  }
+  const amount = booking.get("estimatedTotal") as Money;
+  const nights = booking.get("nights") ?? 1;
+  const description = `Réservation ${booking.get("hotelName")} (${nights} nuit${nights > 1 ? "s" : ""})`;
+  const gateway = activeGateway();
+  const ref = db.collection("payments").doc();
+  await ref.set({
+    provider: gateway.provider,
+    purpose: { type: "booking", bookingRequestId },
+    payerUid: uid,
+    payerOrgId: null,
+    orgId: booking.get("orgId"),
+    orgName: booking.get("hotelName") ?? null,
+    amount,
+    description,
+    status: "pending",
+    simulatedOutcome: null,
+    providerRef: null,
+    createdAt: FieldValue.serverTimestamp(),
+    updatedAt: FieldValue.serverTimestamp(),
+    completedAt: null,
+  });
+  const checkout = await gateway.start({ id: ref.id, amount, description });
+  return { paymentId: ref.id, provider: gateway.provider, amount, description, checkout };
+}
+
+async function confirmBookingPayment(
+  paymentRef: FirebaseFirestore.DocumentReference,
+  bookingRequestId: string,
+  outcome: "success" | "failure" | "cancelled",
+) {
+  const bookingRef = db.collection("bookingRequests").doc(bookingRequestId);
+  const first = await bookingRef.get();
+  const members = first.exists ? await memberUids(first.get("orgId")) : [];
+  return db.runTransaction(async (tx) => {
+    const payment = (await tx.get(paymentRef)).data()!;
+    if (payment.status !== "pending") {
+      throw new HttpsError("failed-precondition", "Ce paiement a déjà été traité.");
+    }
+    const booking = (await tx.get(bookingRef)).data();
+    const status = outcome === "success" ? "succeeded" : outcome === "failure" ? "failed" : "cancelled";
+    if (status === "succeeded") {
+      if (!booking || booking.status !== "accepted" || booking.paymentStatus !== "unpaid") {
+        throw new HttpsError("failed-precondition", "Cette réservation n'est plus à payer (annulée ou déjà payée).");
+      }
+      tx.update(bookingRef, {
+        paymentStatus: "paid_simulated",
+        paymentId: paymentRef.id,
+        paidAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+      for (const uid of members) {
+        notifyUser(tx, uid, { ...bookingMessages.paid(summaryOf(booking)), link: hotelLink(booking.orgId, bookingRef.id) });
+      }
+    }
+    tx.update(paymentRef, {
+      status,
+      simulatedOutcome: outcome,
+      completedAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+    return { status };
+  });
+}
+
 /**
- * Démarre le paiement d'un abonnement. Le montant vient toujours du plan
- * enregistré, jamais de l'app. Réservé aux propriétaires d'un compte vérifié.
+ * Démarre un paiement : abonnement (propriétaire d'un compte vérifié) ou
+ * réservation acceptée (client). Le montant vient toujours du serveur.
  */
 export const startPayment = onCall(async (request) => {
   const uid = requireAuth(request);
   const { orgId, purpose } = parseInput(StartPaymentInput, request.data);
+  if (purpose.type === "booking") return startBookingPayment(uid, purpose.bookingRequestId);
+  if (!orgId) throw new HttpsError("invalid-argument", "Compte pro manquant.");
 
   const orgRef = db.collection("organizations").doc(orgId);
   const [org, member, plan] = await Promise.all([
@@ -128,6 +210,9 @@ export const confirmSimulatedPayment = onCall(async (request) => {
   if (first.get("provider") !== "simulation") {
     throw new HttpsError("failed-precondition", "Ce paiement n'est pas un paiement simulé.");
   }
+  const purpose = first.get("purpose");
+  if (purpose?.type === "booking") return confirmBookingPayment(paymentRef, purpose.bookingRequestId, outcome);
+
   const orgId = first.get("payerOrgId") as string;
   const orgRef = db.collection("organizations").doc(orgId);
   const owners = await orgRef.collection("members").where("role", "==", "owner").get();

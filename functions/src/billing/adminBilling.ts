@@ -3,6 +3,7 @@ import { HttpsError, onCall } from "firebase-functions/v2/https";
 
 import { writeAudit } from "../shared/audit";
 import { db } from "../shared/config";
+import { loadRules } from "./commissionStore";
 import { money } from "../shared/format";
 import { parseInput, requireAdmin, requireStaff } from "../shared/guards";
 import {
@@ -11,10 +12,8 @@ import {
   UpdateCommissionStatusInput,
   canMoveCommission,
   computeCommission,
-  ruleFromData,
   ruleProblem,
   selectRule,
-  type CommissionScope,
 } from "./commissions";
 import { SubscriptionPlanInput, planProblem } from "./plans";
 
@@ -131,16 +130,6 @@ export const upsertCommissionRule = onCall(async (request) => {
   });
   return { ruleId: ref.id };
 });
-
-/** Règles actives d'un type d'opération. */
-export async function loadRules(scope: CommissionScope) {
-  const snap = await db
-    .collection("commissionRules")
-    .where("scope", "==", scope)
-    .where("active", "==", true)
-    .get();
-  return snap.docs.map((d) => ruleFromData(d.id, d.data()));
-}
 
 /**
  * Simulateur du back-office : quelle règle s'appliquerait, et pour quel montant.

@@ -1,4 +1,5 @@
-// Remplit les catalogues de référence (villes, équipements, types de biens).
+// Remplit les catalogues de référence (villes, équipements, types de biens)
+// et la configuration de l'app (`config/app` : délai de réponse aux réservations).
 // Les listes restent ensuite modifiables depuis le back-office (admin).
 //
 // Sur les émulateurs (par défaut) :
@@ -94,4 +95,13 @@ for (const [name, items] of Object.entries(catalogs)) {
   }
   await ref.set({ items, updatedAt: FieldValue.serverTimestamp() });
   console.log(`catalog/${name} : ${items.length} entrées.`);
+}
+
+// Configuration générale : délai de réponse d'un hôtel à une demande de réservation.
+const configRef = db.doc("config/app");
+if ((await configRef.get()).exists && !force) {
+  console.log("config/app : déjà rempli, ignoré.");
+} else {
+  await configRef.set({ bookingExpiryHours: 48, minAppVersion: "1.0.0", updatedAt: FieldValue.serverTimestamp() });
+  console.log("config/app : créé (réponse sous 48 h).");
 }
