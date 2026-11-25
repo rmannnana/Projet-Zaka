@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../l10n/app_localizations.dart';
 import 'flavor.dart';
 import 'router.dart';
+import 'services.dart';
 import 'theme.dart';
 
 /// Racine commune : seule la table de routes change entre l'app publique
@@ -20,6 +21,7 @@ class ZakaApp extends ConsumerWidget {
       target == AppTarget.admin ? adminRouterProvider : publicRouterProvider,
     );
     final flavor = Flavor.current;
+    ref.watch(pushRegistrationProvider);
 
     return MaterialApp.router(
       onGenerateTitle: (context) {

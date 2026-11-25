@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/data/auth_repository.dart';
 import '../data/admin_repository.dart';
+import '../data/moderation_repository.dart';
 
 /// Accueil du back-office : files de travail en attente et chiffres clés.
 class AdminDashboardScreen extends ConsumerWidget {
@@ -14,8 +15,12 @@ class AdminDashboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final counters = ref.watch(adminCountersProvider);
     final isAdmin = ref.watch(staffRoleProvider).value == 'admin';
+    final activity = ref.watch(activityCountersProvider).value;
     return RefreshIndicator(
-      onRefresh: () => ref.refresh(adminCountersProvider.future),
+      onRefresh: () {
+        ref.invalidate(activityCountersProvider);
+        return ref.refresh(adminCountersProvider.future);
+      },
       child: counters.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Chargement impossible : $e')),
@@ -31,13 +36,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                 _Tile('Comptes pros à vérifier', c.pendingOrgs, Icons.verified_user_outlined, '/comptes'),
                 _Tile('Signalements ouverts', c.openReports, Icons.flag_outlined, '/signalements'),
                 _Tile('Demandes de suppression', c.pendingDeletions, Icons.person_remove_outlined, '/suppressions'),
-                const _Tile(
-                  'Annonces de particuliers à valider',
-                  null,
-                  Icons.fact_check_outlined,
-                  null,
-                  note: 'Avec les annonces immobilières (phase 4)',
-                ),
+                _Tile('Annonces de particuliers à valider', activity?.pendingListings, Icons.fact_check_outlined, '/annonces'),
               ],
             ),
             const SizedBox(height: 24),
@@ -49,6 +48,9 @@ class AdminDashboardScreen extends ConsumerWidget {
               children: [
                 _Tile('Utilisateurs inscrits', c.users, Icons.people_outline, null),
                 _Tile('Comptes pros vérifiés', c.verifiedOrgs, Icons.storefront_outlined, '/comptes'),
+                _Tile('Annonces en ligne (hôtels et biens)', activity?.published, Icons.public, null),
+                _Tile('Réservations en attente de réponse', activity?.openBookings, Icons.hotel_outlined, null),
+                _Tile('Nouvelles demandes de contact', activity?.newLeads, Icons.forum_outlined, null),
                 if (isAdmin) ...[
                   _Tile('Abonnements payants actifs', c.activeSubscriptions, Icons.workspace_premium_outlined,
                       '/facturation'),
@@ -64,13 +66,12 @@ class AdminDashboardScreen extends ConsumerWidget {
 }
 
 class _Tile extends StatelessWidget {
-  const _Tile(this.label, this.count, this.icon, this.path, {this.note});
+  const _Tile(this.label, this.count, this.icon, this.path);
 
   final String label;
   final int? count;
   final IconData icon;
   final String? path;
-  final String? note;
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +99,6 @@ class _Tile extends StatelessWidget {
                         ),
                       ),
                       Text(label),
-                      if (note != null) Text(note!, style: theme.textTheme.bodySmall),
                     ],
                   ),
                 ),

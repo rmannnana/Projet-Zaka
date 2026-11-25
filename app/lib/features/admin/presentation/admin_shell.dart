@@ -18,7 +18,9 @@ class AdminDestination {
 const adminDestinations = [
   AdminDestination('/', 'Tableau de bord', Icons.dashboard_outlined),
   AdminDestination('/comptes', 'Comptes pros', Icons.verified_user_outlined),
+  AdminDestination('/annonces', 'Annonces à valider', Icons.fact_check_outlined),
   AdminDestination('/signalements', 'Signalements', Icons.flag_outlined),
+  AdminDestination('/litiges', 'Litiges', Icons.gavel_outlined),
   AdminDestination('/suppressions', 'Suppressions', Icons.person_remove_outlined),
   AdminDestination('/equipe', 'Équipe et rôles', Icons.admin_panel_settings_outlined, adminOnly: true),
   AdminDestination('/facturation', 'Facturation', Icons.payments_outlined, adminOnly: true),
@@ -84,17 +86,27 @@ class AdminShell extends ConsumerWidget {
       appBar: appBar,
       body: Row(
         children: [
-          NavigationRail(
-            extended: MediaQuery.sizeOf(context).width >= 1200,
-            selectedIndex: index < 0 ? null : index,
-            labelType: MediaQuery.sizeOf(context).width >= 1200
-                ? NavigationRailLabelType.none
-                : NavigationRailLabelType.all,
-            onDestinationSelected: (i) => context.go(destinations[i].path),
-            destinations: [
-              for (final d in destinations)
-                NavigationRailDestination(icon: Icon(d.icon), label: Text(d.label)),
-            ],
+          // Menu défilant : il reste utilisable sur un écran peu haut.
+          LayoutBuilder(
+            builder: (context, constraints) => SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: NavigationRail(
+                    extended: MediaQuery.sizeOf(context).width >= 1200,
+                    selectedIndex: index < 0 ? null : index,
+                    labelType: MediaQuery.sizeOf(context).width >= 1200
+                        ? NavigationRailLabelType.none
+                        : NavigationRailLabelType.all,
+                    onDestinationSelected: (i) => context.go(destinations[i].path),
+                    destinations: [
+                      for (final d in destinations)
+                        NavigationRailDestination(icon: Icon(d.icon), label: Text(d.label)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
           const VerticalDivider(width: 1),
           Expanded(child: child),

@@ -30,6 +30,16 @@ const _actionLabels = {
   'commission.paid': 'Commission payée',
   'commission.waived': 'Commission offerte',
   'commission.due': 'Facture de commission annulée',
+  'listing.publish': 'Annonce publiée après validation',
+  'listing.reject': 'Annonce refusée',
+  'listing.suspend': 'Annonce suspendue',
+  'listing.reinstate': 'Annonce rétablie',
+  'booking.accept': 'Réservation acceptée',
+  'booking.reject': 'Réservation refusée',
+  'booking.request_info': 'Précisions demandées au client',
+  'booking.complete': 'Séjour terminé',
+  'booking.cancel': "Réservation annulée par l'hôtel",
+  'dispute.export': 'Dossier de litige exporté',
 };
 
 /// Journal d'activité complet (100 dernières opérations sensibles).

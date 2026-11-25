@@ -9,6 +9,7 @@ import '../features/admin/presentation/admin_dashboard_screen.dart';
 import '../features/admin/presentation/admin_shell.dart';
 import '../features/admin/presentation/audit_screen.dart';
 import '../features/admin/presentation/catalogs_screen.dart';
+import '../features/admin/presentation/moderation_screens.dart';
 import '../features/admin/presentation/org_review_screens.dart';
 import '../features/admin/presentation/requests_screens.dart';
 import '../features/admin/presentation/team_screen.dart';
@@ -296,7 +297,9 @@ final adminRouterProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
+          GoRoute(path: '/annonces', builder: (_, _) => const ListingReviewScreen()),
           GoRoute(path: '/signalements', builder: (_, _) => const ReportsScreen()),
+          GoRoute(path: '/litiges', builder: (_, _) => const DisputesScreen()),
           GoRoute(path: '/suppressions', builder: (_, _) => const DeletionRequestsScreen()),
           GoRoute(path: '/equipe', builder: (_, _) => const TeamScreen()),
           GoRoute(path: '/catalogues', builder: (_, _) => const CatalogsScreen()),

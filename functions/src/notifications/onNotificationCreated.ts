@@ -47,7 +47,7 @@ export const onNotificationCreated = onDocumentCreated(
         notification: { title: n.title, body: n.body },
         data: { link: n.link ?? "/" },
         webpush: { fcmOptions: { link } },
-        android: { priority: "high", notification: { channelId: "zaka" } },
+        android: { priority: "high" },
       });
       const stale = result.responses
         .map((r, i) => (!r.success && r.error?.code?.includes("registration-token") ? tokens[i] : null))
