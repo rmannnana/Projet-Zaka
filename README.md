@@ -58,6 +58,15 @@ npm run seed-catalog     # villes UEMOA, équipements, types de biens
 npm run seed-billing     # plan Gratuit et commission hôtelière par défaut (valeurs provisoires)
 ```
 
+### Options de build (vrais projets)
+
+| Option | Effet |
+|---|---|
+| `--dart-define=USE_EMULATORS=false` | Vise le vrai projet dev (`zaka-dev-01`) au lieu des émulateurs |
+| `--dart-define=FCM_VAPID_KEY=…` | Notifications push sur le web (clé Web Push de la console) |
+| `--dart-define=APP_CHECK=true --dart-define=RECAPTCHA_ENTERPRISE_KEY=…` | Active App Check |
+| `--dart-define=PUBLIC_SITE_URL=…` | Back-office : adresse du site public (liens « Voir l'annonce ») |
+
 ### Paiements
 
 Au MVP, les paiements sont **simulés** : l'écran de paiement affiche « Mode test : aucun
