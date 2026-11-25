@@ -1,0 +1,6 @@
+{
+  "FLAVOR": "dev",
+  "USE_EMULATORS": false,
+  "FCM_VAPID_KEY": "BGPifMdUHQ0URcGpeM3OV1l1EkFgOZEa-iZOPBO7j9mT8W4yI0n4RWq_ozBwaDtEx67X9FnxSoBMEUGjNpHdL5g",
+  "PUBLIC_SITE_URL": "https://zaka-dev-01.web.app"
+}

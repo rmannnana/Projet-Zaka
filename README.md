@@ -63,7 +63,7 @@ npm run seed-billing     # plan Gratuit et commission hôtelière par défaut (v
 | Option | Effet |
 |---|---|
 | `--dart-define=USE_EMULATORS=false` | Vise le vrai projet dev (`zaka-dev-01`) au lieu des émulateurs |
-| `--dart-define=FCM_VAPID_KEY=…` | Notifications push sur le web (clé Web Push de la console) |
+| `--dart-define=FCM_VAPID_KEY=…` | Notifications push sur le web (clé Web Push de la console, publique) |
 | `--dart-define=APP_CHECK=true --dart-define=RECAPTCHA_ENTERPRISE_KEY=…` | Active App Check |
 | `--dart-define=PUBLIC_SITE_URL=…` | Back-office : adresse du site public (liens « Voir l'annonce ») |
 
@@ -152,12 +152,14 @@ $env:FUNCTIONS_DISCOVERY_TIMEOUT = "60"
 firebase deploy --only firestore,storage,functions -P dev
 ```
 
-Sites web : compiler depuis `app/`, puis déployer depuis la racine :
+Sites web : compiler depuis `app/`, puis déployer depuis la racine. Les options du vrai projet
+dev (pas d'émulateurs, clé Web Push, adresse du site public) sont dans `app/config/dev.json` :
+uniquement des valeurs publiques, jamais de secret dans ce dossier.
 
 ```powershell
 cd app
-flutter build web --dart-define=FLAVOR=dev --dart-define=USE_EMULATORS=false
-flutter build web -t lib/main_admin.dart --output build/web_admin --dart-define=FLAVOR=dev --dart-define=USE_EMULATORS=false
+flutter build web --dart-define-from-file=config/dev.json
+flutter build web -t lib/main_admin.dart --output build/web_admin --dart-define-from-file=config/dev.json
 cd ..
 firebase deploy --only hosting -P dev
 ```
