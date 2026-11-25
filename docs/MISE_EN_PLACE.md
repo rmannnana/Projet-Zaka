@@ -54,7 +54,7 @@ Pour **chaque** projet :
 | ☑ (dev) **Cloud Functions** | Déployées depuis le dossier `functions/` |
 | ☑ (dev) **Hosting** | Créer **2 sites** : `zaka-<env>` (site public + espace pro) et `zaka-admin-<env>` (back-office). En dev : `zaka-dev-01` et `zaka-admin-dev`, reliés aux cibles `public` et `admin` par `firebase target:apply` |
 | ☐ **Cloud Messaging (FCM)** | Rien à configurer pour Android. Pour le web : générer la **clé VAPID** (*Paramètres → Cloud Messaging → Web Push*) et la passer au build web : `--dart-define=FCM_VAPID_KEY=…`. Sans elle, le web n'a pas de push (les notifications restent visibles dans l'app) |
-| ☐ **App Check** | Play Integrity (Android), reCAPTCHA Enterprise (web). Créer la clé reCAPTCHA Enterprise, l'enregistrer dans *App Check*, puis builder avec `--dart-define=APP_CHECK=true --dart-define=RECAPTCHA_ENTERPRISE_KEY=…`. Commencer en mode « surveillance » avant de l'imposer |
+| ☐ **App Check** | Play Integrity (Android), reCAPTCHA Enterprise (web). Créer la clé reCAPTCHA Enterprise, l'enregistrer dans *App Check*, puis builder avec `--dart-define=APP_CHECK=true --dart-define=RECAPTCHA_ENTERPRISE_KEY=…`. Commencer en mode « surveillance » avant de l'imposer. À faire avec la création de la fiche Play Console : tant que Play Integrity ne marche pas sur Android, App Check ne peut pas être imposé et n'apporte aucune protection |
 | ◐ **Clés d'API** | Dans *Google Cloud → API et services → Identifiants*, garder la restriction d'API posée par Firebase (API Firebase seulement) et ajouter une restriction d'application. **Clé web** : sites `https://<site>.web.app/*` et `https://<projet>.firebaseapp.com/*` de chaque site, plus `http://localhost:5000/*` en dev (fait sur `zaka-dev-01`). **Clé Android** : nom du paquet et SHA-1 de chaque clé de signature, **à faire après les premiers tests sur téléphone** (une restriction mal posée bloque la connexion par SMS) |
 | ☐ **Remote Config** | Créer les paramètres `payments_provider` = `simulation`, `module_installments` = `false`, `module_investments` = `false`, `min_app_version` |
 | ☐ **Crashlytics** + **Analytics** | Activés par défaut avec FlutterFire |
@@ -72,7 +72,7 @@ Pour **chaque** projet :
 | Service | Réglages |
 |---|---|
 | ☐ **Secret Manager** | Secrets : `BREVO_SMTP_PASSWORD`, `CINETPAY_API_KEY`, `CINETPAY_SITE_ID`, `CINETPAY_SECRET_KEY` (sandbox en dev/staging) |
-| ☐ **Sauvegardes Firestore** | Activer le **Point-in-time recovery**, plus une sauvegarde planifiée quotidienne avec 30 jours de rétention : commandes dans [SAUVEGARDE_RESTAURATION.md](SAUVEGARDE_RESTAURATION.md) |
+| ◐ **Sauvegardes Firestore et Storage** | Point-in-time recovery, sauvegardes quotidienne (7 jours) et hebdomadaire (14 semaines), versionnage Storage (30 jours) : commandes dans [SAUVEGARDE_RESTAURATION.md](SAUVEGARDE_RESTAURATION.md). En place sur `zaka-dev-01`, à refaire sur staging et prod |
 | ☐ **Cloud Scheduler** | Créé automatiquement par les fonctions planifiées (expiration des demandes, rappels, stats) |
 | ☐ **BigQuery** | Dataset `zaka_analytics` en `EU` |
 | ☐ **Cloud Monitoring** | Alertes : erreurs des Functions, pics de lectures Firestore |

@@ -120,6 +120,9 @@ données personnelles (voir l'article 7). Dans ce cas :
 - seules les données dont la conservation est imposée par la loi
   (par exemple les données comptables) sont gardées, sans
   information permettant de vous identifier lorsque c'est possible.
+Les copies de sauvegarde, qui servent uniquement à restaurer le
+service en cas d'incident, sont effacées automatiquement au plus
+tard 14 semaines après la suppression.
 
 
 7. VOS DROITS

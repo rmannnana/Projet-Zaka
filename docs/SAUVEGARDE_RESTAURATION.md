@@ -9,8 +9,8 @@
 
 | Donnée | Où | Sauvegarde |
 |---|---|---|
-| Comptes, annonces, demandes, messages, commissions, paiements, journal d'audit | Firestore | Point-in-time recovery (7 jours) + sauvegarde quotidienne conservée 30 jours |
-| Photos d'annonces, pièces justificatives, exports de litiges | Cloud Storage | Versionnage des objets (fichiers supprimés ou écrasés récupérables 30 jours) |
+| Comptes, annonces, demandes, messages, commissions, paiements, journal d'audit | Firestore | Point-in-time recovery (7 jours) + sauvegarde quotidienne conservée 7 jours + sauvegarde hebdomadaire (dimanche) conservée 14 semaines |
+| Photos d'annonces, pièces justificatives, exports de litiges | Cloud Storage | Versionnage des objets : un fichier supprimé ou écrasé reste récupérable 30 jours, puis il est effacé automatiquement |
 | Comptes de connexion (e-mail, téléphone, Google) | Firebase Authentication | Export mensuel (`firebase auth:export`) conservé hors du projet |
 | Code, règles de sécurité, index, scripts | GitHub | Historique git ; tout se redéploie depuis le dépôt |
 
@@ -19,18 +19,30 @@ Les règles de sécurité et les index ne se sauvegardent pas à part : ils vien
 
 ## 2. Mise en place (une fois par projet)
 
-Remplacer `PROJET` par l'identifiant du projet (ex. `zaka-prod-8c5c8`).
+| Projet | État |
+|---|---|
+| `zaka-dev-01` | ✅ En place depuis le 25/11/2026 |
+| `zaka-staging` | ☐ À faire après activation de la facturation |
+| `zaka-prod-8c5c8` | ☐ À faire avant l'ouverture au public |
+
+Remplacer `PROJET` par l'identifiant du projet (ex. `zaka-prod-8c5c8`). Commandes à lancer
+depuis la racine du dépôt (le fichier `docs/storage-lifecycle.json` y est référencé).
 
 ```powershell
 # Point-in-time recovery : retour possible à n'importe quelle minute des 7 derniers jours.
 gcloud firestore databases update --database="(default)" --enable-pitr --project=PROJET
 
-# Sauvegarde quotidienne de toute la base, conservée 30 jours.
-gcloud firestore backups schedules create --database="(default)" --recurrence=daily --retention=30d --project=PROJET
+# Sauvegardes de toute la base. Google limite une sauvegarde quotidienne à 7 jours de
+# conservation et une hebdomadaire à 14 semaines : on cumule les deux.
+gcloud firestore backups schedules create --database="(default)" --recurrence=daily --retention=7d --project=PROJET
+gcloud firestore backups schedules create --database="(default)" --recurrence=weekly --day-of-week=SUN --retention=14w --project=PROJET
 
 # Versionnage du bucket Storage, et suppression des anciennes versions après 30 jours.
-gcloud storage buckets update gs://PROJET.firebasestorage.app --versioning --project=PROJET
+gcloud storage buckets update gs://PROJET.firebasestorage.app --versioning --lifecycle-file=docs/storage-lifecycle.json --project=PROJET
 ```
+
+Après une suppression de compte, les copies de sauvegarde disparaissent donc au plus tard
+14 semaines plus tard ; la politique de confidentialité l'indique (article 6.2).
 
 Vérifier :
 
