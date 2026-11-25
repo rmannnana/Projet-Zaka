@@ -81,6 +81,18 @@ class AccountScreen extends ConsumerWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.push('/compte/notifications'),
           ),
+          ListTile(
+            leading: const Icon(Icons.favorite_border),
+            title: Text(l10n.favorites),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push('/favoris'),
+          ),
+          ListTile(
+            leading: const Icon(Icons.inbox_outlined),
+            title: Text(l10n.navRequests),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.go('/demandes'),
+          ),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.storefront_outlined),
@@ -88,6 +100,17 @@ class AccountScreen extends ConsumerWidget {
             subtitle: Text(orgCount == 0 ? l10n.proSpacesEmptyHint : l10n.proSpacesCount(orgCount)),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.push(orgCount == 0 ? '/pro/nouveau' : '/pro'),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.gavel_outlined),
+            title: Text(l10n.legalTerms),
+            onTap: () => context.push('/cgu'),
+          ),
+          ListTile(
+            leading: const Icon(Icons.privacy_tip_outlined),
+            title: Text(l10n.legalPrivacy),
+            onTap: () => context.push('/confidentialite'),
           ),
           const Divider(),
           ListTile(

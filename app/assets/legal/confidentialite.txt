@@ -1,0 +1,183 @@
+POLITIQUE DE CONFIDENTIALITÉ DE ZAKA
+
+Dernière mise à jour : [date de mise en ligne]
+
+
+1. RESPONSABLE DU TRAITEMENT
+
+Vos données personnelles sont traitées par [raison sociale],
+[adresse complète], Burkina Faso, éditeur de la plateforme ZAKA.
+
+Pour toute question sur vos données :
+[adresse e-mail dédiée aux données personnelles]
+
+Ce traitement respecte la législation applicable en matière de
+protection des données à caractère personnel, notamment la loi
+n° 001-2021/AN du 30 mars 2021 portant protection des personnes à
+l'égard du traitement des données à caractère personnel au Burkina
+Faso.
+
+
+2. QUELLES DONNÉES COLLECTONS-NOUS ?
+
+2.1. Pour tous les utilisateurs disposant d'un compte :
+- nom, prénom, numéro de téléphone, adresse e-mail, photo de profil
+  (facultative), pays ;
+- identifiants de connexion (nous ne voyons jamais votre mot de
+  passe).
+
+2.2. Lorsque vous utilisez la plateforme :
+- vos demandes de réservation, de contact et de visite (dates,
+  nombre de personnes, message) ;
+- les messages échangés avec les partenaires sur ZAKA ;
+- vos favoris et vos signalements ;
+- l'historique de vos paiements, le cas échéant (montant, date,
+  statut). Les données de carte ou de Mobile Money sont traitées par
+  le prestataire de paiement, pas par ZAKA.
+
+2.3. Pour les partenaires professionnels :
+- les informations de l'entreprise (nom, IFU, RCCM, représentant,
+  coordonnées) ;
+- les copies de l'IFU, du RCCM et du justificatif de résidence ;
+- les annonces publiées et les statistiques associées.
+
+2.4. Données techniques :
+- type d'appareil, version de l'application, données de connexion,
+  rapports de plantage ;
+- statistiques d'utilisation anonymes ou pseudonymes ;
+- identifiant de notification pour vous envoyer des alertes.
+
+2.5. Localisation : si vous l'autorisez, votre position sert
+uniquement à afficher les offres proches de vous. Elle n'est pas
+conservée.
+
+
+3. POURQUOI UTILISONS-NOUS VOS DONNÉES ?
+
+- Créer et gérer votre compte ;
+- vérifier l'identité et l'activité des partenaires professionnels ;
+- transmettre vos demandes aux partenaires et vous informer de leur
+  suivi ;
+- vous envoyer des notifications utiles (réponse à une demande,
+  expiration, rappel) ;
+- traiter les paiements et calculer les commissions des partenaires ;
+- assurer la sécurité de la plateforme et lutter contre la fraude ;
+- traiter les signalements et modérer les annonces ;
+- fournir les informations utiles au règlement d'un litige, à la
+  demande d'une partie ou d'une autorité ;
+- améliorer la plateforme grâce à des statistiques d'utilisation ;
+- respecter nos obligations légales.
+
+Nous ne vendons pas vos données personnelles.
+
+
+4. QUI A ACCÈS À VOS DONNÉES ?
+
+4.1. Les partenaires : lorsque vous envoyez une demande à un hôtel ou
+à un annonceur immobilier, il reçoit votre nom, votre numéro de
+téléphone, votre message et les détails de votre demande.
+
+4.2. L'équipe ZAKA : seulement les personnes habilitées
+(administration, modération, assistance), dans la limite de leurs
+missions. Les justificatifs des partenaires ne sont accessibles
+qu'aux modérateurs.
+
+4.3. Nos prestataires techniques, qui agissent selon nos
+instructions :
+- Google (Firebase / Google Cloud) : hébergement, base de données,
+  authentification, notifications, statistiques, rapports de
+  plantage ;
+- [Brevo] : envoi des e-mails ;
+- [CinetPay] : traitement des paiements, lorsque le paiement en
+  ligne est activé.
+
+4.4. Les autorités : lorsque la loi l'exige ou sur demande d'une
+autorité judiciaire ou administrative compétente.
+
+
+5. OÙ SONT STOCKÉES VOS DONNÉES ?
+
+Vos données sont hébergées par Google Cloud dans des centres de
+données situés dans l'Union européenne (Belgique). Ce transfert hors
+du Burkina Faso est encadré par les engagements de sécurité et de
+confidentialité de notre hébergeur, et [mention des formalités
+accomplies auprès de la CIL, à compléter avec le juriste].
+
+
+6. COMBIEN DE TEMPS CONSERVONS-NOUS VOS DONNÉES ?
+
+6.1. Nous conservons vos données tant que votre compte existe, et
+au-delà, afin de pouvoir fournir les informations nécessaires au
+règlement d'éventuels litiges entre utilisateurs.
+
+6.2. Vous pouvez à tout moment demander la suppression de vos
+données personnelles (voir l'article 7). Dans ce cas :
+- votre profil, vos photos, vos favoris et votre compte sont
+  supprimés ;
+- dans les demandes, réservations et messages déjà échangés, vos
+  informations personnelles sont remplacées par la mention
+  « Utilisateur supprimé » ;
+- seules les données dont la conservation est imposée par la loi
+  (par exemple les données comptables) sont gardées, sans
+  information permettant de vous identifier lorsque c'est possible.
+
+
+7. VOS DROITS
+
+Vous disposez des droits suivants sur vos données :
+- droit d'accès : savoir quelles données nous détenons sur vous ;
+- droit de rectification : corriger des données inexactes ;
+- droit d'opposition : vous opposer à certains traitements, par
+  exemple aux notifications non essentielles ;
+- droit de suppression : demander l'effacement de vos données.
+
+Comment exercer vos droits :
+- dans l'application : Profil > Mes données / Supprimer mon compte ;
+- par e-mail : [adresse e-mail dédiée aux données personnelles].
+
+Nous répondons dans un délai de [30] jours. Une preuve d'identité
+peut vous être demandée si nous avons un doute sur l'auteur de la
+demande.
+
+Si vous estimez que vos droits ne sont pas respectés, vous pouvez
+saisir la Commission de l'Informatique et des Libertés (CIL) du
+Burkina Faso ou l'autorité de protection des données de votre pays.
+
+
+8. SÉCURITÉ
+
+Nous protégeons vos données par des mesures techniques et
+organisationnelles adaptées : connexions chiffrées, accès limités
+selon les rôles, stockage privé des justificatifs, vérification de
+l'authenticité de l'application, journal des opérations sensibles et
+sauvegardes régulières.
+
+
+9. COOKIES ET TRACEURS (SITE WEB)
+
+Le site web de ZAKA utilise des traceurs nécessaires à son
+fonctionnement (maintien de la connexion, sécurité) et des outils de
+mesure d'audience (Google Analytics for Firebase). [Si requis :
+décrire le bandeau de consentement et la manière de refuser les
+traceurs non essentiels.]
+
+
+10. MINEURS
+
+ZAKA est réservée aux personnes âgées d'au moins 18 ans. Nous ne
+collectons pas sciemment de données concernant des mineurs.
+
+
+11. MODIFICATION DE CETTE POLITIQUE
+
+Nous pouvons modifier cette politique. La nouvelle version est
+publiée sur cette page avec sa date de mise à jour. En cas de
+changement important, vous en êtes informé dans l'application.
+
+
+12. CONTACT
+
+[raison sociale]
+[adresse complète]
+E-mail : [adresse e-mail dédiée aux données personnelles]
+Téléphone : [numéro de téléphone]

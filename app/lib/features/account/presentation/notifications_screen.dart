@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../core/links.dart';
 import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
@@ -44,7 +46,9 @@ class NotificationsScreen extends ConsumerWidget {
                       if (uid != null && !n.read) {
                         ref.read(accountRequestsRepositoryProvider).markRead(uid, n.id);
                       }
-                      if (n.link != null) context.push(n.link!);
+                      if (n.link != null) {
+                        n.link!.startsWith('http') ? openExternal(n.link!) : context.push(n.link!);
+                      }
                     },
                   );
                 },

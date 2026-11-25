@@ -341,5 +341,705 @@
   "commissionStatusDue": "Due",
   "commissionStatusInvoiced": "Facturée",
   "commissionStatusPaid": "Payée",
-  "commissionStatusWaived": "Offerte"
+  "commissionStatusWaived": "Offerte",
+  "accept": "Accepter",
+  "reject": "Refuser",
+  "all": "Tout",
+  "any": "Peu importe",
+  "apply": "Appliquer",
+  "close": "Fermer",
+  "confirm": "Confirmer",
+  "delete": "Supprimer",
+  "description": "Description",
+  "send": "Envoyer",
+  "sending": "Envoi…",
+  "saved": "Modifications enregistrées.",
+  "search": "Rechercher",
+  "seeAll": "Tout voir",
+  "explore": "Explorer",
+  "requiredField": "Champ obligatoire",
+  "call": "Appeler",
+  "location": "Emplacement",
+  "district": "Quartier",
+  "allCities": "Toutes les villes",
+  "price": "Prix",
+  "priceSection": "Prix et conditions",
+  "legalTerms": "Conditions d'utilisation",
+  "legalPrivacy": "Confidentialité",
+  "navRequests": "Demandes",
+  "favorites": "Favoris",
+  "favoriteAdd": "Ajouter aux favoris",
+  "favoriteRemove": "Retirer des favoris",
+  "noFavorite": "Aucun favori pour le moment",
+  "noFavoriteHint": "Touchez le cœur d'une annonce pour la retrouver ici.",
+  "featured": "À la une",
+  "publishedBy": "Publié par {name}",
+  "@publishedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "listingUnavailable": "Cette annonce n'est pas disponible.",
+  "requestNotFound": "Demande introuvable.",
+  "homeFeaturedHotels": "Hôtels à la une",
+  "homeFeaturedProperties": "Biens à la une",
+  "homeNoHotelsYet": "Les premiers hôtels arrivent bientôt sur ZAKA.",
+  "homeNoPropertiesYet": "Les premières annonces arrivent bientôt sur ZAKA.",
+  "homeProTitle": "Hôtel, agence, promoteur ou propriétaire ?",
+  "homeProBody": "Publiez vos chambres et vos biens sur ZAKA et recevez des demandes de clients vérifiés.",
+  "homeProAction": "Publier sur ZAKA",
+  "rent": "Louer",
+  "buy": "Acheter",
+  "forRent": "À louer",
+  "forSale": "À vendre",
+  "newProjects": "Programmes neufs",
+  "newProject": "Programme neuf",
+  "chooseDates": "Choisir les dates",
+  "chooseYourDates": "Choisissez vos dates d'arrivée et de départ.",
+  "guests": "Voyageurs",
+  "guestsCount": "{count, plural, =1{1 voyageur} other{{count} voyageurs}}",
+  "@guestsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "filters": "Filtres",
+  "filtersCount": "Filtres ({count})",
+  "@filtersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "maxPricePerNight": "Budget maximum par nuit",
+  "maxBudget": "Budget maximum",
+  "anyBudget": "Tous budgets",
+  "amenities": "Équipements",
+  "showResults": "Voir les résultats",
+  "hotelsFound": "{count, plural, =1{1 hôtel trouvé} other{{count} hôtels trouvés}}",
+  "@hotelsFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noHotelFound": "Aucun hôtel ne correspond à votre recherche",
+  "noHotelFoundHint": "Essayez une autre ville ou retirez des filtres.",
+  "propertyType": "Type de bien",
+  "allTypes": "Tous",
+  "minRooms": "Pièces au minimum",
+  "furnishedOnly": "Meublé uniquement",
+  "noPropertyFound": "Aucun bien ne correspond à votre recherche",
+  "noPropertyFoundHint": "Élargissez la recherche à une autre ville ou un autre budget.",
+  "noProjectFound": "Aucun programme neuf pour le moment",
+  "priceFromPerNight": "À partir de {price} / nuit",
+  "@priceFromPerNight": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "pricePerNight": "{price} / nuit",
+  "@pricePerNight": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "pricePerMonth": "{price} / mois",
+  "@pricePerMonth": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "pricePerDay": "{price} / jour",
+  "@pricePerDay": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "priceFrom": "À partir de {price}",
+  "@priceFrom": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "rooms": "Chambres",
+  "noRoomAvailable": "Aucune chambre proposée pour le moment.",
+  "roomCapacity": "{adults, plural, =1{1 adulte} other{{adults} adultes}}{children, plural, =0{} =1{ + 1 enfant} other{ + {children} enfants}}",
+  "@roomCapacity": {
+    "placeholders": {
+      "adults": {
+        "type": "int"
+      },
+      "children": {
+        "type": "int"
+      }
+    }
+  },
+  "requestThisRoom": "Demander",
+  "hotelRules": "Règles de l'hôtel",
+  "checkInFrom": "Arrivée à partir de {time}",
+  "@checkInFrom": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "checkOutBefore": "Départ avant {time}",
+  "@checkOutBefore": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "petsAllowed": "Animaux acceptés",
+  "petsNotAllowed": "Animaux non acceptés",
+  "cancellationPolicy": "Annulation : {policy}",
+  "@cancellationPolicy": {
+    "placeholders": {
+      "policy": {
+        "type": "String"
+      }
+    }
+  },
+  "offerUntil": "Jusqu'au {date}",
+  "@offerUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingConfirmationNotice": "Chaque demande est confirmée par l'hôtel, qui répond sous 48 h.",
+  "bookingRequestTitle": "Demande de réservation",
+  "adults": "Adultes",
+  "children": "Enfants",
+  "roomsCount": "Chambres",
+  "messageToHotel": "Message à l'hôtel (facultatif)",
+  "messageToHotelHint": "Heure d'arrivée, demande particulière…",
+  "estimatedTotal": "Total estimé",
+  "estimateDetail": "{price} × {nights, plural, =1{1 nuit} other{{nights} nuits}} × {rooms, plural, =1{1 chambre} other{{rooms} chambres}}",
+  "@estimateDetail": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      },
+      "nights": {
+        "type": "int"
+      },
+      "rooms": {
+        "type": "int"
+      }
+    }
+  },
+  "nightsCount": "{count, plural, =1{1 nuit} other{{count} nuits}}",
+  "@nightsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bookingRequestNotice": "Ceci est une demande : l'hôtel confirme la disponibilité et le prix. Vous ne payez rien pour l'instant.",
+  "sendRequest": "Envoyer la demande",
+  "bookingSentTitle": "Demande envoyée",
+  "bookingSentBody": "{hotel} a jusqu'au {deadline} pour vous répondre. Vous serez prévenu dès sa réponse.",
+  "@bookingSentBody": {
+    "placeholders": {
+      "hotel": {
+        "type": "String"
+      },
+      "deadline": {
+        "type": "String"
+      }
+    }
+  },
+  "seeMyRequest": "Voir ma demande",
+  "askVisit": "Demander une visite",
+  "askInformation": "Demander des informations",
+  "surfaceValue": "{value} m²",
+  "@surfaceValue": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "roomsValue": "{count, plural, =1{1 pièce} other{{count} pièces}}",
+  "@roomsValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bedroomsValue": "{count, plural, =1{1 chambre} other{{count} chambres}}",
+  "@bedroomsValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bathroomsValue": "{count, plural, =1{1 salle d'eau} other{{count} salles d'eau}}",
+  "@bathroomsValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "features": "Atouts",
+  "rentConditions": "Conditions de location",
+  "depositValue": "Caution : {value}",
+  "@depositValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "advanceValue": "Avance : {value}",
+  "@advanceValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "agencyFeesValue": "Frais d'agence : {value}",
+  "@agencyFeesValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "publisher": "Annonceur",
+  "verifiedProfessional": "Professionnel vérifié par ZAKA",
+  "realEstateDisclaimer": "ZAKA met en relation les particuliers et les professionnels. Ne versez jamais d'argent avant d'avoir visité le bien et vérifié les documents.",
+  "deliveryValue": "Livraison prévue : {date}",
+  "@deliveryValue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "budgetValue": "Budget estimé : {amount}",
+  "@budgetValue": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "unitsAvailableValue": "{available, plural, =0{Aucun lot disponible} =1{1 lot disponible} other{{available} lots disponibles}} sur {total}",
+  "@unitsAvailableValue": {
+    "placeholders": {
+      "available": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "units": "Lots",
+  "noUnitYet": "Aucun lot renseigné pour le moment.",
+  "interested": "Ça m'intéresse",
+  "unitAvailable": "Disponible",
+  "unitReserved": "Réservé",
+  "unitSold": "Vendu",
+  "leadTypeContact": "Contacter",
+  "leadTypeVisit": "Visite",
+  "leadTypeInfo": "Information",
+  "leadTemplate": "Bonjour, votre annonce « {title} » m'intéresse. Est-elle toujours disponible ?",
+  "@leadTemplate": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "leadTemplateUnit": "Bonjour, le lot {unit} du programme « {title} » m'intéresse. Pouvez-vous m'en dire plus ?",
+  "@leadTemplateUnit": {
+    "placeholders": {
+      "unit": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "yourMessage": "Votre message",
+  "preferredDates": "Vos disponibilités",
+  "preferredDatesHint": "Ex. samedi matin, en semaine après 17 h",
+  "preferredDatesValue": "Disponibilités : {value}",
+  "@preferredDatesValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "contactPhoneHelp": "L'annonceur pourra vous rappeler à ce numéro.",
+  "leadMessageRequired": "Écrivez un message à l'annonceur.",
+  "leadSent": "Demande envoyée. L'annonceur vous répondra dans votre espace Demandes.",
+  "leadNew": "Nouvelle",
+  "leadInProgress": "Prise en charge",
+  "leadVisitScheduled": "Visite programmée",
+  "leadClosed": "Close",
+  "visitPlanned": "Visite prévue le {date}",
+  "@visitPlanned": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "unitLabel": "Lot {label}",
+  "@unitLabel": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "bookings": "Réservations",
+  "contactRequests": "Contacts",
+  "bookingRequest": "Demande de réservation",
+  "contactRequest": "Demande de contact",
+  "noBookingYet": "Aucune réservation pour le moment",
+  "noBookingYetHint": "Trouvez un hôtel et envoyez une demande : il vous répond sous 48 h.",
+  "findHotel": "Trouver un hôtel",
+  "noLeadYet": "Aucune demande de contact",
+  "noLeadYetHint": "Contactez un annonceur ou demandez une visite depuis une annonce.",
+  "findProperty": "Voir les annonces",
+  "bookingPending": "En attente",
+  "bookingInfoRequested": "Précisions demandées",
+  "bookingAccepted": "Acceptée",
+  "bookingRejected": "Refusée",
+  "bookingCancelled": "Annulée",
+  "bookingExpired": "Expirée",
+  "bookingCompleted": "Séjour terminé",
+  "bookingPendingHelp": "L'hôtel doit vous répondre avant le {deadline}.",
+  "@bookingPendingHelp": {
+    "placeholders": {
+      "deadline": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingInfoRequestedHelp": "L'hôtel vous pose une question : répondez dans la discussion ci-dessous.",
+  "bookingAcceptedHelp": "Votre réservation est confirmée. Vous pouvez payer en ligne ou à l'hôtel.",
+  "bookingPaidHelp": "Votre réservation est confirmée et payée. Bon séjour !",
+  "bookingRejectedHelp": "L'hôtel ne peut pas vous accueillir à ces dates. Essayez d'autres dates ou un autre hôtel.",
+  "bookingCancelledHelp": "Cette réservation a été annulée.",
+  "bookingExpiredHelp": "L'hôtel n'a pas répondu à temps. Votre demande est close, sans frais.",
+  "bookingCompletedHelp": "Merci d'avoir séjourné avec ZAKA !",
+  "guestsSummary": "{adults, plural, =1{1 adulte} other{{adults} adultes}}{children, plural, =0{} =1{, 1 enfant} other{, {children} enfants}} · {rooms, plural, =1{1 chambre} other{{rooms} chambres}}",
+  "@guestsSummary": {
+    "placeholders": {
+      "adults": {
+        "type": "int"
+      },
+      "children": {
+        "type": "int"
+      },
+      "rooms": {
+        "type": "int"
+      }
+    }
+  },
+  "payOnline": "Payer en ligne",
+  "payAtHotelNotice": "Vous pouvez aussi payer directement à l'hôtel.",
+  "paidSimulated": "Payée en ligne (mode test)",
+  "cancelBooking": "Annuler la réservation",
+  "keepBooking": "Garder",
+  "cancelBookingTitle": "Annuler cette demande ?",
+  "cancelBookingBody": "L'hôtel sera prévenu. Les conditions d'annulation de l'hôtel s'appliquent.",
+  "conversation": "Discussion",
+  "conversationEmpty": "Aucun message. Posez vos questions ici.",
+  "writeMessage": "Écrire un message…",
+  "checkoutBookingPaid": "Votre réservation est payée. L'hôtel est prévenu.",
+  "checkoutBackToBooking": "Retour à la réservation",
+  "myListings": "Mes annonces",
+  "myListingsHint": "Créer, publier, mettre en avant",
+  "newListing": "Nouvelle annonce",
+  "newProperty": "Nouveau bien",
+  "newProjectListing": "Nouveau programme",
+  "noListingYet": "Aucune annonce pour le moment",
+  "noListingYetHint": "Créez votre première annonce : elle reste en brouillon jusqu'à sa publication.",
+  "listingsNeedVerification": "Vous pourrez publier dès que votre compte sera vérifié.",
+  "listingsReviewedByZaka": "Vos annonces sont vérifiées par ZAKA avant d'être publiées, généralement sous 24 h.",
+  "listingsOnline": "{online} / {max} annonces en ligne",
+  "@listingsOnline": {
+    "placeholders": {
+      "online": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "listingsOnlineUnlimited": "{count, plural, =1{1 annonce en ligne} other{{count} annonces en ligne}}",
+  "@listingsOnlineUnlimited": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planLabel": "Plan {name}",
+  "@planLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "changePlan": "Changer",
+  "untitledHotel": "Hôtel sans nom",
+  "untitledListing": "Annonce sans titre",
+  "untitledProject": "Programme sans nom",
+  "roomTypesCount": "{count, plural, =0{Aucun type de chambre} =1{1 type de chambre} other{{count} types de chambres}}",
+  "@roomTypesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "acceptanceRate": "{rate} % de demandes acceptées",
+  "@acceptanceRate": {
+    "placeholders": {
+      "rate": {
+        "type": "int"
+      }
+    }
+  },
+  "statsHotel": "{views} vues · {requests} demandes",
+  "@statsHotel": {
+    "placeholders": {
+      "views": {
+        "type": "int"
+      },
+      "requests": {
+        "type": "int"
+      }
+    }
+  },
+  "statsListing": "{views} vues · {leads} contacts",
+  "@statsListing": {
+    "placeholders": {
+      "views": {
+        "type": "int"
+      },
+      "leads": {
+        "type": "int"
+      }
+    }
+  },
+  "moderationReason": "Motif : {reason}",
+  "@moderationReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "publish": "Publier",
+  "sendForReview": "Envoyer à la validation",
+  "publishedNow": "Annonce en ligne.",
+  "sentForReview": "Annonce envoyée à ZAKA pour validation.",
+  "takeOffline": "Retirer de la ligne",
+  "takenOffline": "Annonce retirée.",
+  "feature": "Mettre à la une",
+  "unfeature": "Retirer de la une",
+  "featuredNow": "Annonce mise à la une.",
+  "markUnderOffer": "Marquer « sous offre »",
+  "markRentedOrSold": "Marquer louée / vendue",
+  "backOnline": "Remettre disponible",
+  "markInProgress": "Travaux en cours",
+  "markDelivered": "Programme livré",
+  "seePublicListing": "Voir l'annonce",
+  "listingDraft": "Brouillon",
+  "listingPendingReview": "En validation",
+  "listingPublished": "En ligne",
+  "listingRejected": "Refusée",
+  "listingUnderOffer": "Sous offre",
+  "listingRented": "Louée",
+  "listingSold": "Vendue",
+  "listingInactive": "Hors ligne",
+  "listingInProgress": "Travaux en cours",
+  "listingDelivered": "Livré",
+  "listingSuspended": "Suspendue",
+  "waitingForReview": "En cours de validation par ZAKA",
+  "reviewAgainTitle": "Nouvelle validation",
+  "reviewAgainBody": "Votre annonce est en ligne : après modification, elle sera de nouveau vérifiée par ZAKA avant d'être republiée.",
+  "tabInfo": "Infos",
+  "tabPhotos": "Photos",
+  "tabOffers": "Offres",
+  "tabAvailability": "Disponibilités",
+  "hotelIdentity": "L'hôtel",
+  "hotelName": "Nom de l'hôtel",
+  "stars": "Classement",
+  "notRated": "Non classé",
+  "receptionPhone": "Téléphone de la réception",
+  "checkInTime": "Heure d'arrivée",
+  "checkOutTime": "Heure de départ",
+  "cancellationPolicyLabel": "Conditions d'annulation",
+  "cancellationPolicyHint": "Ex. gratuite jusqu'à 24 h avant l'arrivée",
+  "otherRules": "Autres règles",
+  "photosHelp": "Ajoutez des photos lumineuses : la première sert de couverture. 12 photos au plus, 8 Mo chacune.",
+  "addPhotos": "Ajouter des photos",
+  "cover": "Couverture",
+  "makeCover": "Mettre en couverture",
+  "photoTooLarge": "{name} dépasse 8 Mo.",
+  "@photoTooLarge": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "addRoomType": "Ajouter un type de chambre",
+  "editRoomType": "Modifier le type de chambre",
+  "noRoomTypeYet": "Aucun type de chambre",
+  "noRoomTypeYetHint": "Ajoutez vos chambres avec leur prix : il en faut au moins une pour publier.",
+  "roomTypeName": "Type de chambre",
+  "roomTypeNameHint": "Ex. Chambre double climatisée",
+  "pricePerNightLabel": "Prix par nuit",
+  "roomsOfThisType": "Nombre de chambres",
+  "beds": "Lits",
+  "bedsHint": "Ex. 1 grand lit",
+  "roomActive": "Proposée aux clients",
+  "roomQuantity": "{count, plural, =1{1 chambre} other{{count} chambres}}",
+  "@roomQuantity": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inactiveRoom": "non proposée",
+  "addOffer": "Ajouter une offre",
+  "editOffer": "Modifier l'offre",
+  "noOfferYet": "Aucune offre spéciale",
+  "noOfferYetHint": "Créez une remise sur une période : elle s'affiche sur votre fiche.",
+  "offerTitle": "Titre de l'offre",
+  "offerTitleHint": "Ex. Spécial fêtes de fin d'année",
+  "discount": "Remise",
+  "offerPeriod": "Choisir la période",
+  "offerRooms": "Chambres concernées (aucune sélection : toutes)",
+  "offerActive": "Offre active",
+  "offerIncomplete": "Indiquez un titre, une remise entre 1 et 99 % et une période.",
+  "inactiveOffer": "inactive",
+  "availabilityHelp": "Indiquez les jours où vous avez moins de chambres libres (ou aucune). Les autres jours, toutes les chambres du type sont considérées comme disponibles.",
+  "roomsAvailable": "Chambres libres",
+  "resetDay": "Toutes libres",
+  "closeWholeMonth": "Complet tout le mois",
+  "openWholeMonth": "Tout disponible",
+  "listingMain": "L'annonce",
+  "listingTitle": "Titre",
+  "listingTitleHint": "Ex. Villa 4 pièces avec jardin à Ouaga 2000",
+  "rentPeriod": "Loyer",
+  "perMonth": "Par mois",
+  "perDay": "Par jour",
+  "deposit": "Caution",
+  "depositHint": "Ex. 2 mois",
+  "advance": "Avance sur loyer",
+  "advanceHint": "Ex. 3 mois",
+  "agencyFees": "Frais d'agence",
+  "characteristics": "Caractéristiques",
+  "surface": "Surface",
+  "roomsLabel": "Pièces",
+  "bedrooms": "Chambres",
+  "bathrooms": "Salles d'eau",
+  "addressHelp": "Restez général si vous préférez : le quartier suffit.",
+  "projectName": "Nom du programme",
+  "deliveryDate": "Livraison prévue",
+  "deliveryDateHint": "Ex. 2e trimestre 2027",
+  "estimatedBudget": "Budget estimé",
+  "addUnit": "Ajouter un lot",
+  "editUnit": "Modifier le lot",
+  "unitName": "Nom du lot",
+  "receivedBookings": "Demandes de réservation",
+  "receivedLeads": "Demandes de contact",
+  "toHandle": "À traiter ({count})",
+  "@toHandle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closedRequests": "Closes",
+  "noRequestHere": "Aucune demande ici.",
+  "answerBefore": "Répondre avant le {deadline}",
+  "@answerBefore": {
+    "placeholders": {
+      "deadline": {
+        "type": "String"
+      }
+    }
+  },
+  "hotelPendingHelp": "Acceptez ou refusez avant le {deadline}, sinon la demande expirera.",
+  "@hotelPendingHelp": {
+    "placeholders": {
+      "deadline": {
+        "type": "String"
+      }
+    }
+  },
+  "hotelInfoRequestedHelp": "Vous avez demandé des précisions : la réponse du client remettra la demande en attente.",
+  "hotelAcceptedHelp": "Réservation confirmée. Le client peut payer en ligne ou sur place.",
+  "hotelPaidHelp": "Réservation confirmée et payée en ligne (mode test).",
+  "askInfo": "Demander des précisions",
+  "askInfoTitle": "Question au client",
+  "rejectBookingTitle": "Refuser la demande",
+  "cancelAcceptedTitle": "Annuler la réservation",
+  "stayCompleted": "Séjour terminé",
+  "commissionDueFor": "Commission ZAKA due pour ce séjour : {amount}",
+  "@commissionDueFor": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "messageForClient": "Message au client",
+  "messageForClientOptional": "Message au client (facultatif)",
+  "takeCharge": "Prendre en charge",
+  "scheduleVisit": "Programmer une visite",
+  "changeVisit": "Changer la visite",
+  "closeRequest": "Clore la demande",
+  "whatsappLeadText": "Bonjour, je vous contacte au sujet de « {title} » sur ZAKA.",
+  "@whatsappLeadText": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  }
 }

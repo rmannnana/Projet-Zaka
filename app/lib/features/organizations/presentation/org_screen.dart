@@ -77,12 +77,28 @@ class OrgScreen extends ConsumerWidget {
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => context.push('/pro/$orgId/commissions'),
                 ),
+              const Divider(),
               ListTile(
-                enabled: false,
                 leading: const Icon(Icons.list_alt),
-                title: Text(l10n.orgListings),
-                subtitle: Text(l10n.comingSoon),
+                title: Text(l10n.myListings),
+                subtitle: Text(org.isVerified ? l10n.myListingsHint : l10n.listingsNeedVerification),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push('/pro/$orgId/annonces'),
               ),
+              if (org.type == OrgType.hotel)
+                ListTile(
+                  leading: const Icon(Icons.inbox_outlined),
+                  title: Text(l10n.receivedBookings),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.push('/pro/$orgId/reservations'),
+                )
+              else
+                ListTile(
+                  leading: const Icon(Icons.forum_outlined),
+                  title: Text(l10n.receivedLeads),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.push('/pro/$orgId/contacts'),
+                ),
             ],
           );
         },

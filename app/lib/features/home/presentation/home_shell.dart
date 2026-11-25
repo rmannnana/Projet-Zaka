@@ -19,6 +19,7 @@ class HomeShell extends StatelessWidget {
       (Icons.home_outlined, Icons.home, l10n.navHome),
       (Icons.hotel_outlined, Icons.hotel, l10n.navHotels),
       (Icons.apartment_outlined, Icons.apartment, l10n.navRealEstate),
+      (Icons.inbox_outlined, Icons.inbox, l10n.navRequests),
       (Icons.person_outline, Icons.person, l10n.navAccount),
     ];
     final wide = MediaQuery.sizeOf(context).width >= 840;

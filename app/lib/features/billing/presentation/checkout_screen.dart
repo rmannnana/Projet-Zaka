@@ -11,10 +11,14 @@ import 'billing_labels.dart';
 /// Écran de paiement simulé : aucun argent ne circule, l'utilisateur choisit l'issue.
 /// Avec CinetPay (phase 6), il sera remplacé par la page du prestataire.
 class CheckoutScreen extends ConsumerStatefulWidget {
-  const CheckoutScreen({super.key, required this.orgId, required this.paymentId});
+  const CheckoutScreen({super.key, this.orgId, required this.paymentId, this.backLocation});
 
-  final String orgId;
+  /// Compte pro qui paie un abonnement (null pour une réservation payée par un client).
+  final String? orgId;
   final String paymentId;
+
+  /// Page où revenir après le paiement.
+  final String? backLocation;
 
   @override
   ConsumerState<CheckoutScreen> createState() => _CheckoutScreenState();
@@ -67,7 +71,11 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   if (payment.status == PaymentStatus.pending)
                     ..._pendingActions(l10n)
                   else
-                    _Result(orgId: widget.orgId, payment: payment),
+                    _Result(
+                      orgId: widget.orgId,
+                      payment: payment,
+                      backLocation: widget.backLocation ?? '/pro/${widget.orgId}/abonnement',
+                    ),
                 ],
               );
             },
@@ -136,22 +144,24 @@ class _TestBanner extends StatelessWidget {
 }
 
 class _Result extends ConsumerWidget {
-  const _Result({required this.orgId, required this.payment});
+  const _Result({required this.orgId, required this.payment, required this.backLocation});
 
-  final String orgId;
+  final String? orgId;
   final Payment payment;
+  final String backLocation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
-    final end = ref.watch(orgSubscriptionProvider(orgId)).value?.currentPeriodEnd;
+    final end = orgId == null ? null : ref.watch(orgSubscriptionProvider(orgId!)).value?.currentPeriodEnd;
+    final booking = payment.purpose.type == 'booking';
 
     final (IconData icon, String title, String? body) = switch (payment.status) {
       PaymentStatus.succeeded => (
         Icons.check_circle,
         l10n.checkoutSucceeded,
-        end == null ? null : l10n.checkoutSucceededUntil(billingDate.format(end)),
+        booking ? l10n.checkoutBookingPaid : (end == null ? null : l10n.checkoutSucceededUntil(billingDate.format(end))),
       ),
       PaymentStatus.failed => (Icons.error, l10n.checkoutFailed, l10n.checkoutFailedBody),
       _ => (Icons.cancel_outlined, l10n.checkoutCancelled, null),
@@ -168,8 +178,8 @@ class _Result extends ConsumerWidget {
         ],
         const SizedBox(height: 24),
         FilledButton(
-          onPressed: () => context.go('/pro/$orgId/abonnement'),
-          child: Text(l10n.checkoutBackToSubscription),
+          onPressed: () => context.go(backLocation),
+          child: Text(booking ? l10n.checkoutBackToBooking : l10n.checkoutBackToSubscription),
         ),
       ],
     );

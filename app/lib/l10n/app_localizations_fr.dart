@@ -676,4 +676,1215 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get commissionStatusWaived => 'Offerte';
+
+  @override
+  String get accept => 'Accepter';
+
+  @override
+  String get reject => 'Refuser';
+
+  @override
+  String get all => 'Tout';
+
+  @override
+  String get any => 'Peu importe';
+
+  @override
+  String get apply => 'Appliquer';
+
+  @override
+  String get close => 'Fermer';
+
+  @override
+  String get confirm => 'Confirmer';
+
+  @override
+  String get delete => 'Supprimer';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get send => 'Envoyer';
+
+  @override
+  String get sending => 'Envoi…';
+
+  @override
+  String get saved => 'Modifications enregistrées.';
+
+  @override
+  String get search => 'Rechercher';
+
+  @override
+  String get seeAll => 'Tout voir';
+
+  @override
+  String get explore => 'Explorer';
+
+  @override
+  String get requiredField => 'Champ obligatoire';
+
+  @override
+  String get call => 'Appeler';
+
+  @override
+  String get location => 'Emplacement';
+
+  @override
+  String get district => 'Quartier';
+
+  @override
+  String get allCities => 'Toutes les villes';
+
+  @override
+  String get price => 'Prix';
+
+  @override
+  String get priceSection => 'Prix et conditions';
+
+  @override
+  String get legalTerms => 'Conditions d\'utilisation';
+
+  @override
+  String get legalPrivacy => 'Confidentialité';
+
+  @override
+  String get navRequests => 'Demandes';
+
+  @override
+  String get favorites => 'Favoris';
+
+  @override
+  String get favoriteAdd => 'Ajouter aux favoris';
+
+  @override
+  String get favoriteRemove => 'Retirer des favoris';
+
+  @override
+  String get noFavorite => 'Aucun favori pour le moment';
+
+  @override
+  String get noFavoriteHint =>
+      'Touchez le cœur d\'une annonce pour la retrouver ici.';
+
+  @override
+  String get featured => 'À la une';
+
+  @override
+  String publishedBy(String name) {
+    return 'Publié par $name';
+  }
+
+  @override
+  String get listingUnavailable => 'Cette annonce n\'est pas disponible.';
+
+  @override
+  String get requestNotFound => 'Demande introuvable.';
+
+  @override
+  String get homeFeaturedHotels => 'Hôtels à la une';
+
+  @override
+  String get homeFeaturedProperties => 'Biens à la une';
+
+  @override
+  String get homeNoHotelsYet =>
+      'Les premiers hôtels arrivent bientôt sur ZAKA.';
+
+  @override
+  String get homeNoPropertiesYet =>
+      'Les premières annonces arrivent bientôt sur ZAKA.';
+
+  @override
+  String get homeProTitle => 'Hôtel, agence, promoteur ou propriétaire ?';
+
+  @override
+  String get homeProBody =>
+      'Publiez vos chambres et vos biens sur ZAKA et recevez des demandes de clients vérifiés.';
+
+  @override
+  String get homeProAction => 'Publier sur ZAKA';
+
+  @override
+  String get rent => 'Louer';
+
+  @override
+  String get buy => 'Acheter';
+
+  @override
+  String get forRent => 'À louer';
+
+  @override
+  String get forSale => 'À vendre';
+
+  @override
+  String get newProjects => 'Programmes neufs';
+
+  @override
+  String get newProject => 'Programme neuf';
+
+  @override
+  String get chooseDates => 'Choisir les dates';
+
+  @override
+  String get chooseYourDates => 'Choisissez vos dates d\'arrivée et de départ.';
+
+  @override
+  String get guests => 'Voyageurs';
+
+  @override
+  String guestsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count voyageurs',
+      one: '1 voyageur',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get filters => 'Filtres';
+
+  @override
+  String filtersCount(int count) {
+    return 'Filtres ($count)';
+  }
+
+  @override
+  String get maxPricePerNight => 'Budget maximum par nuit';
+
+  @override
+  String get maxBudget => 'Budget maximum';
+
+  @override
+  String get anyBudget => 'Tous budgets';
+
+  @override
+  String get amenities => 'Équipements';
+
+  @override
+  String get showResults => 'Voir les résultats';
+
+  @override
+  String hotelsFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hôtels trouvés',
+      one: '1 hôtel trouvé',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noHotelFound => 'Aucun hôtel ne correspond à votre recherche';
+
+  @override
+  String get noHotelFoundHint =>
+      'Essayez une autre ville ou retirez des filtres.';
+
+  @override
+  String get propertyType => 'Type de bien';
+
+  @override
+  String get allTypes => 'Tous';
+
+  @override
+  String get minRooms => 'Pièces au minimum';
+
+  @override
+  String get furnishedOnly => 'Meublé uniquement';
+
+  @override
+  String get noPropertyFound => 'Aucun bien ne correspond à votre recherche';
+
+  @override
+  String get noPropertyFoundHint =>
+      'Élargissez la recherche à une autre ville ou un autre budget.';
+
+  @override
+  String get noProjectFound => 'Aucun programme neuf pour le moment';
+
+  @override
+  String priceFromPerNight(String price) {
+    return 'À partir de $price / nuit';
+  }
+
+  @override
+  String pricePerNight(String price) {
+    return '$price / nuit';
+  }
+
+  @override
+  String pricePerMonth(String price) {
+    return '$price / mois';
+  }
+
+  @override
+  String pricePerDay(String price) {
+    return '$price / jour';
+  }
+
+  @override
+  String priceFrom(String price) {
+    return 'À partir de $price';
+  }
+
+  @override
+  String get rooms => 'Chambres';
+
+  @override
+  String get noRoomAvailable => 'Aucune chambre proposée pour le moment.';
+
+  @override
+  String roomCapacity(int adults, int children) {
+    String _temp0 = intl.Intl.pluralLogic(
+      adults,
+      locale: localeName,
+      other: '$adults adultes',
+      one: '1 adulte',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      children,
+      locale: localeName,
+      other: ' + $children enfants',
+      one: ' + 1 enfant',
+      zero: '',
+    );
+    return '$_temp0$_temp1';
+  }
+
+  @override
+  String get requestThisRoom => 'Demander';
+
+  @override
+  String get hotelRules => 'Règles de l\'hôtel';
+
+  @override
+  String checkInFrom(String time) {
+    return 'Arrivée à partir de $time';
+  }
+
+  @override
+  String checkOutBefore(String time) {
+    return 'Départ avant $time';
+  }
+
+  @override
+  String get petsAllowed => 'Animaux acceptés';
+
+  @override
+  String get petsNotAllowed => 'Animaux non acceptés';
+
+  @override
+  String cancellationPolicy(String policy) {
+    return 'Annulation : $policy';
+  }
+
+  @override
+  String offerUntil(String date) {
+    return 'Jusqu\'au $date';
+  }
+
+  @override
+  String get bookingConfirmationNotice =>
+      'Chaque demande est confirmée par l\'hôtel, qui répond sous 48 h.';
+
+  @override
+  String get bookingRequestTitle => 'Demande de réservation';
+
+  @override
+  String get adults => 'Adultes';
+
+  @override
+  String get children => 'Enfants';
+
+  @override
+  String get roomsCount => 'Chambres';
+
+  @override
+  String get messageToHotel => 'Message à l\'hôtel (facultatif)';
+
+  @override
+  String get messageToHotelHint => 'Heure d\'arrivée, demande particulière…';
+
+  @override
+  String get estimatedTotal => 'Total estimé';
+
+  @override
+  String estimateDetail(String price, int nights, int rooms) {
+    String _temp0 = intl.Intl.pluralLogic(
+      nights,
+      locale: localeName,
+      other: '$nights nuits',
+      one: '1 nuit',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      rooms,
+      locale: localeName,
+      other: '$rooms chambres',
+      one: '1 chambre',
+    );
+    return '$price × $_temp0 × $_temp1';
+  }
+
+  @override
+  String nightsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nuits',
+      one: '1 nuit',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bookingRequestNotice =>
+      'Ceci est une demande : l\'hôtel confirme la disponibilité et le prix. Vous ne payez rien pour l\'instant.';
+
+  @override
+  String get sendRequest => 'Envoyer la demande';
+
+  @override
+  String get bookingSentTitle => 'Demande envoyée';
+
+  @override
+  String bookingSentBody(String hotel, String deadline) {
+    return '$hotel a jusqu\'au $deadline pour vous répondre. Vous serez prévenu dès sa réponse.';
+  }
+
+  @override
+  String get seeMyRequest => 'Voir ma demande';
+
+  @override
+  String get askVisit => 'Demander une visite';
+
+  @override
+  String get askInformation => 'Demander des informations';
+
+  @override
+  String surfaceValue(int value) {
+    return '$value m²';
+  }
+
+  @override
+  String roomsValue(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pièces',
+      one: '1 pièce',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bedroomsValue(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count chambres',
+      one: '1 chambre',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bathroomsValue(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count salles d\'eau',
+      one: '1 salle d\'eau',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get features => 'Atouts';
+
+  @override
+  String get rentConditions => 'Conditions de location';
+
+  @override
+  String depositValue(String value) {
+    return 'Caution : $value';
+  }
+
+  @override
+  String advanceValue(String value) {
+    return 'Avance : $value';
+  }
+
+  @override
+  String agencyFeesValue(String value) {
+    return 'Frais d\'agence : $value';
+  }
+
+  @override
+  String get publisher => 'Annonceur';
+
+  @override
+  String get verifiedProfessional => 'Professionnel vérifié par ZAKA';
+
+  @override
+  String get realEstateDisclaimer =>
+      'ZAKA met en relation les particuliers et les professionnels. Ne versez jamais d\'argent avant d\'avoir visité le bien et vérifié les documents.';
+
+  @override
+  String deliveryValue(String date) {
+    return 'Livraison prévue : $date';
+  }
+
+  @override
+  String budgetValue(String amount) {
+    return 'Budget estimé : $amount';
+  }
+
+  @override
+  String unitsAvailableValue(int available, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      available,
+      locale: localeName,
+      other: '$available lots disponibles',
+      one: '1 lot disponible',
+      zero: 'Aucun lot disponible',
+    );
+    return '$_temp0 sur $total';
+  }
+
+  @override
+  String get units => 'Lots';
+
+  @override
+  String get noUnitYet => 'Aucun lot renseigné pour le moment.';
+
+  @override
+  String get interested => 'Ça m\'intéresse';
+
+  @override
+  String get unitAvailable => 'Disponible';
+
+  @override
+  String get unitReserved => 'Réservé';
+
+  @override
+  String get unitSold => 'Vendu';
+
+  @override
+  String get leadTypeContact => 'Contacter';
+
+  @override
+  String get leadTypeVisit => 'Visite';
+
+  @override
+  String get leadTypeInfo => 'Information';
+
+  @override
+  String leadTemplate(String title) {
+    return 'Bonjour, votre annonce « $title » m\'intéresse. Est-elle toujours disponible ?';
+  }
+
+  @override
+  String leadTemplateUnit(String unit, String title) {
+    return 'Bonjour, le lot $unit du programme « $title » m\'intéresse. Pouvez-vous m\'en dire plus ?';
+  }
+
+  @override
+  String get yourMessage => 'Votre message';
+
+  @override
+  String get preferredDates => 'Vos disponibilités';
+
+  @override
+  String get preferredDatesHint => 'Ex. samedi matin, en semaine après 17 h';
+
+  @override
+  String preferredDatesValue(String value) {
+    return 'Disponibilités : $value';
+  }
+
+  @override
+  String get contactPhoneHelp =>
+      'L\'annonceur pourra vous rappeler à ce numéro.';
+
+  @override
+  String get leadMessageRequired => 'Écrivez un message à l\'annonceur.';
+
+  @override
+  String get leadSent =>
+      'Demande envoyée. L\'annonceur vous répondra dans votre espace Demandes.';
+
+  @override
+  String get leadNew => 'Nouvelle';
+
+  @override
+  String get leadInProgress => 'Prise en charge';
+
+  @override
+  String get leadVisitScheduled => 'Visite programmée';
+
+  @override
+  String get leadClosed => 'Close';
+
+  @override
+  String visitPlanned(String date) {
+    return 'Visite prévue le $date';
+  }
+
+  @override
+  String unitLabel(String label) {
+    return 'Lot $label';
+  }
+
+  @override
+  String get bookings => 'Réservations';
+
+  @override
+  String get contactRequests => 'Contacts';
+
+  @override
+  String get bookingRequest => 'Demande de réservation';
+
+  @override
+  String get contactRequest => 'Demande de contact';
+
+  @override
+  String get noBookingYet => 'Aucune réservation pour le moment';
+
+  @override
+  String get noBookingYetHint =>
+      'Trouvez un hôtel et envoyez une demande : il vous répond sous 48 h.';
+
+  @override
+  String get findHotel => 'Trouver un hôtel';
+
+  @override
+  String get noLeadYet => 'Aucune demande de contact';
+
+  @override
+  String get noLeadYetHint =>
+      'Contactez un annonceur ou demandez une visite depuis une annonce.';
+
+  @override
+  String get findProperty => 'Voir les annonces';
+
+  @override
+  String get bookingPending => 'En attente';
+
+  @override
+  String get bookingInfoRequested => 'Précisions demandées';
+
+  @override
+  String get bookingAccepted => 'Acceptée';
+
+  @override
+  String get bookingRejected => 'Refusée';
+
+  @override
+  String get bookingCancelled => 'Annulée';
+
+  @override
+  String get bookingExpired => 'Expirée';
+
+  @override
+  String get bookingCompleted => 'Séjour terminé';
+
+  @override
+  String bookingPendingHelp(String deadline) {
+    return 'L\'hôtel doit vous répondre avant le $deadline.';
+  }
+
+  @override
+  String get bookingInfoRequestedHelp =>
+      'L\'hôtel vous pose une question : répondez dans la discussion ci-dessous.';
+
+  @override
+  String get bookingAcceptedHelp =>
+      'Votre réservation est confirmée. Vous pouvez payer en ligne ou à l\'hôtel.';
+
+  @override
+  String get bookingPaidHelp =>
+      'Votre réservation est confirmée et payée. Bon séjour !';
+
+  @override
+  String get bookingRejectedHelp =>
+      'L\'hôtel ne peut pas vous accueillir à ces dates. Essayez d\'autres dates ou un autre hôtel.';
+
+  @override
+  String get bookingCancelledHelp => 'Cette réservation a été annulée.';
+
+  @override
+  String get bookingExpiredHelp =>
+      'L\'hôtel n\'a pas répondu à temps. Votre demande est close, sans frais.';
+
+  @override
+  String get bookingCompletedHelp => 'Merci d\'avoir séjourné avec ZAKA !';
+
+  @override
+  String guestsSummary(int adults, int children, int rooms) {
+    String _temp0 = intl.Intl.pluralLogic(
+      adults,
+      locale: localeName,
+      other: '$adults adultes',
+      one: '1 adulte',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      children,
+      locale: localeName,
+      other: ', $children enfants',
+      one: ', 1 enfant',
+      zero: '',
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      rooms,
+      locale: localeName,
+      other: '$rooms chambres',
+      one: '1 chambre',
+    );
+    return '$_temp0$_temp1 · $_temp2';
+  }
+
+  @override
+  String get payOnline => 'Payer en ligne';
+
+  @override
+  String get payAtHotelNotice =>
+      'Vous pouvez aussi payer directement à l\'hôtel.';
+
+  @override
+  String get paidSimulated => 'Payée en ligne (mode test)';
+
+  @override
+  String get cancelBooking => 'Annuler la réservation';
+
+  @override
+  String get keepBooking => 'Garder';
+
+  @override
+  String get cancelBookingTitle => 'Annuler cette demande ?';
+
+  @override
+  String get cancelBookingBody =>
+      'L\'hôtel sera prévenu. Les conditions d\'annulation de l\'hôtel s\'appliquent.';
+
+  @override
+  String get conversation => 'Discussion';
+
+  @override
+  String get conversationEmpty => 'Aucun message. Posez vos questions ici.';
+
+  @override
+  String get writeMessage => 'Écrire un message…';
+
+  @override
+  String get checkoutBookingPaid =>
+      'Votre réservation est payée. L\'hôtel est prévenu.';
+
+  @override
+  String get checkoutBackToBooking => 'Retour à la réservation';
+
+  @override
+  String get myListings => 'Mes annonces';
+
+  @override
+  String get myListingsHint => 'Créer, publier, mettre en avant';
+
+  @override
+  String get newListing => 'Nouvelle annonce';
+
+  @override
+  String get newProperty => 'Nouveau bien';
+
+  @override
+  String get newProjectListing => 'Nouveau programme';
+
+  @override
+  String get noListingYet => 'Aucune annonce pour le moment';
+
+  @override
+  String get noListingYetHint =>
+      'Créez votre première annonce : elle reste en brouillon jusqu\'à sa publication.';
+
+  @override
+  String get listingsNeedVerification =>
+      'Vous pourrez publier dès que votre compte sera vérifié.';
+
+  @override
+  String get listingsReviewedByZaka =>
+      'Vos annonces sont vérifiées par ZAKA avant d\'être publiées, généralement sous 24 h.';
+
+  @override
+  String listingsOnline(int online, int max) {
+    return '$online / $max annonces en ligne';
+  }
+
+  @override
+  String listingsOnlineUnlimited(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count annonces en ligne',
+      one: '1 annonce en ligne',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String planLabel(String name) {
+    return 'Plan $name';
+  }
+
+  @override
+  String get changePlan => 'Changer';
+
+  @override
+  String get untitledHotel => 'Hôtel sans nom';
+
+  @override
+  String get untitledListing => 'Annonce sans titre';
+
+  @override
+  String get untitledProject => 'Programme sans nom';
+
+  @override
+  String roomTypesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count types de chambres',
+      one: '1 type de chambre',
+      zero: 'Aucun type de chambre',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String acceptanceRate(int rate) {
+    return '$rate % de demandes acceptées';
+  }
+
+  @override
+  String statsHotel(int views, int requests) {
+    return '$views vues · $requests demandes';
+  }
+
+  @override
+  String statsListing(int views, int leads) {
+    return '$views vues · $leads contacts';
+  }
+
+  @override
+  String moderationReason(String reason) {
+    return 'Motif : $reason';
+  }
+
+  @override
+  String get publish => 'Publier';
+
+  @override
+  String get sendForReview => 'Envoyer à la validation';
+
+  @override
+  String get publishedNow => 'Annonce en ligne.';
+
+  @override
+  String get sentForReview => 'Annonce envoyée à ZAKA pour validation.';
+
+  @override
+  String get takeOffline => 'Retirer de la ligne';
+
+  @override
+  String get takenOffline => 'Annonce retirée.';
+
+  @override
+  String get feature => 'Mettre à la une';
+
+  @override
+  String get unfeature => 'Retirer de la une';
+
+  @override
+  String get featuredNow => 'Annonce mise à la une.';
+
+  @override
+  String get markUnderOffer => 'Marquer « sous offre »';
+
+  @override
+  String get markRentedOrSold => 'Marquer louée / vendue';
+
+  @override
+  String get backOnline => 'Remettre disponible';
+
+  @override
+  String get markInProgress => 'Travaux en cours';
+
+  @override
+  String get markDelivered => 'Programme livré';
+
+  @override
+  String get seePublicListing => 'Voir l\'annonce';
+
+  @override
+  String get listingDraft => 'Brouillon';
+
+  @override
+  String get listingPendingReview => 'En validation';
+
+  @override
+  String get listingPublished => 'En ligne';
+
+  @override
+  String get listingRejected => 'Refusée';
+
+  @override
+  String get listingUnderOffer => 'Sous offre';
+
+  @override
+  String get listingRented => 'Louée';
+
+  @override
+  String get listingSold => 'Vendue';
+
+  @override
+  String get listingInactive => 'Hors ligne';
+
+  @override
+  String get listingInProgress => 'Travaux en cours';
+
+  @override
+  String get listingDelivered => 'Livré';
+
+  @override
+  String get listingSuspended => 'Suspendue';
+
+  @override
+  String get waitingForReview => 'En cours de validation par ZAKA';
+
+  @override
+  String get reviewAgainTitle => 'Nouvelle validation';
+
+  @override
+  String get reviewAgainBody =>
+      'Votre annonce est en ligne : après modification, elle sera de nouveau vérifiée par ZAKA avant d\'être republiée.';
+
+  @override
+  String get tabInfo => 'Infos';
+
+  @override
+  String get tabPhotos => 'Photos';
+
+  @override
+  String get tabOffers => 'Offres';
+
+  @override
+  String get tabAvailability => 'Disponibilités';
+
+  @override
+  String get hotelIdentity => 'L\'hôtel';
+
+  @override
+  String get hotelName => 'Nom de l\'hôtel';
+
+  @override
+  String get stars => 'Classement';
+
+  @override
+  String get notRated => 'Non classé';
+
+  @override
+  String get receptionPhone => 'Téléphone de la réception';
+
+  @override
+  String get checkInTime => 'Heure d\'arrivée';
+
+  @override
+  String get checkOutTime => 'Heure de départ';
+
+  @override
+  String get cancellationPolicyLabel => 'Conditions d\'annulation';
+
+  @override
+  String get cancellationPolicyHint =>
+      'Ex. gratuite jusqu\'à 24 h avant l\'arrivée';
+
+  @override
+  String get otherRules => 'Autres règles';
+
+  @override
+  String get photosHelp =>
+      'Ajoutez des photos lumineuses : la première sert de couverture. 12 photos au plus, 8 Mo chacune.';
+
+  @override
+  String get addPhotos => 'Ajouter des photos';
+
+  @override
+  String get cover => 'Couverture';
+
+  @override
+  String get makeCover => 'Mettre en couverture';
+
+  @override
+  String photoTooLarge(String name) {
+    return '$name dépasse 8 Mo.';
+  }
+
+  @override
+  String get addRoomType => 'Ajouter un type de chambre';
+
+  @override
+  String get editRoomType => 'Modifier le type de chambre';
+
+  @override
+  String get noRoomTypeYet => 'Aucun type de chambre';
+
+  @override
+  String get noRoomTypeYetHint =>
+      'Ajoutez vos chambres avec leur prix : il en faut au moins une pour publier.';
+
+  @override
+  String get roomTypeName => 'Type de chambre';
+
+  @override
+  String get roomTypeNameHint => 'Ex. Chambre double climatisée';
+
+  @override
+  String get pricePerNightLabel => 'Prix par nuit';
+
+  @override
+  String get roomsOfThisType => 'Nombre de chambres';
+
+  @override
+  String get beds => 'Lits';
+
+  @override
+  String get bedsHint => 'Ex. 1 grand lit';
+
+  @override
+  String get roomActive => 'Proposée aux clients';
+
+  @override
+  String roomQuantity(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count chambres',
+      one: '1 chambre',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inactiveRoom => 'non proposée';
+
+  @override
+  String get addOffer => 'Ajouter une offre';
+
+  @override
+  String get editOffer => 'Modifier l\'offre';
+
+  @override
+  String get noOfferYet => 'Aucune offre spéciale';
+
+  @override
+  String get noOfferYetHint =>
+      'Créez une remise sur une période : elle s\'affiche sur votre fiche.';
+
+  @override
+  String get offerTitle => 'Titre de l\'offre';
+
+  @override
+  String get offerTitleHint => 'Ex. Spécial fêtes de fin d\'année';
+
+  @override
+  String get discount => 'Remise';
+
+  @override
+  String get offerPeriod => 'Choisir la période';
+
+  @override
+  String get offerRooms => 'Chambres concernées (aucune sélection : toutes)';
+
+  @override
+  String get offerActive => 'Offre active';
+
+  @override
+  String get offerIncomplete =>
+      'Indiquez un titre, une remise entre 1 et 99 % et une période.';
+
+  @override
+  String get inactiveOffer => 'inactive';
+
+  @override
+  String get availabilityHelp =>
+      'Indiquez les jours où vous avez moins de chambres libres (ou aucune). Les autres jours, toutes les chambres du type sont considérées comme disponibles.';
+
+  @override
+  String get roomsAvailable => 'Chambres libres';
+
+  @override
+  String get resetDay => 'Toutes libres';
+
+  @override
+  String get closeWholeMonth => 'Complet tout le mois';
+
+  @override
+  String get openWholeMonth => 'Tout disponible';
+
+  @override
+  String get listingMain => 'L\'annonce';
+
+  @override
+  String get listingTitle => 'Titre';
+
+  @override
+  String get listingTitleHint => 'Ex. Villa 4 pièces avec jardin à Ouaga 2000';
+
+  @override
+  String get rentPeriod => 'Loyer';
+
+  @override
+  String get perMonth => 'Par mois';
+
+  @override
+  String get perDay => 'Par jour';
+
+  @override
+  String get deposit => 'Caution';
+
+  @override
+  String get depositHint => 'Ex. 2 mois';
+
+  @override
+  String get advance => 'Avance sur loyer';
+
+  @override
+  String get advanceHint => 'Ex. 3 mois';
+
+  @override
+  String get agencyFees => 'Frais d\'agence';
+
+  @override
+  String get characteristics => 'Caractéristiques';
+
+  @override
+  String get surface => 'Surface';
+
+  @override
+  String get roomsLabel => 'Pièces';
+
+  @override
+  String get bedrooms => 'Chambres';
+
+  @override
+  String get bathrooms => 'Salles d\'eau';
+
+  @override
+  String get addressHelp =>
+      'Restez général si vous préférez : le quartier suffit.';
+
+  @override
+  String get projectName => 'Nom du programme';
+
+  @override
+  String get deliveryDate => 'Livraison prévue';
+
+  @override
+  String get deliveryDateHint => 'Ex. 2e trimestre 2027';
+
+  @override
+  String get estimatedBudget => 'Budget estimé';
+
+  @override
+  String get addUnit => 'Ajouter un lot';
+
+  @override
+  String get editUnit => 'Modifier le lot';
+
+  @override
+  String get unitName => 'Nom du lot';
+
+  @override
+  String get receivedBookings => 'Demandes de réservation';
+
+  @override
+  String get receivedLeads => 'Demandes de contact';
+
+  @override
+  String toHandle(int count) {
+    return 'À traiter ($count)';
+  }
+
+  @override
+  String get closedRequests => 'Closes';
+
+  @override
+  String get noRequestHere => 'Aucune demande ici.';
+
+  @override
+  String answerBefore(String deadline) {
+    return 'Répondre avant le $deadline';
+  }
+
+  @override
+  String hotelPendingHelp(String deadline) {
+    return 'Acceptez ou refusez avant le $deadline, sinon la demande expirera.';
+  }
+
+  @override
+  String get hotelInfoRequestedHelp =>
+      'Vous avez demandé des précisions : la réponse du client remettra la demande en attente.';
+
+  @override
+  String get hotelAcceptedHelp =>
+      'Réservation confirmée. Le client peut payer en ligne ou sur place.';
+
+  @override
+  String get hotelPaidHelp =>
+      'Réservation confirmée et payée en ligne (mode test).';
+
+  @override
+  String get askInfo => 'Demander des précisions';
+
+  @override
+  String get askInfoTitle => 'Question au client';
+
+  @override
+  String get rejectBookingTitle => 'Refuser la demande';
+
+  @override
+  String get cancelAcceptedTitle => 'Annuler la réservation';
+
+  @override
+  String get stayCompleted => 'Séjour terminé';
+
+  @override
+  String commissionDueFor(String amount) {
+    return 'Commission ZAKA due pour ce séjour : $amount';
+  }
+
+  @override
+  String get messageForClient => 'Message au client';
+
+  @override
+  String get messageForClientOptional => 'Message au client (facultatif)';
+
+  @override
+  String get takeCharge => 'Prendre en charge';
+
+  @override
+  String get scheduleVisit => 'Programmer une visite';
+
+  @override
+  String get changeVisit => 'Changer la visite';
+
+  @override
+  String get closeRequest => 'Clore la demande';
+
+  @override
+  String whatsappLeadText(String title) {
+    return 'Bonjour, je vous contacte au sujet de « $title » sur ZAKA.';
+  }
 }

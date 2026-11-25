@@ -47,6 +47,8 @@ export function publishTarget(
   status: string,
   mode: string,
 ): "published" | "pending_review" | null {
+  // Sous offre → de nouveau disponible : le contenu n'a pas changé, pas de nouvelle validation.
+  if (kind === "property" && status === "under_offer") return "published";
   if (!publishableFrom[kind].includes(status)) return null;
   return mode === "review" ? "pending_review" : "published";
 }
