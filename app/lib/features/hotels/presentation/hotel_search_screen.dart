@@ -92,6 +92,16 @@ class _HotelSearchScreenState extends ConsumerState<HotelSearchScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    children: [
+                      Expanded(child: Text(l10n.filters, style: Theme.of(context).textTheme.titleLarge)),
+                      TextButton(onPressed: () => update(() {
+                          _maxPrice = null;
+                          _amenities.clear();
+                        }), child: Text(l10n.resetFilters)),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
                   Text(l10n.maxPricePerNight, style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 8),
                   Wrap(
@@ -158,8 +168,25 @@ class _HotelSearchScreenState extends ConsumerState<HotelSearchScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    CityPicker(value: _city, cities: cities, onChanged: (c) => setState(() => _city = c)),
-                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CityPicker(value: _city, cities: cities, onChanged: (c) => setState(() => _city = c)),
+                        ),
+                        const SizedBox(width: 8),
+                        Badge.count(
+                          count: filterCount,
+                          isLabelVisible: filterCount > 0,
+                          child: IconButton.filled(
+                            tooltip: l10n.filters,
+                            onPressed: () => _filters(amenities),
+                            icon: const Icon(Icons.tune),
+                            style: IconButton.styleFrom(minimumSize: const Size(58, 58)),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
@@ -177,11 +204,6 @@ class _HotelSearchScreenState extends ConsumerState<HotelSearchScreen> {
                           avatar: const Icon(Icons.people_outline, size: 18),
                           label: Text(l10n.guestsCount(_guests)),
                           onPressed: _pickGuests,
-                        ),
-                        ActionChip(
-                          avatar: const Icon(Icons.tune, size: 18),
-                          label: Text(filterCount == 0 ? l10n.filters : l10n.filtersCount(filterCount)),
-                          onPressed: () => _filters(amenities),
                         ),
                       ],
                     ),

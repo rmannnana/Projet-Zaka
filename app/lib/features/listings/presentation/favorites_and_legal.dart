@@ -5,17 +5,23 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/widgets/listing_widgets.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../hotels/presentation/hotel_search_screen.dart';
 import '../data/listings_repository.dart';
 import '../domain/listing.dart';
 import 'cards.dart';
 
-/// Annonces mises de côté par l'utilisateur.
-class FavoritesScreen extends ConsumerWidget {
+/// Annonces mises de côté par l'utilisateur, filtrables par type.
+class FavoritesScreen extends ConsumerStatefulWidget {
   const FavoritesScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<FavoritesScreen> createState() => _FavoritesScreenState();
+}
+
+class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
+  ListingKind? _kind;
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final favorites = ref.watch(favoritesProvider);
     return Scaffold(
@@ -23,38 +29,72 @@ class FavoritesScreen extends ConsumerWidget {
       body: favorites.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text(l10n.genericError)),
-        data: (items) => items.isEmpty
-            ? EmptyState(
-                icon: Icons.favorite_border,
-                title: l10n.noFavorite,
-                body: l10n.noFavoriteHint,
-                action: FilledButton.tonal(onPressed: () => context.go('/'), child: Text(l10n.explore)),
-              )
-            : CustomScrollView(
-                slivers: [
-                  SliverCrossAxisConstrained(
-                    maxCrossAxisExtent: 1200,
-                    child: ListingGrid(
-                      children: [
-                        for (final f in items)
-                          ListingCard(
-                            title: f.title,
-                            photo: f.photo,
-                            location: f.city ?? '',
-                            price: f.price?.format(),
-                            icon: switch (f.targetType) {
-                              ListingKind.hotel => Icons.hotel,
-                              ListingKind.property => Icons.home_work_outlined,
-                              ListingKind.project => Icons.domain,
-                            },
-                            favorite: FavoriteButton(onImage: true, targetId: f.id, favorite: f),
-                            onTap: () => openFavorite(context, f),
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
+        data: (all) {
+          if (all.isEmpty) {
+            return EmptyState(
+              icon: Icons.favorite_border,
+              title: l10n.noFavorite,
+              body: l10n.noFavoriteHint,
+              action: FilledButton(
+                style: FilledButton.styleFrom(minimumSize: const Size(180, 48)),
+                onPressed: () => context.go('/'),
+                child: Text(l10n.explore),
               ),
+            );
+          }
+          final items = _kind == null ? all : all.where((f) => f.targetType == _kind).toList();
+          final filters = [
+            (null, l10n.all),
+            (ListingKind.hotel, l10n.homeCategoryHotels),
+            (ListingKind.property, l10n.navRealEstate),
+            (ListingKind.project, l10n.homeCategoryProjects),
+          ];
+          return Readable(
+            maxWidth: 760,
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+              children: [
+                SizedBox(
+                  height: 44,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      for (final (kind, label) in filters)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: ChoiceChip(
+                            label: Text(label),
+                            selected: _kind == kind,
+                            onSelected: (_) => setState(() => _kind = kind),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                if (items.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 48),
+                    child: EmptyState(icon: Icons.favorite_border, title: l10n.noFavorite),
+                  ),
+                for (final f in items)
+                  ListingTile(
+                    title: f.title,
+                    photo: f.photo,
+                    location: f.city ?? '',
+                    price: f.price?.format(),
+                    icon: switch (f.targetType) {
+                      ListingKind.hotel => Icons.hotel,
+                      ListingKind.property => Icons.home_work_outlined,
+                      ListingKind.project => Icons.domain,
+                    },
+                    trailing: FavoriteButton(targetId: f.id, favorite: f),
+                    onTap: () => openFavorite(context, f),
+                  ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

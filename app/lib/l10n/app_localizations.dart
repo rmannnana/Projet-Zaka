@@ -3189,6 +3189,150 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Bonjour, je vous contacte au sujet de « {title} » sur ZAKA.'**
   String whatsappLeadText(String title);
+
+  /// No description provided for @badgeHotel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hôtel'**
+  String get badgeHotel;
+
+  /// No description provided for @starsValue.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 étoile} other{{count} étoiles}}'**
+  String starsValue(int count);
+
+  /// No description provided for @upToGuests.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 pers.} other{Jusqu\'à {count} pers.}}'**
+  String upToGuests(int count);
+
+  /// No description provided for @roomTypesValue.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 type de chambre} other{{count} types de chambre}}'**
+  String roomTypesValue(int count);
+
+  /// No description provided for @unitsLeft.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Complet} =1{1 lot disponible} other{{count} lots disponibles}}'**
+  String unitsLeft(int count);
+
+  /// No description provided for @deliveryShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison {date}'**
+  String deliveryShort(String date);
+
+  /// No description provided for @homeGreeting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bonjour {name} 👋'**
+  String homeGreeting(String name);
+
+  /// No description provided for @homeGreetingAnonymous.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bonjour 👋'**
+  String get homeGreetingAnonymous;
+
+  /// No description provided for @homeTagline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trouvez l\'hôtel ou le logement qui vous ressemble'**
+  String get homeTagline;
+
+  /// No description provided for @homeSearchHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hôtel, location, achat…'**
+  String get homeSearchHint;
+
+  /// No description provided for @homeSearchTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Que cherchez-vous ?'**
+  String get homeSearchTitle;
+
+  /// No description provided for @homeCategoryHotels.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hôtels'**
+  String get homeCategoryHotels;
+
+  /// No description provided for @homeCategoryProjects.
+  ///
+  /// In fr, this message translates to:
+  /// **'Neuf'**
+  String get homeCategoryProjects;
+
+  /// No description provided for @homePopularCities.
+  ///
+  /// In fr, this message translates to:
+  /// **'Villes populaires'**
+  String get homePopularCities;
+
+  /// No description provided for @citySearchHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher une ville'**
+  String get citySearchHint;
+
+  /// No description provided for @seeRooms.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir les chambres'**
+  String get seeRooms;
+
+  /// No description provided for @accountStatUnread.
+  ///
+  /// In fr, this message translates to:
+  /// **'Non lues'**
+  String get accountStatUnread;
+
+  /// No description provided for @accountSectionActivity.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon activité'**
+  String get accountSectionActivity;
+
+  /// No description provided for @accountSectionPro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Professionnels'**
+  String get accountSectionPro;
+
+  /// No description provided for @accountSectionInfo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Informations'**
+  String get accountSectionInfo;
+
+  /// No description provided for @accountSectionAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte'**
+  String get accountSectionAccount;
+
+  /// No description provided for @signInWelcome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bienvenue sur ZAKA'**
+  String get signInWelcome;
+
+  /// No description provided for @signInTagline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réservez un hôtel, contactez les annonceurs et retrouvez vos favoris.'**
+  String get signInTagline;
+
+  /// No description provided for @resetFilters.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réinitialiser'**
+  String get resetFilters;
 }
 
 class _AppLocalizationsDelegate

@@ -1887,4 +1887,115 @@ class AppLocalizationsFr extends AppLocalizations {
   String whatsappLeadText(String title) {
     return 'Bonjour, je vous contacte au sujet de « $title » sur ZAKA.';
   }
+
+  @override
+  String get badgeHotel => 'Hôtel';
+
+  @override
+  String starsValue(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count étoiles',
+      one: '1 étoile',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String upToGuests(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Jusqu\'à $count pers.',
+      one: '1 pers.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String roomTypesValue(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count types de chambre',
+      one: '1 type de chambre',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String unitsLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lots disponibles',
+      one: '1 lot disponible',
+      zero: 'Complet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String deliveryShort(String date) {
+    return 'Livraison $date';
+  }
+
+  @override
+  String homeGreeting(String name) {
+    return 'Bonjour $name 👋';
+  }
+
+  @override
+  String get homeGreetingAnonymous => 'Bonjour 👋';
+
+  @override
+  String get homeTagline =>
+      'Trouvez l\'hôtel ou le logement qui vous ressemble';
+
+  @override
+  String get homeSearchHint => 'Hôtel, location, achat…';
+
+  @override
+  String get homeSearchTitle => 'Que cherchez-vous ?';
+
+  @override
+  String get homeCategoryHotels => 'Hôtels';
+
+  @override
+  String get homeCategoryProjects => 'Neuf';
+
+  @override
+  String get homePopularCities => 'Villes populaires';
+
+  @override
+  String get citySearchHint => 'Rechercher une ville';
+
+  @override
+  String get seeRooms => 'Voir les chambres';
+
+  @override
+  String get accountStatUnread => 'Non lues';
+
+  @override
+  String get accountSectionActivity => 'Mon activité';
+
+  @override
+  String get accountSectionPro => 'Professionnels';
+
+  @override
+  String get accountSectionInfo => 'Informations';
+
+  @override
+  String get accountSectionAccount => 'Compte';
+
+  @override
+  String get signInWelcome => 'Bienvenue sur ZAKA';
+
+  @override
+  String get signInTagline =>
+      'Réservez un hôtel, contactez les annonceurs et retrouvez vos favoris.';
+
+  @override
+  String get resetFilters => 'Réinitialiser';
 }

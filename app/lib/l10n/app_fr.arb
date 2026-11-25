@@ -1041,5 +1041,71 @@
         "type": "String"
       }
     }
-  }
+  },
+  "badgeHotel": "Hôtel",
+  "starsValue": "{count, plural, =1{1 étoile} other{{count} étoiles}}",
+  "@starsValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "upToGuests": "{count, plural, =1{1 pers.} other{Jusqu'à {count} pers.}}",
+  "@upToGuests": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomTypesValue": "{count, plural, =1{1 type de chambre} other{{count} types de chambre}}",
+  "@roomTypesValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unitsLeft": "{count, plural, =0{Complet} =1{1 lot disponible} other{{count} lots disponibles}}",
+  "@unitsLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deliveryShort": "Livraison {date}",
+  "@deliveryShort": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "homeGreeting": "Bonjour {name} 👋",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "homeGreetingAnonymous": "Bonjour 👋",
+  "homeTagline": "Trouvez l'hôtel ou le logement qui vous ressemble",
+  "homeSearchHint": "Hôtel, location, achat…",
+  "homeSearchTitle": "Que cherchez-vous ?",
+  "homeCategoryHotels": "Hôtels",
+  "homeCategoryProjects": "Neuf",
+  "homePopularCities": "Villes populaires",
+  "citySearchHint": "Rechercher une ville",
+  "seeRooms": "Voir les chambres",
+  "accountStatUnread": "Non lues",
+  "accountSectionActivity": "Mon activité",
+  "accountSectionPro": "Professionnels",
+  "accountSectionInfo": "Informations",
+  "accountSectionAccount": "Compte",
+  "signInWelcome": "Bienvenue sur ZAKA",
+  "signInTagline": "Réservez un hôtel, contactez les annonceurs et retrouvez vos favoris.",
+  "resetFilters": "Réinitialiser"
 }

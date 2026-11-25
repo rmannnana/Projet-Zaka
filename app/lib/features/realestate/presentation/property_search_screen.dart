@@ -60,6 +60,13 @@ class _PropertySearchScreenState extends ConsumerState<PropertySearchScreen> wit
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    children: [
+                      Expanded(child: Text(l10n.filters, style: Theme.of(context).textTheme.titleLarge)),
+                      TextButton(onPressed: () => update(_query.copyWith(propertyType: () => null, maxPrice: () => null, minRooms: () => null, furnished: false)), child: Text(l10n.resetFilters)),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
                   Text(l10n.propertyType, style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 8),
                   Wrap(
@@ -156,10 +163,7 @@ class _PropertySearchScreenState extends ConsumerState<PropertySearchScreen> wit
             floating: true,
             pinned: true,
             title: Text(l10n.navRealEstate),
-            bottom: TabBar(
-              controller: _tabs,
-              tabs: [Tab(text: l10n.rent), Tab(text: l10n.buy), Tab(text: l10n.newProjects)],
-            ),
+            bottom: PillTabBar(controller: _tabs, labels: [l10n.rent, l10n.buy, l10n.homeCategoryProjects]),
           ),
         ],
         body: CustomScrollView(
@@ -183,10 +187,11 @@ class _PropertySearchScreenState extends ConsumerState<PropertySearchScreen> wit
                         Badge.count(
                           count: filterCount,
                           isLabelVisible: filterCount > 0,
-                          child: IconButton.filledTonal(
+                          child: IconButton.filled(
                             tooltip: l10n.filters,
                             onPressed: () => _filters(types),
                             icon: const Icon(Icons.tune),
+                            style: IconButton.styleFrom(minimumSize: const Size(58, 58)),
                           ),
                         ),
                       ],

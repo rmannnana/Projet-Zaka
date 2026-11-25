@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/theme.dart';
 import '../../../core/widgets/listing_widgets.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../account/data/user_repository.dart';
@@ -191,6 +192,7 @@ class _LeadSheetState extends ConsumerState<_LeadSheet> {
 }
 
 /// Barre fixe en bas d'une fiche : prix et action principale.
+/// Sans prix, la dernière action prend toute la largeur restante.
 class BottomActionBar extends StatelessWidget {
   const BottomActionBar({super.key, required this.price, required this.actions});
 
@@ -200,29 +202,38 @@ class BottomActionBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Material(
-      elevation: 8,
-      color: theme.colorScheme.surfaceContainer,
+    final palette = ZakaPalette.of(context);
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerLow,
+        border: Border(top: BorderSide(color: palette.line)),
+        boxShadow: [BoxShadow(color: palette.shadow, blurRadius: 16, offset: const Offset(0, -4))],
+      ),
       child: SafeArea(
         top: false,
         child: Readable(
+          shrinkHeight: true,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
             child: Row(
               children: [
                 if (price != null)
                   Expanded(
                     child: Text(
                       price!,
+                      maxLines: 2,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w800,
                         color: theme.colorScheme.primary,
+                        height: 1.2,
                       ),
                     ),
-                  )
-                else
-                  const Spacer(),
-                for (final a in actions) Padding(padding: const EdgeInsets.only(left: 8), child: a),
+                  ),
+                for (var i = 0; i < actions.length; i++)
+                  if (price == null && i == actions.length - 1)
+                    Expanded(child: Padding(padding: EdgeInsets.only(left: i == 0 ? 0 : 10), child: actions[i]))
+                  else
+                    Padding(padding: EdgeInsets.only(left: i == 0 && price == null ? 0 : 10), child: actions[i]),
               ],
             ),
           ),

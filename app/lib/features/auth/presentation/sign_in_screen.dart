@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/theme.dart';
+import '../../../core/widgets/listing_widgets.dart';
 import '../../../l10n/app_localizations.dart';
 import '../data/auth_repository.dart';
 import 'phone_form.dart';
@@ -47,15 +49,26 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.signIn)),
+      appBar: AppBar(),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420),
           child: ListView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
             shrinkWrap: true,
             children: [
+              const Center(child: ZakaLogo(size: 64)),
+              const SizedBox(height: 16),
+              Text(l10n.signInWelcome, textAlign: TextAlign.center, style: theme.textTheme.headlineSmall),
+              const SizedBox(height: 6),
+              Text(
+                l10n.signInTagline,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyMedium?.copyWith(color: ZakaPalette.of(context).muted),
+              ),
+              const SizedBox(height: 24),
               SegmentedButton<_Method>(
                 segments: [
                   ButtonSegment(
@@ -90,6 +103,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               ),
               const SizedBox(height: 16),
               OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(52)),
                 onPressed: _googleBusy ? null : _google,
                 icon: const Icon(Icons.account_circle_outlined),
                 label: Text(l10n.continueWithGoogle),

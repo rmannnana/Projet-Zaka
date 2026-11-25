@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../app/theme.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/data/auth_repository.dart';
 import '../../organizations/data/organization_repository.dart';
@@ -56,45 +57,68 @@ class _ConversationState extends ConsumerState<Conversation> {
     final uid = ref.watch(authStateProvider).value?.uid;
     final messages = ref.watch(messagesProvider((thread: widget.thread, id: widget.id))).value ?? const [];
 
+    final palette = ZakaPalette.of(context);
+    final scheme = theme.colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(l10n.conversation, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
-        const SizedBox(height: 8),
+        Text(l10n.conversation, style: theme.textTheme.titleMedium?.copyWith(fontSize: 18)),
+        const SizedBox(height: 10),
         if (messages.isEmpty)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Text(l10n.conversationEmpty, style: theme.textTheme.bodySmall),
           ),
         for (final m in messages)
-          Align(
-            alignment: m.fromUid == uid ? Alignment.centerRight : Alignment.centerLeft,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 480),
-              child: Container(
-                margin: const EdgeInsets.symmetric(vertical: 4),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  color: m.fromUid == uid ? theme.colorScheme.primaryContainer : theme.colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SelectableText(m.text),
-                    const SizedBox(height: 2),
-                    Text(
-                      m.createdAt == null ? l10n.sending : _time.format(m.createdAt!),
-                      style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.outline),
+          Builder(
+            builder: (context) {
+              final mine = m.fromUid == uid;
+              return Align(
+                alignment: mine ? Alignment.centerRight : Alignment.centerLeft,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: (MediaQuery.sizeOf(context).width * 0.78).clamp(0, 480)),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(vertical: 4),
+                    padding: const EdgeInsets.fromLTRB(14, 10, 14, 8),
+                    decoration: BoxDecoration(
+                      color: mine ? scheme.primary : scheme.surfaceContainerLow,
+                      border: mine ? null : Border.all(color: palette.line),
+                      borderRadius: BorderRadius.only(
+                        topLeft: const Radius.circular(18),
+                        topRight: const Radius.circular(18),
+                        bottomLeft: Radius.circular(mine ? 18 : 4),
+                        bottomRight: Radius.circular(mine ? 4 : 18),
+                      ),
                     ),
-                  ],
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          child: SelectableText(
+                            m.text,
+                            style: TextStyle(color: mine ? scheme.onPrimary : scheme.onSurface, height: 1.4),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          m.createdAt == null ? l10n.sending : _time.format(m.createdAt!),
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: mine ? scheme.onPrimary.withValues(alpha: 0.7) : palette.muted,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           ),
         if (widget.enabled) ...[
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Expanded(
                 child: TextField(
@@ -102,7 +126,20 @@ class _ConversationState extends ConsumerState<Conversation> {
                   minLines: 1,
                   maxLines: 4,
                   maxLength: 2000,
-                  decoration: InputDecoration(hintText: l10n.writeMessage, counterText: ''),
+                  decoration: InputDecoration(
+                    hintText: l10n.writeMessage,
+                    counterText: '',
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(26), borderSide: BorderSide(color: palette.line)),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(26),
+                      borderSide: BorderSide(color: palette.line),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(26),
+                      borderSide: BorderSide(color: scheme.primary, width: 1.6),
+                    ),
+                  ),
                   onSubmitted: (_) => _send(),
                 ),
               ),
@@ -110,7 +147,8 @@ class _ConversationState extends ConsumerState<Conversation> {
               IconButton.filled(
                 tooltip: l10n.send,
                 onPressed: _sending ? null : _send,
-                icon: const Icon(Icons.send),
+                icon: const Icon(Icons.send_rounded),
+                style: IconButton.styleFrom(minimumSize: const Size(50, 50), shape: const CircleBorder()),
               ),
             ],
           ),

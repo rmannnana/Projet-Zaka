@@ -107,6 +107,24 @@ dart run build_runner build -d
 flutter gen-l10n
 ```
 
+## Identité visuelle
+
+| Élément | Où |
+|---|---|
+| Couleurs (vert `#0B4A3C`, doré `#E6AD5E`, teintes des catégories) et thème Material | `app/lib/app/theme.dart` (`ZakaColors`, `ZakaPalette`) |
+| Police **Plus Jakarta Sans** (licence SIL OFL) | `app/assets/fonts/` |
+| Logo dans l'app (noir sur transparent, recoloré à l'affichage par `ZakaLogo`) | `app/assets/brand/` |
+| Sources de l'icône et de l'écran de démarrage | `app/branding/` (logo d'origine : `logo_source.jpg`) |
+| Composants communs (cartes d'annonce, en-tête des fiches, tuiles, menus) | `app/lib/core/widgets/listing_widgets.dart` |
+
+Après une modification du logo, régénérer l'icône et l'écran de démarrage (Android et web) :
+
+```bash
+cd app
+dart run flutter_launcher_icons
+dart run flutter_native_splash:create
+```
+
 ## Environnements
 
 | Flavor | Projet Firebase | Identifiant Android |

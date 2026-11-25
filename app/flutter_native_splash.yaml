@@ -1,0 +1,10 @@
+# Écran de démarrage, généré par : dart run flutter_native_splash:create
+flutter_native_splash:
+  color: "#0B4A3C"
+  image: branding/splash_mark.png
+  android_12:
+    color: "#0B4A3C"
+    image: branding/splash_android12.png
+    icon_background_color: "#0B4A3C"
+  web: true
+  ios: false
