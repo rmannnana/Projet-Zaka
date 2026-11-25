@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/widgets/listing_widgets.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../billing/data/billing_repository.dart';
 import '../../billing/presentation/billing_labels.dart';
@@ -17,26 +18,16 @@ class BillingAdminScreen extends StatelessWidget {
     length: 5,
     child: Column(
       children: [
-        TabBar(
-          isScrollable: true,
-          tabAlignment: TabAlignment.start,
-          tabs: [
-            Tab(text: "Plans d'abonnement"),
-            Tab(text: 'Règles de commission'),
-            Tab(text: 'Commissions'),
-            Tab(text: 'Abonnements actifs'),
-            Tab(text: 'Paiements'),
-          ],
+        Padding(
+          padding: EdgeInsets.only(top: 12),
+          child: PillTabBar(
+            scrollable: true,
+            labels: ["Plans d'abonnement", 'Règles de commission', 'Commissions', 'Abonnements actifs', 'Paiements'],
+          ),
         ),
         Expanded(
           child: TabBarView(
-            children: [
-              PlansTab(),
-              CommissionRulesTab(),
-              CommissionsRegistryTab(),
-              _SubscriptionsTab(),
-              _PaymentsTab(),
-            ],
+            children: [PlansTab(), CommissionRulesTab(), CommissionsRegistryTab(), _SubscriptionsTab(), _PaymentsTab()],
           ),
         ),
       ],
@@ -53,31 +44,33 @@ class _SubscriptionsTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    return ref.watch(activeSubscriptionsProvider).when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Chargement impossible : $e')),
-      data: (subs) => subs.isEmpty
-          ? const Center(child: Text('Aucun abonnement payant en cours : tous les comptes sont au plan Gratuit.'))
-          : ListView(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text('${subs.length} abonnement(s), du plus proche de son échéance au plus lointain.'),
-                ),
-                for (final s in subs)
-                  ListTile(
-                    leading: const Icon(Icons.workspace_premium_outlined),
-                    title: Text(s.orgName ?? s.orgId),
-                    subtitle: Text(
-                      '${s.planSnapshot.name} · jusqu\'au '
-                      '${s.currentPeriodEnd == null ? '?' : _date.format(s.currentPeriodEnd!)}',
+    return ref
+        .watch(activeSubscriptionsProvider)
+        .when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(child: Text('Chargement impossible : $e')),
+          data: (subs) => subs.isEmpty
+              ? const Center(child: Text('Aucun abonnement payant en cours : tous les comptes sont au plan Gratuit.'))
+              : ListView(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text('${subs.length} abonnement(s), du plus proche de son échéance au plus lointain.'),
                     ),
-                    trailing: Text(s.planSnapshot.priceLabel(l10n)),
-                  ),
-              ],
-            ),
-    );
+                    for (final s in subs)
+                      ListTile(
+                        leading: const Icon(Icons.workspace_premium_outlined),
+                        title: Text(s.orgName ?? s.orgId),
+                        subtitle: Text(
+                          '${s.planSnapshot.name} · jusqu\'au '
+                          '${s.currentPeriodEnd == null ? '?' : _date.format(s.currentPeriodEnd!)}',
+                        ),
+                        trailing: Text(s.planSnapshot.priceLabel(l10n)),
+                      ),
+                  ],
+                ),
+        );
   }
 }
 
@@ -88,37 +81,38 @@ class _PaymentsTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
-    return ref.watch(recentPaymentsProvider).when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Chargement impossible : $e')),
-      data: (payments) => payments.isEmpty
-          ? const Center(child: Text('Aucun paiement.'))
-          : ListView.separated(
-              itemCount: payments.length,
-              separatorBuilder: (_, _) => const Divider(height: 1),
-              itemBuilder: (context, i) {
-                final p = payments[i];
-                return ListTile(
-                  title: Text(p.description),
-                  subtitle: Text([
-                    p.orgName ?? p.payerOrgId ?? '',
-                    if (p.createdAt != null) _dateTime.format(p.createdAt!),
-                    p.isSimulated ? 'Simulation' : p.provider,
-                  ].join(' · ')),
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(p.amount.format()),
-                      Text(
-                        p.status.label(l10n),
-                        style: TextStyle(color: p.status.color(scheme), fontSize: 12),
+    return ref
+        .watch(recentPaymentsProvider)
+        .when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(child: Text('Chargement impossible : $e')),
+          data: (payments) => payments.isEmpty
+              ? const Center(child: Text('Aucun paiement.'))
+              : ListView.separated(
+                  itemCount: payments.length,
+                  separatorBuilder: (_, _) => const Divider(height: 1),
+                  itemBuilder: (context, i) {
+                    final p = payments[i];
+                    return ListTile(
+                      title: Text(p.description),
+                      subtitle: Text(
+                        [
+                          p.orgName ?? p.payerOrgId ?? '',
+                          if (p.createdAt != null) _dateTime.format(p.createdAt!),
+                          p.isSimulated ? 'Simulation' : p.provider,
+                        ].join(' · '),
                       ),
-                    ],
-                  ),
-                );
-              },
-            ),
-    );
+                      trailing: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(p.amount.format()),
+                          Text(p.status.label(l10n), style: TextStyle(color: p.status.color(scheme), fontSize: 12)),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+        );
   }
 }

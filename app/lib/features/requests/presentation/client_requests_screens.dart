@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/theme.dart';
 import '../../../core/widgets/listing_widgets.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../listings/presentation/listing_labels.dart';
@@ -22,7 +23,7 @@ class MyRequestsScreen extends ConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(l10n.navRequests),
-          bottom: TabBar(tabs: [Tab(text: l10n.bookings), Tab(text: l10n.contactRequests)]),
+          bottom: PillTabBar(labels: [l10n.bookings, l10n.contactRequests]),
         ),
         body: const TabBarView(children: [_MyBookings(), _MyLeads()]),
       ),
@@ -37,41 +38,45 @@ class _MyBookings extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
-    return ref.watch(myBookingsProvider).when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text(l10n.genericError)),
-      data: (items) => items.isEmpty
-          ? EmptyState(
-              icon: Icons.hotel_outlined,
-              title: l10n.noBookingYet,
-              body: l10n.noBookingYetHint,
-              action: FilledButton.tonal(onPressed: () => context.go('/hotels'), child: Text(l10n.findHotel)),
-            )
-          : Readable(
-              child: ListView.separated(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                itemCount: items.length,
-                separatorBuilder: (_, _) => const Divider(height: 1),
-                itemBuilder: (context, i) {
-                  final b = items[i];
-                  return ListTile(
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: SizedBox(width: 56, height: 56, child: NetImage(b.hotelPhoto, icon: Icons.hotel)),
-                    ),
-                    title: Text(b.hotelName),
-                    subtitle: Text(
-                      '${b.roomTypeName}\n${b.checkIn == null ? '' : shortDate.format(b.checkIn!)} → '
-                      '${b.checkOut == null ? '' : shortDate.format(b.checkOut!)}',
-                    ),
-                    isThreeLine: true,
-                    trailing: StatusPill(b.status.label(l10n), b.status.color(scheme)),
-                    onTap: () => context.push('/reservations/${b.id}'),
-                  );
-                },
-              ),
-            ),
-    );
+    return ref
+        .watch(myBookingsProvider)
+        .when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(child: Text(l10n.genericError)),
+          data: (items) => items.isEmpty
+              ? EmptyState(
+                  icon: Icons.hotel_outlined,
+                  title: l10n.noBookingYet,
+                  body: l10n.noBookingYetHint,
+                  action: FilledButton.tonal(onPressed: () => context.go('/hotels'), child: Text(l10n.findHotel)),
+                )
+              : Readable(
+                  child: ListView(
+                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+                    children: [
+                      CardList(
+                        indent: 86,
+                        children: [
+                          for (final b in items)
+                            RequestRow(
+                              leading: _Thumb(b.hotelPhoto, Icons.hotel),
+                              icon: Icons.hotel,
+                              color: b.status.color(scheme),
+                              title: b.hotelName,
+                              status: b.status.label(l10n),
+                              lines: [
+                                b.roomTypeName,
+                                if (b.checkIn != null && b.checkOut != null)
+                                  '${shortDate.format(b.checkIn!)} → ${shortDate.format(b.checkOut!)}',
+                              ],
+                              onTap: () => context.push('/reservations/${b.id}'),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+        );
   }
 }
 
@@ -82,37 +87,46 @@ class _MyLeads extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
-    return ref.watch(myLeadsProvider).when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text(l10n.genericError)),
-      data: (items) => items.isEmpty
-          ? EmptyState(
-              icon: Icons.home_work_outlined,
-              title: l10n.noLeadYet,
-              body: l10n.noLeadYetHint,
-              action: FilledButton.tonal(onPressed: () => context.go('/immobilier'), child: Text(l10n.findProperty)),
-            )
-          : Readable(
-              child: ListView.separated(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                itemCount: items.length,
-                separatorBuilder: (_, _) => const Divider(height: 1),
-                itemBuilder: (context, i) {
-                  final lead = items[i];
-                  return ListTile(
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: SizedBox(width: 56, height: 56, child: NetImage(lead.targetPhoto, icon: Icons.home_work_outlined)),
-                    ),
-                    title: Text(lead.targetTitle),
-                    subtitle: Text('${lead.type.label(l10n)} · ${lead.orgName ?? ''}'),
-                    trailing: StatusPill(lead.status.label(l10n), lead.status.color(scheme)),
-                    onTap: () => context.push('/contacts/${lead.id}'),
-                  );
-                },
-              ),
-            ),
-    );
+    return ref
+        .watch(myLeadsProvider)
+        .when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(child: Text(l10n.genericError)),
+          data: (items) => items.isEmpty
+              ? EmptyState(
+                  icon: Icons.home_work_outlined,
+                  title: l10n.noLeadYet,
+                  body: l10n.noLeadYetHint,
+                  action: FilledButton.tonal(
+                    onPressed: () => context.go('/immobilier'),
+                    child: Text(l10n.findProperty),
+                  ),
+                )
+              : Readable(
+                  child: ListView(
+                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+                    children: [
+                      CardList(
+                        indent: 86,
+                        children: [
+                          for (final lead in items)
+                            RequestRow(
+                              leading: _Thumb(lead.targetPhoto, Icons.home_work_outlined),
+                              icon: Icons.home_work_outlined,
+                              color: lead.status.color(scheme),
+                              title: lead.targetTitle,
+                              status: lead.status.label(l10n),
+                              lines: [
+                                [lead.type.label(l10n), if (lead.orgName != null) lead.orgName!].join(' · '),
+                              ],
+                              onTap: () => context.push('/contacts/${lead.id}'),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+        );
   }
 }
 
@@ -249,13 +263,32 @@ class BookingStatusCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final color = status.color(Theme.of(context).colorScheme);
-    return Card.outlined(
-      margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: color)),
-      child: ListTile(
-        leading: Icon(status.icon, color: color, size: 32),
-        title: Text(status.label(l10n), style: TextStyle(color: color, fontWeight: FontWeight.w700)),
-        subtitle: Text(help),
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(ZakaRadius.card),
+        border: Border.all(color: color.withValues(alpha: 0.35)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          IconTile(icon: status.icon, background: color.withValues(alpha: 0.14), foreground: color, size: 44),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  status.label(l10n),
+                  style: TextStyle(color: color, fontWeight: FontWeight.w800, fontSize: 16),
+                ),
+                const SizedBox(height: 2),
+                Text(help, style: const TextStyle(height: 1.4)),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -273,43 +306,52 @@ class BookingSummaryCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final b = booking;
-    return Card.outlined(
+    return Card(
       margin: EdgeInsets.zero,
+      clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           ListTile(
-            leading: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: SizedBox(width: 56, height: 56, child: NetImage(b.hotelPhoto, icon: Icons.hotel)),
-            ),
-            title: Text(b.hotelName, style: const TextStyle(fontWeight: FontWeight.w700)),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+            leading: _Thumb(b.hotelPhoto, Icons.hotel),
+            title: Text(b.hotelName, style: const TextStyle(fontWeight: FontWeight.w800)),
             subtitle: Text([b.roomTypeName, if (b.hotelCity != null) b.hotelCity!].join(' · ')),
             trailing: onOpenHotel == null ? null : const Icon(Icons.chevron_right),
             onTap: onOpenHotel,
           ),
-          const Divider(height: 1),
+          Divider(height: 1, color: ZakaPalette.of(context).line),
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (b.checkIn != null && b.checkOut != null)
-                  InfoRow(Icons.date_range, '${longDate.format(b.checkIn!)} → ${longDate.format(b.checkOut!)} · ${l10n.nightsCount(b.nights)}'),
+                  InfoRow(
+                    Icons.date_range,
+                    '${longDate.format(b.checkIn!)} → ${longDate.format(b.checkOut!)} · ${l10n.nightsCount(b.nights)}',
+                  ),
                 InfoRow(Icons.people_outline, l10n.guestsSummary(b.adults, b.children, b.rooms)),
                 if (b.message.isNotEmpty) InfoRow(Icons.notes, b.message),
-                if (b.offerTitle != null) InfoRow(Icons.local_offer_outlined, '${b.offerTitle} : −${b.discountPercent} %'),
+                if (b.offerTitle != null)
+                  InfoRow(Icons.local_offer_outlined, '${b.offerTitle} : −${b.discountPercent} %'),
                 const SizedBox(height: 8),
                 Row(
                   children: [
                     Expanded(child: Text(l10n.estimatedTotal)),
-                    Text(b.estimatedTotal.format(), style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800)),
+                    Text(
+                      b.estimatedTotal.format(),
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w800,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
                   ],
                 ),
                 if (b.isPaid)
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
-                    child: Text(l10n.paidSimulated, style: TextStyle(color: Colors.green.shade700)),
+                    child: Text(l10n.paidSimulated, style: TextStyle(color: ZakaColors.success)),
                   ),
               ],
             ),
@@ -343,30 +385,45 @@ class LeadDetailScreen extends ConsumerWidget {
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                Card.outlined(
+                Card(
                   margin: EdgeInsets.zero,
+                  clipBehavior: Clip.antiAlias,
                   child: ListTile(
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: SizedBox(width: 56, height: 56, child: NetImage(lead.targetPhoto)),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                    leading: _Thumb(lead.targetPhoto, Icons.home_work_outlined),
+                    title: Text(lead.targetTitle, style: const TextStyle(fontWeight: FontWeight.w800)),
+                    subtitle: Text(
+                      [
+                        lead.type.label(l10n),
+                        if (lead.unitLabel != null) l10n.unitLabel(lead.unitLabel!),
+                        lead.orgName ?? '',
+                      ].join(' · '),
                     ),
-                    title: Text(lead.targetTitle, style: const TextStyle(fontWeight: FontWeight.w700)),
-                    subtitle: Text([
-                      lead.type.label(l10n),
-                      if (lead.unitLabel != null) l10n.unitLabel(lead.unitLabel!),
-                      lead.orgName ?? '',
-                    ].join(' · ')),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () => context.push(lead.targetType == 'project' ? '/programme/${lead.targetId}' : '/bien/${lead.targetId}'),
+                    onTap: () => context.push(
+                      lead.targetType == 'project' ? '/programme/${lead.targetId}' : '/bien/${lead.targetId}',
+                    ),
                   ),
                 ),
                 const SizedBox(height: 12),
-                Row(children: [StatusPill(lead.status.label(l10n), lead.status.color(scheme))]),
-                if (lead.visitAt != null) InfoRow(Icons.event, l10n.visitPlanned(dateTimeFormat.format(lead.visitAt!))),
-                InfoRow(Icons.notes, lead.message),
-                if (lead.preferredDates.isNotEmpty) InfoRow(Icons.schedule, lead.preferredDates),
+                SectionCard(
+                  margin: EdgeInsets.zero,
+                  children: [
+                    Row(children: [StatusPill(lead.status.label(l10n), lead.status.color(scheme))]),
+                    const SizedBox(height: 6),
+                    if (lead.visitAt != null)
+                      InfoRow(Icons.event, l10n.visitPlanned(dateTimeFormat.format(lead.visitAt!))),
+                    InfoRow(Icons.notes, lead.message),
+                    if (lead.preferredDates.isNotEmpty) InfoRow(Icons.schedule, lead.preferredDates),
+                  ],
+                ),
                 const SizedBox(height: 24),
-                Conversation(thread: Thread.lead, id: lead.id, role: 'client', enabled: lead.status != LeadStatus.closed),
+                Conversation(
+                  thread: Thread.lead,
+                  id: lead.id,
+                  role: 'client',
+                  enabled: lead.status != LeadStatus.closed,
+                ),
               ],
             ),
           );
@@ -374,4 +431,18 @@ class LeadDetailScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// Petite photo arrondie d'un hôtel ou d'un bien.
+class _Thumb extends StatelessWidget {
+  const _Thumb(this.url, this.icon);
+
+  final String? url;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) => ClipRRect(
+    borderRadius: BorderRadius.circular(ZakaRadius.small + 2),
+    child: SizedBox(width: 60, height: 60, child: NetImage(url, icon: icon)),
+  );
 }

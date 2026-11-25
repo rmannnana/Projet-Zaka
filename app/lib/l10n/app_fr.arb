@@ -1107,5 +1107,16 @@
   "accountSectionAccount": "Compte",
   "signInWelcome": "Bienvenue sur ZAKA",
   "signInTagline": "Réservez un hôtel, contactez les annonceurs et retrouvez vos favoris.",
-  "resetFilters": "Réinitialiser"
+  "resetFilters": "Réinitialiser",
+  "proSpacesIntro": "Gérez vos annonces, les demandes de vos clients et votre abonnement.",
+  "orgSectionActivity": "Activité",
+  "orgSectionSpace": "Votre espace",
+  "orgSectionBilling": "Facturation",
+  "orgStatListings": "Annonces en ligne",
+  "orgStatToHandle": "Demandes à traiter",
+  "orgStatViews": "Vues des annonces",
+  "proTypeTitle": "Quel espace créer ?",
+  "proTypeIntro": "Chaque espace a ses propres annonces, demandes et abonnement. Vous pourrez en créer d'autres plus tard.",
+  "clientLabel": "Client",
+  "planInUse": "Plan en cours"
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/theme.dart';
 import '../../../core/money.dart';
 import '../../../core/widgets/listing_widgets.dart';
 import '../../../l10n/app_localizations.dart';
@@ -30,14 +31,8 @@ Future<void> showBookingSheet(
     context: context,
     isScrollControlled: true,
     showDragHandle: true,
-    builder: (_) => _BookingSheet(
-      hotel: hotel,
-      room: room,
-      offers: offers,
-      checkIn: checkIn,
-      checkOut: checkOut,
-      guests: guests,
-    ),
+    builder: (_) =>
+        _BookingSheet(hotel: hotel, room: room, offers: offers, checkIn: checkIn, checkOut: checkOut, guests: guests),
   );
 }
 
@@ -103,23 +98,25 @@ class _BookingSheetState extends ConsumerState<_BookingSheet> {
       _error = null;
     });
     try {
-      final result = await ref.read(requestsRepositoryProvider).createBooking(
-        hotelId: widget.hotel.id,
-        roomTypeId: widget.room.id,
-        checkIn: _dates!.start,
-        checkOut: _dates!.end,
-        adults: _adults,
-        children: _children,
-        rooms: _rooms,
-        message: _message.text,
-      );
+      final result = await ref
+          .read(requestsRepositoryProvider)
+          .createBooking(
+            hotelId: widget.hotel.id,
+            roomTypeId: widget.room.id,
+            checkIn: _dates!.start,
+            checkOut: _dates!.end,
+            adults: _adults,
+            children: _children,
+            rooms: _rooms,
+            message: _message.text,
+          );
       if (!mounted) return;
       final router = GoRouter.of(context);
       Navigator.pop(context);
       await showDialog<void>(
         context: router.routerDelegate.navigatorKey.currentContext!,
         builder: (context) => AlertDialog(
-          icon: Icon(Icons.mark_email_read_outlined, color: Colors.green.shade700, size: 48),
+          icon: Icon(Icons.mark_email_read_outlined, color: ZakaColors.success, size: 48),
           title: Text(l10n.bookingSentTitle),
           content: Text(l10n.bookingSentBody(widget.hotel.name, dateTimeFormat.format(result.expiresAt))),
           actions: [
@@ -161,7 +158,10 @@ class _BookingSheetState extends ConsumerState<_BookingSheet> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(l10n.bookingRequestTitle, style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
+                Text(
+                  l10n.bookingRequestTitle,
+                  style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+                ),
                 Text('${widget.hotel.name} · ${room.name}'),
                 const SizedBox(height: 16),
                 OutlinedButton.icon(
@@ -207,10 +207,12 @@ class _BookingSheetState extends ConsumerState<_BookingSheet> {
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     child: ListTile(
                       title: Text(l10n.estimatedTotal),
-                      subtitle: Text([
-                        l10n.estimateDetail(room.pricePerNight.format(), _nights, _rooms),
-                        if (offer != null) '${offer.title} : −${offer.discountPercent} %',
-                      ].join('\n')),
+                      subtitle: Text(
+                        [
+                          l10n.estimateDetail(room.pricePerNight.format(), _nights, _rooms),
+                          if (offer != null) '${offer.title} : −${offer.discountPercent} %',
+                        ].join('\n'),
+                      ),
                       trailing: Text(
                         total.format(),
                         style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),

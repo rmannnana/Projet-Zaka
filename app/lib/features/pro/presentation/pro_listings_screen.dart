@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/theme.dart';
 import '../../../core/widgets/listing_widgets.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../billing/data/billing_repository.dart';
@@ -117,23 +118,21 @@ class ProListingsScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
           children: [
-            if (!org.isVerified)
-              Card.filled(
-                child: ListTile(leading: const Icon(Icons.info_outline), title: Text(l10n.listingsNeedVerification)),
-              ),
-            if (org.requiresListingReview)
-              Card.filled(
-                child: ListTile(leading: const Icon(Icons.fact_check_outlined), title: Text(l10n.listingsReviewedByZaka)),
-              ),
-            Card.outlined(
-              child: ListTile(
-                leading: const Icon(Icons.workspace_premium_outlined),
-                title: Text(max == null ? l10n.listingsOnlineUnlimited(online) : l10n.listingsOnline(online, max)),
-                subtitle: Text(l10n.planLabel(plan?.name ?? l10n.billingFree)),
-                trailing: TextButton(onPressed: () => context.push('/pro/$orgId/abonnement'), child: Text(l10n.changePlan)),
-              ),
+            if (!org.isVerified) ...[
+              NoticeCard(text: l10n.listingsNeedVerification, tone: Tone.peach),
+              const SizedBox(height: 12),
+            ],
+            if (org.requiresListingReview) ...[
+              NoticeCard(text: l10n.listingsReviewedByZaka, icon: Icons.fact_check_outlined),
+              const SizedBox(height: 12),
+            ],
+            _PlanUsage(
+              online: online,
+              max: max,
+              planName: plan?.name ?? l10n.billingFree,
+              onChange: () => context.push('/pro/$orgId/abonnement'),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             if (rows.isEmpty)
               EmptyState(
                 icon: Icons.add_home_work_outlined,
@@ -154,21 +153,27 @@ class ProListingsScreen extends ConsumerWidget {
       final picked = await showModalBottomSheet<ListingKind>(
         context: context,
         showDragHandle: true,
+        useRootNavigator: true,
         builder: (context) => SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.home_work_outlined),
-                title: Text(l10n.newProperty),
-                onTap: () => Navigator.pop(context, ListingKind.property),
-              ),
-              ListTile(
-                leading: const Icon(Icons.domain),
-                title: Text(l10n.newProjectListing),
-                onTap: () => Navigator.pop(context, ListingKind.project),
-              ),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: const ToneIcon(Icons.home_work_outlined, tone: Tone.sky),
+                  title: Text(l10n.newProperty, style: const TextStyle(fontWeight: FontWeight.w700)),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => Navigator.pop(context, ListingKind.property),
+                ),
+                ListTile(
+                  leading: const ToneIcon(Icons.domain, tone: Tone.lavender),
+                  title: Text(l10n.newProjectListing, style: const TextStyle(fontWeight: FontWeight.w700)),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => Navigator.pop(context, ListingKind.project),
+                ),
+              ],
+            ),
           ),
         ),
       );
@@ -227,45 +232,71 @@ class _ListingTile extends ConsumerWidget {
           },
         ),
       if (isProperty && r.status == ListingStatus.published)
-        (l10n.markUnderOffer, () async {
-          await repo.setStatus(r.kind, r.id, ListingStatus.underOffer);
-          return null;
-        }),
+        (
+          l10n.markUnderOffer,
+          () async {
+            await repo.setStatus(r.kind, r.id, ListingStatus.underOffer);
+            return null;
+          },
+        ),
       if (isProperty && (r.status == ListingStatus.published || r.status == ListingStatus.underOffer))
-        (l10n.markRentedOrSold, () async {
-          // Le type (location ou vente) est lu sur la fiche ; « louée » par défaut pour une location.
-          final p = await ref.read(propertyProvider(r.id).future);
-          await repo.setStatus(r.kind, r.id, p?.transactionType == TransactionType.sale ? ListingStatus.sold : ListingStatus.rented);
-          return null;
-        }),
+        (
+          l10n.markRentedOrSold,
+          () async {
+            // Le type (location ou vente) est lu sur la fiche ; « louée » par défaut pour une location.
+            final p = await ref.read(propertyProvider(r.id).future);
+            await repo.setStatus(
+              r.kind,
+              r.id,
+              p?.transactionType == TransactionType.sale ? ListingStatus.sold : ListingStatus.rented,
+            );
+            return null;
+          },
+        ),
       if (isProperty && r.status == ListingStatus.underOffer)
-        (l10n.backOnline, () async {
-          await repo.publish(r.kind, r.id);
-          return null;
-        }),
+        (
+          l10n.backOnline,
+          () async {
+            await repo.publish(r.kind, r.id);
+            return null;
+          },
+        ),
       if (isProject && r.status == ListingStatus.published)
-        (l10n.markInProgress, () async {
-          await repo.setStatus(r.kind, r.id, ListingStatus.inProgress);
-          return null;
-        }),
+        (
+          l10n.markInProgress,
+          () async {
+            await repo.setStatus(r.kind, r.id, ListingStatus.inProgress);
+            return null;
+          },
+        ),
       if (isProject && (r.status == ListingStatus.published || r.status == ListingStatus.inProgress))
-        (l10n.markDelivered, () async {
-          await repo.setStatus(r.kind, r.id, ListingStatus.delivered);
-          return null;
-        }),
+        (
+          l10n.markDelivered,
+          () async {
+            await repo.setStatus(r.kind, r.id, ListingStatus.delivered);
+            return null;
+          },
+        ),
       if (r.status.isPublic)
-        (r.featured ? l10n.unfeature : l10n.feature, () async {
-          await repo.setFeatured(r.kind, r.id, !r.featured);
-          return r.featured ? null : l10n.featuredNow;
-        }),
+        (
+          r.featured ? l10n.unfeature : l10n.feature,
+          () async {
+            await repo.setFeatured(r.kind, r.id, !r.featured);
+            return r.featured ? null : l10n.featuredNow;
+          },
+        ),
       if (r.status.isPublic)
-        (l10n.takeOffline, () async {
-          await repo.setStatus(r.kind, r.id, ListingStatus.inactive);
-          return l10n.takenOffline;
-        }),
+        (
+          l10n.takeOffline,
+          () async {
+            await repo.setStatus(r.kind, r.id, ListingStatus.inactive);
+            return l10n.takenOffline;
+          },
+        ),
     ];
 
-    return Card.outlined(
+    final palette = ZakaPalette.of(context);
+    return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
         onTap: r.status == ListingStatus.suspended || r.status == ListingStatus.pendingReview
@@ -277,29 +308,60 @@ class _ListingTile extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: SizedBox(width: 96, height: 72, child: NetImage(r.photo)),
+                borderRadius: BorderRadius.circular(ZakaRadius.medium),
+                child: SizedBox(
+                  width: 104,
+                  height: 88,
+                  child: NetImage(r.photo, icon: r.kind == ListingKind.hotel ? Icons.hotel : Icons.home_work_outlined),
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(r.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w700)),
-                    if (r.subtitle != null && r.subtitle!.isNotEmpty) Text(r.subtitle!, style: Theme.of(context).textTheme.bodySmall),
-                    const SizedBox(height: 6),
+                    Text(
+                      r.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
+                    ),
+                    if (r.subtitle != null && r.subtitle!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Text(
+                          r.subtitle!,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: r.kind == ListingKind.property ? scheme.primary : palette.muted,
+                            fontWeight: r.kind == ListingKind.property ? FontWeight.w700 : null,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                    const SizedBox(height: 8),
                     Wrap(
                       spacing: 6,
                       runSpacing: 6,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         StatusPill(r.status.label(l10n), r.status.color(scheme)),
-                        if (r.featured) StatusPill(l10n.featured, scheme.secondary),
-                        Text(
-                          r.kind == ListingKind.hotel
-                              ? l10n.statsHotel(r.stats.views, r.stats.requests)
-                              : l10n.statsListing(r.stats.views, r.stats.leads),
-                          style: Theme.of(context).textTheme.bodySmall,
+                        if (r.featured) StatusPill(l10n.featured, palette.onPeach),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(Icons.insights, size: 15, color: palette.muted),
+                        const SizedBox(width: 5),
+                        Expanded(
+                          child: Text(
+                            r.kind == ListingKind.hotel
+                                ? l10n.statsHotel(r.stats.views, r.stats.requests)
+                                : l10n.statsListing(r.stats.views, r.stats.leads),
+                            style: TextStyle(color: palette.muted, fontSize: 12.5),
+                          ),
                         ),
                       ],
                     ),
@@ -312,6 +374,7 @@ class _ListingTile extends ConsumerWidget {
                 ),
               ),
               PopupMenuButton<int>(
+                icon: Icon(Icons.more_vert, color: palette.muted),
                 onSelected: (i) {
                   if (i == -1) {
                     context.push(publicPath);
@@ -326,6 +389,70 @@ class _ListingTile extends ConsumerWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Annonces en ligne par rapport à la limite du plan, avec une jauge.
+class _PlanUsage extends StatelessWidget {
+  const _PlanUsage({required this.online, required this.max, required this.planName, required this.onChange});
+
+  final int online;
+  final int? max;
+  final String planName;
+  final VoidCallback onChange;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final palette = ZakaPalette.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    final max = this.max;
+    final full = max != null && online >= max;
+    return Card(
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(14, 14, 8, 14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const ToneIcon(Icons.workspace_premium_outlined, tone: Tone.peach, size: 42),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        max == null ? l10n.listingsOnlineUnlimited(online) : l10n.listingsOnline(online, max),
+                        style: const TextStyle(fontWeight: FontWeight.w800),
+                      ),
+                      Text(l10n.planLabel(planName), style: TextStyle(color: palette.muted, fontSize: 13)),
+                    ],
+                  ),
+                ),
+                TextButton(onPressed: onChange, child: Text(l10n.changePlan)),
+              ],
+            ),
+            if (max != null && max > 0) ...[
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.only(right: 6),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: LinearProgressIndicator(
+                    value: (online / max).clamp(0, 1).toDouble(),
+                    minHeight: 8,
+                    backgroundColor: palette.line,
+                    color: full ? ZakaColors.warning : scheme.primary,
+                  ),
+                ),
+              ),
+            ],
+          ],
         ),
       ),
     );

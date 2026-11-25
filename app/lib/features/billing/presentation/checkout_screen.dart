@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/theme.dart';
+import '../../../core/widgets/listing_widgets.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../organizations/data/organization_repository.dart';
 import '../data/billing_repository.dart';
@@ -47,39 +49,63 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.checkoutTitle)),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 520),
-          child: payment.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, _) => Center(child: Text(l10n.genericError)),
-            data: (payment) {
-              if (payment == null) return Center(child: Text(l10n.checkoutNotFound));
-              return ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  if (payment.isSimulated) const _TestBanner(),
-                  const SizedBox(height: 16),
-                  Card.outlined(
-                    child: ListTile(
-                      title: Text(payment.description),
-                      subtitle: payment.orgName == null ? null : Text(payment.orgName!),
-                      trailing: Text(payment.amount.format(), style: Theme.of(context).textTheme.titleLarge),
+      body: Readable(
+        maxWidth: 560,
+        child: payment.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(child: Text(l10n.genericError)),
+          data: (payment) {
+            if (payment == null) return Center(child: Text(l10n.checkoutNotFound));
+            return ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                if (payment.isSimulated) const _TestBanner(),
+                const SizedBox(height: 16),
+                Card(
+                  margin: EdgeInsets.zero,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        const ToneIcon(Icons.receipt_long_outlined, size: 46),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(payment.description, style: const TextStyle(fontWeight: FontWeight.w800)),
+                              if (payment.orgName != null)
+                                Text(
+                                  payment.orgName!,
+                                  style: TextStyle(color: ZakaPalette.of(context).muted, fontSize: 13),
+                                ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          payment.amount.format(),
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  if (payment.status == PaymentStatus.pending)
-                    ..._pendingActions(l10n)
-                  else
-                    _Result(
-                      orgId: widget.orgId,
-                      payment: payment,
-                      backLocation: widget.backLocation ?? '/pro/${widget.orgId}/abonnement',
-                    ),
-                ],
-              );
-            },
-          ),
+                ),
+                const SizedBox(height: 20),
+                if (payment.status == PaymentStatus.pending)
+                  ..._pendingActions(l10n)
+                else
+                  _Result(
+                    orgId: widget.orgId,
+                    payment: payment,
+                    backLocation: widget.backLocation ?? '/pro/${widget.orgId}/abonnement',
+                  ),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -91,8 +117,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
         : Text(label);
     return [
-      Text(l10n.checkoutTestExplain),
-      const SizedBox(height: 16),
+      PageIntro(text: l10n.checkoutTestExplain),
       FilledButton.icon(
         onPressed: busy ? null : () => _confirm(SimulatedOutcome.success),
         icon: const Icon(Icons.check_circle_outline),
@@ -120,26 +145,7 @@ class _TestBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.amber.shade100,
-        border: Border.all(color: Colors.amber.shade800),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.science_outlined, color: Colors.amber.shade900),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              l10n.checkoutTestBanner,
-              style: TextStyle(color: Colors.amber.shade900, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
-      ),
-    );
+    return NoticeCard(text: l10n.checkoutTestBanner, icon: Icons.science_outlined, tone: Tone.peach);
   }
 }
 
@@ -161,7 +167,9 @@ class _Result extends ConsumerWidget {
       PaymentStatus.succeeded => (
         Icons.check_circle,
         l10n.checkoutSucceeded,
-        booking ? l10n.checkoutBookingPaid : (end == null ? null : l10n.checkoutSucceededUntil(billingDate.format(end))),
+        booking
+            ? l10n.checkoutBookingPaid
+            : (end == null ? null : l10n.checkoutSucceededUntil(billingDate.format(end))),
       ),
       PaymentStatus.failed => (Icons.error, l10n.checkoutFailed, l10n.checkoutFailedBody),
       _ => (Icons.cancel_outlined, l10n.checkoutCancelled, null),
@@ -169,15 +177,22 @@ class _Result extends ConsumerWidget {
 
     return Column(
       children: [
-        Icon(icon, size: 64, color: payment.status.color(scheme)),
         const SizedBox(height: 12),
-        Text(title, style: Theme.of(context).textTheme.headlineSmall),
-        if (body != null) ...[
-          const SizedBox(height: 8),
-          Text(body, textAlign: TextAlign.center),
-        ],
+        Container(
+          width: 92,
+          height: 92,
+          decoration: BoxDecoration(
+            color: payment.status.color(scheme).withValues(alpha: 0.12),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(icon, size: 48, color: payment.status.color(scheme)),
+        ),
+        const SizedBox(height: 16),
+        Text(title, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
+        if (body != null) ...[const SizedBox(height: 8), Text(body, textAlign: TextAlign.center)],
         const SizedBox(height: 24),
         FilledButton(
+          style: FilledButton.styleFrom(minimumSize: const Size(double.infinity, 52)),
           onPressed: () => context.go(backLocation),
           child: Text(booking ? l10n.checkoutBackToBooking : l10n.checkoutBackToSubscription),
         ),

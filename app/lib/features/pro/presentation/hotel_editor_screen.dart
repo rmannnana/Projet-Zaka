@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../app/theme.dart';
 import '../../../core/money.dart';
 import '../../../core/widgets/listing_widgets.dart';
 import '../../../l10n/app_localizations.dart';
@@ -51,16 +52,9 @@ class HotelEditorScreen extends ConsumerWidget {
                 ),
               ),
           ],
-          bottom: TabBar(
-            isScrollable: true,
-            tabAlignment: TabAlignment.start,
-            tabs: [
-              Tab(text: l10n.tabInfo),
-              Tab(text: l10n.tabPhotos),
-              Tab(text: l10n.rooms),
-              Tab(text: l10n.tabOffers),
-              Tab(text: l10n.tabAvailability),
-            ],
+          bottom: PillTabBar(
+            scrollable: true,
+            labels: [l10n.tabInfo, l10n.tabPhotos, l10n.rooms, l10n.tabOffers, l10n.tabAvailability],
           ),
         ),
         body: TabBarView(
@@ -69,11 +63,17 @@ class HotelEditorScreen extends ConsumerWidget {
             Readable(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
-                child: PhotosEditor(
-                  orgId: orgId,
-                  listingId: hotelId,
-                  photos: hotel.photos,
-                  onChanged: (photos) => ref.read(listingsRepositoryProvider).update(ListingKind.hotel, hotelId, {'photos': photos}),
+                child: FormSection(
+                  title: l10n.tabPhotos,
+                  children: [
+                    PhotosEditor(
+                      orgId: orgId,
+                      listingId: hotelId,
+                      photos: hotel.photos,
+                      onChanged: (photos) =>
+                          ref.read(listingsRepositoryProvider).update(ListingKind.hotel, hotelId, {'photos': photos}),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -190,11 +190,19 @@ class _HotelInfoTabState extends ConsumerState<_HotelInfoTab> {
             FormSection(
               title: l10n.location,
               children: [
-                FieldRow(children: [
-                  CityFormField(value: _city, onChanged: (v) => setState(() => _city = v)),
-                  TextFormField(controller: _district, decoration: InputDecoration(labelText: l10n.district)),
-                ]),
-                TextFormField(controller: _address, decoration: InputDecoration(labelText: l10n.address)),
+                FieldRow(
+                  children: [
+                    CityFormField(value: _city, onChanged: (v) => setState(() => _city = v)),
+                    TextFormField(
+                      controller: _district,
+                      decoration: InputDecoration(labelText: l10n.district),
+                    ),
+                  ],
+                ),
+                TextFormField(
+                  controller: _address,
+                  decoration: InputDecoration(labelText: l10n.address),
+                ),
                 TextFormField(
                   controller: _phone,
                   keyboardType: TextInputType.phone,
@@ -205,16 +213,28 @@ class _HotelInfoTabState extends ConsumerState<_HotelInfoTab> {
             FormSection(
               title: l10n.amenities,
               children: [
-                AmenitySelector(selected: _amenities, forHotels: true, onChanged: (v) => setState(() => _amenities = v)),
+                AmenitySelector(
+                  selected: _amenities,
+                  forHotels: true,
+                  onChanged: (v) => setState(() => _amenities = v),
+                ),
               ],
             ),
             FormSection(
               title: l10n.hotelRules,
               children: [
-                FieldRow(children: [
-                  TextFormField(controller: _checkIn, decoration: InputDecoration(labelText: l10n.checkInTime, hintText: '14:00')),
-                  TextFormField(controller: _checkOut, decoration: InputDecoration(labelText: l10n.checkOutTime, hintText: '12:00')),
-                ]),
+                FieldRow(
+                  children: [
+                    TextFormField(
+                      controller: _checkIn,
+                      decoration: InputDecoration(labelText: l10n.checkInTime, hintText: '14:00'),
+                    ),
+                    TextFormField(
+                      controller: _checkOut,
+                      decoration: InputDecoration(labelText: l10n.checkOutTime, hintText: '12:00'),
+                    ),
+                  ],
+                ),
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Text(l10n.petsAllowed),
@@ -224,9 +244,16 @@ class _HotelInfoTabState extends ConsumerState<_HotelInfoTab> {
                 TextFormField(
                   controller: _cancellation,
                   maxLines: 2,
-                  decoration: InputDecoration(labelText: l10n.cancellationPolicyLabel, hintText: l10n.cancellationPolicyHint),
+                  decoration: InputDecoration(
+                    labelText: l10n.cancellationPolicyLabel,
+                    hintText: l10n.cancellationPolicyHint,
+                  ),
                 ),
-                TextFormField(controller: _other, maxLines: 2, decoration: InputDecoration(labelText: l10n.otherRules)),
+                TextFormField(
+                  controller: _other,
+                  maxLines: 2,
+                  decoration: InputDecoration(labelText: l10n.otherRules),
+                ),
               ],
             ),
             FilledButton(onPressed: _saving ? null : _save, child: Text(l10n.save)),
@@ -261,16 +288,23 @@ class _RoomsTab extends ConsumerWidget {
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
                 children: [
                   for (final r in rooms)
-                    Card.outlined(
+                    Card(
+                      margin: const EdgeInsets.only(bottom: 10),
                       child: ListTile(
-                        leading: Icon(r.active ? Icons.bed : Icons.bed_outlined),
-                        title: Text(r.name),
-                        subtitle: Text([
-                          l10n.pricePerNight(r.pricePerNight.format()),
-                          l10n.roomCapacity(r.capacityAdults, r.capacityChildren),
-                          l10n.roomQuantity(r.quantity),
-                          if (!r.active) l10n.inactiveRoom,
-                        ].join(' · ')),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                        leading: ToneIcon(
+                          r.active ? Icons.bed : Icons.bed_outlined,
+                          tone: r.active ? Tone.mint : Tone.neutral,
+                        ),
+                        title: Text(r.name, style: const TextStyle(fontWeight: FontWeight.w700)),
+                        subtitle: Text(
+                          [
+                            l10n.pricePerNight(r.pricePerNight.format()),
+                            l10n.roomCapacity(r.capacityAdults, r.capacityChildren),
+                            l10n.roomQuantity(r.quantity),
+                            if (!r.active) l10n.inactiveRoom,
+                          ].join(' · '),
+                        ),
                         trailing: const Icon(Icons.edit_outlined),
                         onTap: () => _edit(context, ref, r),
                       ),
@@ -281,8 +315,10 @@ class _RoomsTab extends ConsumerWidget {
     );
   }
 
-  Future<void> _edit(BuildContext context, WidgetRef ref, RoomType? room) =>
-      showDialog<void>(context: context, builder: (_) => _RoomDialog(hotelId: hotelId, room: room));
+  Future<void> _edit(BuildContext context, WidgetRef ref, RoomType? room) => showDialog<void>(
+    context: context,
+    builder: (_) => _RoomDialog(hotelId: hotelId, room: room),
+  );
 }
 
 class _RoomDialog extends ConsumerStatefulWidget {
@@ -320,22 +356,24 @@ class _RoomDialogState extends ConsumerState<_RoomDialog> {
     if (!_form.currentState!.validate()) return;
     setState(() => _saving = true);
     try {
-      await ref.read(listingsRepositoryProvider).saveRoomType(
-        widget.hotelId,
-        RoomType(
-          name: _name.text.trim(),
-          description: _description.text.trim(),
-          beds: _beds.text.trim(),
-          pricePerNight: Money(intOf(_price) ?? 0),
-          capacityAdults: intOf(_adults) ?? 1,
-          capacityChildren: intOf(_children) ?? 0,
-          quantity: intOf(_quantity) ?? 1,
-          active: _active,
-          photos: r.photos,
-          amenities: r.amenities,
-        ).toJson(),
-        id: widget.room?.id,
-      );
+      await ref
+          .read(listingsRepositoryProvider)
+          .saveRoomType(
+            widget.hotelId,
+            RoomType(
+              name: _name.text.trim(),
+              description: _description.text.trim(),
+              beds: _beds.text.trim(),
+              pricePerNight: Money(intOf(_price) ?? 0),
+              capacityAdults: intOf(_adults) ?? 1,
+              capacityChildren: intOf(_children) ?? 0,
+              quantity: intOf(_quantity) ?? 1,
+              active: _active,
+              photos: r.photos,
+              amenities: r.amenities,
+            ).toJson(),
+            id: widget.room?.id,
+          );
       if (mounted) Navigator.pop(context);
     } catch (e) {
       if (mounted) showResult(context, functionErrorMessage(e), error: true);
@@ -370,17 +408,28 @@ class _RoomDialogState extends ConsumerState<_RoomDialog> {
                 const SizedBox(height: 12),
                 IntField(controller: _price, label: l10n.pricePerNightLabel, suffix: 'FCFA', required: true),
                 const SizedBox(height: 12),
-                FieldRow(children: [
-                  IntField(controller: _adults, label: l10n.adults, required: true),
-                  IntField(controller: _children, label: l10n.children),
-                ]),
+                FieldRow(
+                  children: [
+                    IntField(controller: _adults, label: l10n.adults, required: true),
+                    IntField(controller: _children, label: l10n.children),
+                  ],
+                ),
                 const SizedBox(height: 12),
-                FieldRow(children: [
-                  IntField(controller: _quantity, label: l10n.roomsOfThisType, required: true),
-                  TextFormField(controller: _beds, decoration: InputDecoration(labelText: l10n.beds, hintText: l10n.bedsHint)),
-                ]),
+                FieldRow(
+                  children: [
+                    IntField(controller: _quantity, label: l10n.roomsOfThisType, required: true),
+                    TextFormField(
+                      controller: _beds,
+                      decoration: InputDecoration(labelText: l10n.beds, hintText: l10n.bedsHint),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 12),
-                TextFormField(controller: _description, maxLines: 3, decoration: InputDecoration(labelText: l10n.description)),
+                TextFormField(
+                  controller: _description,
+                  maxLines: 3,
+                  decoration: InputDecoration(labelText: l10n.description),
+                ),
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Text(l10n.roomActive),
@@ -417,7 +466,10 @@ class _OffersTab extends ConsumerWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
         heroTag: 'offer',
-        onPressed: () => showDialog<void>(context: context, builder: (_) => _OfferDialog(hotelId: hotelId)),
+        onPressed: () => showDialog<void>(
+          context: context,
+          builder: (_) => _OfferDialog(hotelId: hotelId),
+        ),
         icon: const Icon(Icons.add),
         label: Text(l10n.addOffer),
       ),
@@ -428,17 +480,27 @@ class _OffersTab extends ConsumerWidget {
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
                 children: [
                   for (final o in offers)
-                    Card.outlined(
+                    Card(
+                      margin: const EdgeInsets.only(bottom: 10),
                       child: ListTile(
-                        leading: const Icon(Icons.local_offer_outlined),
-                        title: Text('${o.title} · −${o.discountPercent} %'),
-                        subtitle: Text([
-                          if (o.validFrom != null && o.validTo != null)
-                            '${shortDate.format(o.validFrom!)} → ${shortDate.format(o.validTo!.subtract(const Duration(days: 1)))}',
-                          if (!o.active) l10n.inactiveOffer,
-                        ].join(' · ')),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                        leading: ToneIcon(Icons.local_offer_outlined, tone: o.active ? Tone.peach : Tone.neutral),
+                        title: Text(
+                          '${o.title} · −${o.discountPercent} %',
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                        subtitle: Text(
+                          [
+                            if (o.validFrom != null && o.validTo != null)
+                              '${shortDate.format(o.validFrom!)} → ${shortDate.format(o.validTo!.subtract(const Duration(days: 1)))}',
+                            if (!o.active) l10n.inactiveOffer,
+                          ].join(' · '),
+                        ),
                         trailing: const Icon(Icons.edit_outlined),
-                        onTap: () => showDialog<void>(context: context, builder: (_) => _OfferDialog(hotelId: hotelId, offer: o)),
+                        onTap: () => showDialog<void>(
+                          context: context,
+                          builder: (_) => _OfferDialog(hotelId: hotelId, offer: o),
+                        ),
                       ),
                     ),
                 ],
@@ -486,20 +548,22 @@ class _OfferDialogState extends ConsumerState<_OfferDialog> {
       return;
     }
     DateTime utc(DateTime d) => DateTime.utc(d.year, d.month, d.day);
-    await ref.read(listingsRepositoryProvider).saveOffer(
-      widget.hotelId,
-      HotelOffer(
-        title: _title.text.trim(),
-        description: _description.text.trim(),
-        discountPercent: discount,
-        roomTypeIds: _rooms.toList(),
-        validFrom: utc(_period!.start),
-        // Fin exclue : le lendemain du dernier jour choisi.
-        validTo: utc(_period!.end).add(const Duration(days: 1)),
-        active: _active,
-      ).toJson(),
-      id: widget.offer?.id,
-    );
+    await ref
+        .read(listingsRepositoryProvider)
+        .saveOffer(
+          widget.hotelId,
+          HotelOffer(
+            title: _title.text.trim(),
+            description: _description.text.trim(),
+            discountPercent: discount,
+            roomTypeIds: _rooms.toList(),
+            validFrom: utc(_period!.start),
+            // Fin exclue : le lendemain du dernier jour choisi.
+            validTo: utc(_period!.end).add(const Duration(days: 1)),
+            active: _active,
+          ).toJson(),
+          id: widget.offer?.id,
+        );
     if (mounted) Navigator.pop(context);
   }
 
@@ -516,7 +580,10 @@ class _OfferDialogState extends ConsumerState<_OfferDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextField(controller: _title, decoration: InputDecoration(labelText: l10n.offerTitle, hintText: l10n.offerTitleHint)),
+              TextField(
+                controller: _title,
+                decoration: InputDecoration(labelText: l10n.offerTitle, hintText: l10n.offerTitleHint),
+              ),
               const SizedBox(height: 12),
               TextField(
                 controller: _discount,
@@ -557,7 +624,11 @@ class _OfferDialogState extends ConsumerState<_OfferDialog> {
                 ],
               ),
               const SizedBox(height: 12),
-              TextField(controller: _description, maxLines: 2, decoration: InputDecoration(labelText: l10n.description)),
+              TextField(
+                controller: _description,
+                maxLines: 2,
+                decoration: InputDecoration(labelText: l10n.description),
+              ),
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(l10n.offerActive),
@@ -579,7 +650,11 @@ class _OfferDialogState extends ConsumerState<_OfferDialog> {
             child: Text(l10n.delete),
           ),
         TextButton(onPressed: () => Navigator.pop(context), child: Text(l10n.cancel)),
-        FilledButton(style: FilledButton.styleFrom(minimumSize: const Size(0, 40)), onPressed: _save, child: Text(l10n.save)),
+        FilledButton(
+          style: FilledButton.styleFrom(minimumSize: const Size(0, 40)),
+          onPressed: _save,
+          child: Text(l10n.save),
+        ),
       ],
     );
   }
@@ -608,13 +683,16 @@ class _AvailabilityTabState extends ConsumerState<_AvailabilityTab> {
     final rooms = ref.watch(roomTypesProvider(widget.hotelId)).value ?? const <RoomType>[];
     if (rooms.isEmpty) return EmptyState(icon: Icons.calendar_month, title: l10n.noRoomTypeYet);
     final room = rooms.firstWhere((r) => r.id == _roomId, orElse: () => rooms.first);
-    final days = ref.watch(availabilityProvider((hotelId: widget.hotelId, roomTypeId: room.id, month: _monthKey))).value ?? const {};
+    final days =
+        ref.watch(availabilityProvider((hotelId: widget.hotelId, roomTypeId: room.id, month: _monthKey))).value ??
+        const {};
     final daysInMonth = DateTime(_month.year, _month.month + 1, 0).day;
     final offset = DateTime(_month.year, _month.month).weekday - 1;
     final today = DateTime.now();
     final repo = ref.read(listingsRepositoryProvider);
 
-    Future<void> setDays(Map<String, int> updated) => repo.saveAvailability(widget.hotelId, room.id, _monthKey, updated);
+    Future<void> setDays(Map<String, int> updated) =>
+        repo.saveAvailability(widget.hotelId, room.id, _monthKey, updated);
 
     Future<void> editDay(int day) async {
       final key = day.toString().padLeft(2, '0');
@@ -651,8 +729,7 @@ class _AvailabilityTabState extends ConsumerState<_AvailabilityTab> {
       child: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text(l10n.availabilityHelp, style: theme.textTheme.bodySmall),
-          const SizedBox(height: 12),
+          PageIntro(text: l10n.availabilityHelp, padding: const EdgeInsets.only(bottom: 12)),
           DropdownButtonFormField<String>(
             initialValue: room.id,
             decoration: InputDecoration(labelText: l10n.roomTypeName),
@@ -691,35 +768,39 @@ class _AvailabilityTabState extends ConsumerState<_AvailabilityTab> {
                 Center(child: Text(d, style: theme.textTheme.labelMedium)),
               for (var i = 0; i < offset; i++) const SizedBox.shrink(),
               for (var day = 1; day <= daysInMonth; day++)
-                Builder(builder: (context) {
-                  final date = DateTime(_month.year, _month.month, day);
-                  final past = date.isBefore(DateTime(today.year, today.month, today.day));
-                  final declared = days[day.toString().padLeft(2, '0')];
-                  final free = declared ?? room.quantity;
-                  final color = free == 0
-                      ? theme.colorScheme.errorContainer
-                      : declared != null
-                          ? theme.colorScheme.tertiaryContainer
-                          : theme.colorScheme.surfaceContainerHighest;
-                  return Padding(
-                    padding: const EdgeInsets.all(2),
-                    child: Material(
-                      color: past ? theme.colorScheme.surfaceContainerLow : color,
-                      borderRadius: BorderRadius.circular(8),
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(8),
-                        onTap: past ? null : () => editDay(day),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('$day', style: TextStyle(color: past ? theme.colorScheme.outline : null)),
-                            if (!past) Text('$free', style: theme.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w700)),
-                          ],
+                Builder(
+                  builder: (context) {
+                    final date = DateTime(_month.year, _month.month, day);
+                    final past = date.isBefore(DateTime(today.year, today.month, today.day));
+                    final declared = days[day.toString().padLeft(2, '0')];
+                    final free = declared ?? room.quantity;
+                    final palette = ZakaPalette.of(context);
+                    final color = free == 0
+                        ? theme.colorScheme.errorContainer
+                        : declared != null
+                        ? palette.peach
+                        : palette.mint;
+                    return Padding(
+                      padding: const EdgeInsets.all(2),
+                      child: Material(
+                        color: past ? theme.colorScheme.surfaceContainerLow : color,
+                        borderRadius: BorderRadius.circular(ZakaRadius.small),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(ZakaRadius.small),
+                          onTap: past ? null : () => editDay(day),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('$day', style: TextStyle(color: past ? theme.colorScheme.outline : null)),
+                              if (!past)
+                                Text('$free', style: theme.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w700)),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                }),
+                    );
+                  },
+                ),
             ],
           ),
           const SizedBox(height: 12),

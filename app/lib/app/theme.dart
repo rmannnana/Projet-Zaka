@@ -7,6 +7,12 @@ abstract final class ZakaColors {
   static const accent = Color(0xFFE6AD5E);
   static const heart = Color(0xFFEA3A47);
   static const ink = Color(0xFF16211F);
+
+  /// Statuts : accepté, publié, vérifié…
+  static const success = Color(0xFF2E7D4F);
+
+  /// Statuts : en attente, à traiter…
+  static const warning = Color(0xFFC0700F);
 }
 
 /// Teintes complémentaires du thème (tuiles de catégories, cœur, doré…),

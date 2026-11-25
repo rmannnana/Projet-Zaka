@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/theme.dart';
 import '../../../core/links.dart';
 import '../../../core/widgets/listing_widgets.dart';
 import '../../../l10n/app_localizations.dart';
@@ -47,27 +48,16 @@ class _ProBookingsScreenState extends ConsumerState<ProBookingsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-              child: Row(
-                children: [
-                  for (final f in _BookingFilter.values)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: ChoiceChip(
-                        label: Text(switch (f) {
-                          _BookingFilter.toHandle => l10n.toHandle(open),
-                          _BookingFilter.accepted => l10n.bookingAccepted,
-                          _BookingFilter.done => l10n.closedRequests,
-                          _BookingFilter.all => l10n.all,
-                        }),
-                        selected: _filter == f,
-                        onSelected: (_) => setState(() => _filter = f),
-                      ),
-                    ),
-                ],
-              ),
+            FilterChipsBar<_BookingFilter>(
+              values: _BookingFilter.values,
+              selected: _filter,
+              label: (f) => switch (f) {
+                _BookingFilter.toHandle => l10n.toHandle(open),
+                _BookingFilter.accepted => l10n.bookingAccepted,
+                _BookingFilter.done => l10n.closedRequests,
+                _BookingFilter.all => l10n.all,
+              },
+              onSelected: (f) => setState(() => _filter = f),
             ),
             Expanded(
               child: all.when(
@@ -76,25 +66,30 @@ class _ProBookingsScreenState extends ConsumerState<ProBookingsScreen> {
                 data: (items) {
                   final shown = items.where(_keep).toList();
                   if (shown.isEmpty) return EmptyState(icon: Icons.inbox_outlined, title: l10n.noRequestHere);
-                  return ListView.separated(
-                    itemCount: shown.length,
-                    separatorBuilder: (_, _) => const Divider(height: 1),
-                    itemBuilder: (context, i) {
-                      final b = shown[i];
-                      return ListTile(
-                        leading: CircleAvatar(child: Icon(b.status.icon)),
-                        title: Text('${b.clientSnapshot.name} · ${b.roomTypeName}'),
-                        subtitle: Text([
-                          if (b.checkIn != null && b.checkOut != null)
-                            '${shortDate.format(b.checkIn!)} → ${shortDate.format(b.checkOut!)}',
-                          l10n.guestsSummary(b.adults, b.children, b.rooms),
-                          if (b.status.isOpen && b.expiresAt != null) l10n.answerBefore(dateTimeFormat.format(b.expiresAt!)),
-                        ].join('\n')),
-                        isThreeLine: true,
-                        trailing: StatusPill(b.status.label(l10n), b.status.color(scheme)),
-                        onTap: () => context.push('/pro/${widget.orgId}/reservations/${b.id}'),
-                      );
-                    },
+                  return ListView(
+                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+                    children: [
+                      CardList(
+                        indent: 72,
+                        children: [
+                          for (final b in shown)
+                            RequestRow(
+                              icon: b.status.icon,
+                              color: b.status.color(scheme),
+                              title: '${b.clientSnapshot.name} · ${b.roomTypeName}',
+                              status: b.status.label(l10n),
+                              lines: [
+                                if (b.checkIn != null && b.checkOut != null)
+                                  '${shortDate.format(b.checkIn!)} → ${shortDate.format(b.checkOut!)} · '
+                                      '${l10n.guestsSummary(b.adults, b.children, b.rooms)}',
+                                if (b.status.isOpen && b.expiresAt != null)
+                                  l10n.answerBefore(dateTimeFormat.format(b.expiresAt!)),
+                              ],
+                              onTap: () => context.push('/pro/${widget.orgId}/reservations/${b.id}'),
+                            ),
+                        ],
+                      ),
+                    ],
                   );
                 },
               ),
@@ -159,7 +154,9 @@ class _ProBookingDetailScreenState extends ConsumerState<ProBookingDetailScreen>
           if (b == null) return EmptyState(icon: Icons.search_off, title: l10n.requestNotFound);
           final now = DateTime.now();
           final help = switch (b.status) {
-            BookingStatus.pending => l10n.hotelPendingHelp(b.expiresAt == null ? '' : dateTimeFormat.format(b.expiresAt!)),
+            BookingStatus.pending => l10n.hotelPendingHelp(
+              b.expiresAt == null ? '' : dateTimeFormat.format(b.expiresAt!),
+            ),
             BookingStatus.infoRequested => l10n.hotelInfoRequestedHelp,
             BookingStatus.accepted => b.isPaid ? l10n.hotelPaidHelp : l10n.hotelAcceptedHelp,
             _ => bookingStatusHelp(l10n, b),
@@ -171,39 +168,26 @@ class _ProBookingDetailScreenState extends ConsumerState<ProBookingDetailScreen>
               children: [
                 BookingStatusCard(status: b.status, help: help),
                 const SizedBox(height: 12),
-                Card.outlined(
-                  margin: EdgeInsets.zero,
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: const CircleAvatar(child: Icon(Icons.person)),
-                        title: Text(b.clientSnapshot.name, style: const TextStyle(fontWeight: FontWeight.w700)),
-                        subtitle: Text([
-                          if (b.clientSnapshot.phone != null) b.clientSnapshot.phone!,
-                          if (b.clientSnapshot.email != null) b.clientSnapshot.email!,
-                        ].join(' · ')),
+                ClientCard(
+                  name: b.clientSnapshot.name,
+                  subtitle: [
+                    if (b.clientSnapshot.phone != null) b.clientSnapshot.phone!,
+                    if (b.clientSnapshot.email != null) b.clientSnapshot.email!,
+                  ].join(' · '),
+                  actions: [
+                    if (b.clientSnapshot.phone != null) ...[
+                      OutlinedButton.icon(
+                        onPressed: () => callPhone(b.clientSnapshot.phone!),
+                        icon: const Icon(Icons.call_outlined),
+                        label: Text(l10n.call),
                       ),
-                      if (b.clientSnapshot.phone != null)
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                          child: Wrap(
-                            spacing: 8,
-                            children: [
-                              OutlinedButton.icon(
-                                onPressed: () => callPhone(b.clientSnapshot.phone!),
-                                icon: const Icon(Icons.call_outlined),
-                                label: Text(l10n.call),
-                              ),
-                              OutlinedButton.icon(
-                                onPressed: () => openWhatsApp(b.clientSnapshot.phone!),
-                                icon: const Icon(Icons.chat_outlined),
-                                label: const Text('WhatsApp'),
-                              ),
-                            ],
-                          ),
-                        ),
+                      OutlinedButton.icon(
+                        onPressed: () => openWhatsApp(b.clientSnapshot.phone!),
+                        icon: const Icon(Icons.chat_outlined),
+                        label: const Text('WhatsApp'),
+                      ),
                     ],
-                  ),
+                  ],
                 ),
                 const SizedBox(height: 12),
                 BookingSummaryCard(booking: b),
@@ -214,7 +198,11 @@ class _ProBookingDetailScreenState extends ConsumerState<ProBookingDetailScreen>
                   children: [
                     if (b.status.isOpen) ...[
                       FilledButton.icon(
-                        style: FilledButton.styleFrom(minimumSize: const Size(0, 44), backgroundColor: Colors.green.shade700),
+                        style: FilledButton.styleFrom(
+                          minimumSize: const Size(0, 46),
+                          backgroundColor: ZakaColors.success,
+                          foregroundColor: Colors.white,
+                        ),
                         onPressed: _busy ? null : () => _act(BookingAction.accept),
                         icon: const Icon(Icons.check),
                         label: Text(l10n.accept),
@@ -227,7 +215,9 @@ class _ProBookingDetailScreenState extends ConsumerState<ProBookingDetailScreen>
                     ],
                     if (b.status == BookingStatus.pending)
                       OutlinedButton.icon(
-                        onPressed: _busy ? null : () => _act(BookingAction.requestInfo, askNote: true, noteRequired: true),
+                        onPressed: _busy
+                            ? null
+                            : () => _act(BookingAction.requestInfo, askNote: true, noteRequired: true),
                         icon: const Icon(Icons.help_outline),
                         label: Text(l10n.askInfo),
                       ),
@@ -248,10 +238,18 @@ class _ProBookingDetailScreenState extends ConsumerState<ProBookingDetailScreen>
                 ),
                 if (b.commissionAmount != null) ...[
                   const SizedBox(height: 8),
-                  Text(l10n.commissionDueFor(b.commissionAmount!.format()), style: Theme.of(context).textTheme.bodySmall),
+                  Text(
+                    l10n.commissionDueFor(b.commissionAmount!.format()),
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                 ],
                 const SizedBox(height: 24),
-                Conversation(thread: Thread.booking, id: b.id, role: 'hotel', enabled: b.status != BookingStatus.expired),
+                Conversation(
+                  thread: Thread.booking,
+                  id: b.id,
+                  role: 'hotel',
+                  enabled: b.status != BookingStatus.expired,
+                ),
               ],
             ),
           );
@@ -284,7 +282,9 @@ Future<String?> _askMessage(BuildContext context, {required String title, requir
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: Text(l10n.cancel)),
           FilledButton(
-            onPressed: required && controller.text.trim().isEmpty ? null : () => Navigator.pop(context, controller.text.trim()),
+            onPressed: required && controller.text.trim().isEmpty
+                ? null
+                : () => Navigator.pop(context, controller.text.trim()),
             child: Text(l10n.confirm),
           ),
         ],
@@ -319,22 +319,11 @@ class _ProLeadsScreenState extends ConsumerState<ProLeadsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-              child: Row(
-                children: [
-                  for (final s in [...LeadStatus.values, null])
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: ChoiceChip(
-                        label: Text(s == null ? l10n.all : s.label(l10n)),
-                        selected: _status == s,
-                        onSelected: (_) => setState(() => _status = s),
-                      ),
-                    ),
-                ],
-              ),
+            FilterChipsBar<LeadStatus?>(
+              values: [...LeadStatus.values, null],
+              selected: _status,
+              label: (s) => s == null ? l10n.all : s.label(l10n),
+              onSelected: (s) => setState(() => _status = s),
             ),
             Expanded(
               child: leads.when(
@@ -343,23 +332,27 @@ class _ProLeadsScreenState extends ConsumerState<ProLeadsScreen> {
                 data: (items) {
                   final shown = items.where((l) => _status == null || l.status == _status).toList();
                   if (shown.isEmpty) return EmptyState(icon: Icons.inbox_outlined, title: l10n.noRequestHere);
-                  return ListView.separated(
-                    itemCount: shown.length,
-                    separatorBuilder: (_, _) => const Divider(height: 1),
-                    itemBuilder: (context, i) {
-                      final lead = shown[i];
-                      return ListTile(
-                        leading: CircleAvatar(child: Icon(lead.type.icon)),
-                        title: Text('${lead.clientSnapshot.name} · ${lead.type.label(l10n)}'),
-                        subtitle: Text(
-                          '${lead.targetTitle}${lead.unitLabel == null ? '' : ' · ${l10n.unitLabel(lead.unitLabel!)}'}\n'
-                          '${lead.createdAt == null ? '' : dateTimeFormat.format(lead.createdAt!)}',
-                        ),
-                        isThreeLine: true,
-                        trailing: StatusPill(lead.status.label(l10n), lead.status.color(scheme)),
-                        onTap: () => context.push('/pro/${widget.orgId}/contacts/${lead.id}'),
-                      );
-                    },
+                  return ListView(
+                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+                    children: [
+                      CardList(
+                        indent: 72,
+                        children: [
+                          for (final lead in shown)
+                            RequestRow(
+                              icon: lead.type.icon,
+                              color: lead.status.color(scheme),
+                              title: '${lead.clientSnapshot.name} · ${lead.type.label(l10n)}',
+                              status: lead.status.label(l10n),
+                              lines: [
+                                '${lead.targetTitle}${lead.unitLabel == null ? '' : ' · ${l10n.unitLabel(lead.unitLabel!)}'}',
+                                if (lead.createdAt != null) dateTimeFormat.format(lead.createdAt!),
+                              ],
+                              onTap: () => context.push('/pro/${widget.orgId}/contacts/${lead.id}'),
+                            ),
+                        ],
+                      ),
+                    ],
                   );
                 },
               ),
@@ -413,38 +406,45 @@ class ProLeadDetailScreen extends ConsumerWidget {
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                Card.outlined(
-                  margin: EdgeInsets.zero,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      ListTile(
-                        leading: CircleAvatar(child: Icon(lead.type.icon)),
-                        title: Text(lead.clientSnapshot.name, style: const TextStyle(fontWeight: FontWeight.w700)),
-                        subtitle: Text([lead.type.label(l10n), if (lead.clientSnapshot.email != null) lead.clientSnapshot.email!].join(' · ')),
-                        trailing: StatusPill(lead.status.label(l10n), lead.status.color(scheme)),
+                ClientCard(
+                  name: lead.clientSnapshot.name,
+                  subtitle: [
+                    lead.type.label(l10n),
+                    if (lead.clientSnapshot.email != null) lead.clientSnapshot.email!,
+                  ].join(' · '),
+                  trailing: StatusPill(lead.status.label(l10n), lead.status.color(scheme)),
+                  actions: [
+                    if (phone != null) ...[
+                      OutlinedButton.icon(
+                        onPressed: () => callPhone(phone),
+                        icon: const Icon(Icons.call_outlined),
+                        label: Text(l10n.call),
                       ),
-                      if (phone != null)
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                          child: Wrap(spacing: 8, children: [
-                            OutlinedButton.icon(onPressed: () => callPhone(phone), icon: const Icon(Icons.call_outlined), label: Text(phone)),
-                            OutlinedButton.icon(
-                              onPressed: () => openWhatsApp(phone, text: l10n.whatsappLeadText(lead.targetTitle)),
-                              icon: const Icon(Icons.chat_outlined),
-                              label: const Text('WhatsApp'),
-                            ),
-                          ]),
-                        ),
+                      OutlinedButton.icon(
+                        onPressed: () => openWhatsApp(phone, text: l10n.whatsappLeadText(lead.targetTitle)),
+                        icon: const Icon(Icons.chat_outlined),
+                        label: const Text('WhatsApp'),
+                      ),
                     ],
-                  ),
+                  ],
                 ),
                 const SizedBox(height: 12),
-                InfoRow(Icons.home_work_outlined, [lead.targetTitle, if (lead.unitLabel != null) l10n.unitLabel(lead.unitLabel!)].join(' · ')),
-                InfoRow(Icons.notes, lead.message),
-                if (lead.preferredDates.isNotEmpty) InfoRow(Icons.schedule, l10n.preferredDatesValue(lead.preferredDates)),
-                if (lead.visitAt != null) InfoRow(Icons.event, l10n.visitPlanned(dateTimeFormat.format(lead.visitAt!))),
-                const SizedBox(height: 12),
+                SectionCard(
+                  margin: EdgeInsets.zero,
+                  children: [
+                    InfoRow(
+                      Icons.home_work_outlined,
+                      [lead.targetTitle, if (lead.unitLabel != null) l10n.unitLabel(lead.unitLabel!)].join(' · '),
+                    ),
+                    InfoRow(Icons.notes, lead.message),
+                    if (lead.preferredDates.isNotEmpty)
+                      InfoRow(Icons.schedule, l10n.preferredDatesValue(lead.preferredDates)),
+                    if (lead.visitAt != null)
+                      InfoRow(Icons.event, l10n.visitPlanned(dateTimeFormat.format(lead.visitAt!))),
+                    if (phone != null) InfoRow(Icons.call_outlined, phone, onTap: () => callPhone(phone)),
+                  ],
+                ),
+                const SizedBox(height: 14),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
@@ -462,7 +462,10 @@ class ProLeadDetailScreen extends ConsumerWidget {
                         label: Text(lead.visitAt == null ? l10n.scheduleVisit : l10n.changeVisit),
                       ),
                     if (lead.status != LeadStatus.closed)
-                      OutlinedButton(onPressed: () => _setStatus(context, ref, LeadStatus.closed), child: Text(l10n.closeRequest)),
+                      OutlinedButton(
+                        onPressed: () => _setStatus(context, ref, LeadStatus.closed),
+                        child: Text(l10n.closeRequest),
+                      ),
                   ],
                 ),
                 const SizedBox(height: 24),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/theme.dart';
+import '../../../core/widgets/listing_widgets.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/data/auth_repository.dart';
 import '../data/organization_repository.dart';
@@ -31,23 +33,48 @@ class MembersScreen extends ConsumerWidget {
       body: members.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text(l10n.genericError)),
-        data: (members) => ListView(
-          padding: const EdgeInsets.only(bottom: 88),
-          children: [
-            for (final m in members)
-              ListTile(
-                leading: const CircleAvatar(child: Icon(Icons.person)),
-                title: Text(m.displayName?.isNotEmpty == true ? m.displayName! : (m.email ?? m.id)),
-                subtitle: Text(m.role == OrgRole.owner ? l10n.roleOwner : l10n.roleEditor),
-                trailing: isOwner && m.id != uid
-                    ? IconButton(
-                        tooltip: l10n.memberRemove,
-                        icon: const Icon(Icons.person_remove_outlined),
-                        onPressed: () => _remove(context, ref, m),
-                      )
-                    : null,
+        data: (members) => Readable(
+          maxWidth: 760,
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
+            children: [
+              CardList(
+                indent: 72,
+                children: [
+                  for (final m in members)
+                    ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                      leading: InitialsAvatar(
+                        m.displayName?.isNotEmpty == true ? m.displayName! : (m.email ?? '?'),
+                        tone: m.role == OrgRole.owner ? Tone.brand : Tone.mint,
+                      ),
+                      title: Text(
+                        m.displayName?.isNotEmpty == true ? m.displayName! : (m.email ?? m.id),
+                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                      subtitle: m.email == null || m.displayName?.isNotEmpty != true ? null : Text(m.email!),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          StatusPill(
+                            m.role == OrgRole.owner ? l10n.roleOwner : l10n.roleEditor,
+                            m.role == OrgRole.owner
+                                ? Theme.of(context).colorScheme.primary
+                                : ZakaPalette.of(context).muted,
+                          ),
+                          if (isOwner && m.id != uid)
+                            IconButton(
+                              tooltip: l10n.memberRemove,
+                              icon: const Icon(Icons.person_remove_outlined),
+                              onPressed: () => _remove(context, ref, m),
+                            ),
+                        ],
+                      ),
+                    ),
+                ],
               ),
-          ],
+            ],
+          ),
         ),
       ),
     );

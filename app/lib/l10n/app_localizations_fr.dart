@@ -1998,4 +1998,39 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get resetFilters => 'Réinitialiser';
+
+  @override
+  String get proSpacesIntro =>
+      'Gérez vos annonces, les demandes de vos clients et votre abonnement.';
+
+  @override
+  String get orgSectionActivity => 'Activité';
+
+  @override
+  String get orgSectionSpace => 'Votre espace';
+
+  @override
+  String get orgSectionBilling => 'Facturation';
+
+  @override
+  String get orgStatListings => 'Annonces en ligne';
+
+  @override
+  String get orgStatToHandle => 'Demandes à traiter';
+
+  @override
+  String get orgStatViews => 'Vues des annonces';
+
+  @override
+  String get proTypeTitle => 'Quel espace créer ?';
+
+  @override
+  String get proTypeIntro =>
+      'Chaque espace a ses propres annonces, demandes et abonnement. Vous pourrez en créer d\'autres plus tard.';
+
+  @override
+  String get clientLabel => 'Client';
+
+  @override
+  String get planInUse => 'Plan en cours';
 }

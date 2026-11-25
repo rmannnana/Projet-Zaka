@@ -3333,6 +3333,72 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Réinitialiser'**
   String get resetFilters;
+
+  /// No description provided for @proSpacesIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Gérez vos annonces, les demandes de vos clients et votre abonnement.'**
+  String get proSpacesIntro;
+
+  /// No description provided for @orgSectionActivity.
+  ///
+  /// In fr, this message translates to:
+  /// **'Activité'**
+  String get orgSectionActivity;
+
+  /// No description provided for @orgSectionSpace.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre espace'**
+  String get orgSectionSpace;
+
+  /// No description provided for @orgSectionBilling.
+  ///
+  /// In fr, this message translates to:
+  /// **'Facturation'**
+  String get orgSectionBilling;
+
+  /// No description provided for @orgStatListings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annonces en ligne'**
+  String get orgStatListings;
+
+  /// No description provided for @orgStatToHandle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Demandes à traiter'**
+  String get orgStatToHandle;
+
+  /// No description provided for @orgStatViews.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vues des annonces'**
+  String get orgStatViews;
+
+  /// No description provided for @proTypeTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quel espace créer ?'**
+  String get proTypeTitle;
+
+  /// No description provided for @proTypeIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque espace a ses propres annonces, demandes et abonnement. Vous pourrez en créer d\'autres plus tard.'**
+  String get proTypeIntro;
+
+  /// No description provided for @clientLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Client'**
+  String get clientLabel;
+
+  /// No description provided for @planInUse.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plan en cours'**
+  String get planInUse;
 }
 
 class _AppLocalizationsDelegate

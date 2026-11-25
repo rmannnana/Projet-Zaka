@@ -9,6 +9,8 @@ import '../../features/listings/data/listings_repository.dart';
 import '../../features/listings/domain/listing.dart';
 import '../../l10n/app_localizations.dart';
 
+export 'panels.dart';
+
 /// Logo ZAKA (symbole seul ou avec le nom), dans la couleur demandée.
 class ZakaLogo extends StatelessWidget {
   const ZakaLogo({super.key, this.size = 32, this.color, this.withName = false});
@@ -883,10 +885,14 @@ class MenuTile extends StatelessWidget {
 
 /// Onglets en pastilles dans un cadre arrondi (Louer / Acheter / Neuf…).
 class PillTabBar extends StatelessWidget implements PreferredSizeWidget {
-  const PillTabBar({super.key, required this.controller, required this.labels});
+  const PillTabBar({super.key, this.controller, required this.labels, this.scrollable = false});
 
-  final TabController controller;
+  /// Null : celui du [DefaultTabController] parent.
+  final TabController? controller;
   final List<String> labels;
+
+  /// Onglets à leur largeur naturelle, défilants (listes longues du back-office).
+  final bool scrollable;
 
   @override
   Size get preferredSize => const Size.fromHeight(62);
@@ -907,6 +913,9 @@ class PillTabBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         child: TabBar(
           controller: controller,
+          isScrollable: scrollable,
+          tabAlignment: scrollable ? TabAlignment.start : null,
+          labelPadding: scrollable ? const EdgeInsets.symmetric(horizontal: 18) : null,
           dividerColor: Colors.transparent,
           indicatorSize: TabBarIndicatorSize.tab,
           indicator: BoxDecoration(color: scheme.primary, borderRadius: BorderRadius.circular(22)),

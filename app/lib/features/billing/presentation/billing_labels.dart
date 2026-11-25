@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../app/theme.dart';
 import '../../../l10n/app_localizations.dart';
 import '../domain/billing.dart';
 
@@ -16,9 +17,7 @@ extension SubscriptionPlanLabels on SubscriptionPlan {
 
   /// Avantages du plan, une ligne chacun.
   List<String> featureLabels(AppLocalizations l10n) => [
-    features.maxListings == null
-        ? l10n.billingUnlimitedListings
-        : l10n.billingMaxListings(features.maxListings!),
+    features.maxListings == null ? l10n.billingUnlimitedListings : l10n.billingMaxListings(features.maxListings!),
     l10n.billingFeaturedListings(features.featuredListings),
     if (features.advancedStats) l10n.billingAdvancedStats,
   ];
@@ -33,8 +32,8 @@ extension PaymentStatusLabel on PaymentStatus {
   };
 
   Color color(ColorScheme scheme) => switch (this) {
-    PaymentStatus.succeeded => Colors.green.shade700,
-    PaymentStatus.pending => Colors.orange.shade800,
+    PaymentStatus.succeeded => ZakaColors.success,
+    PaymentStatus.pending => ZakaColors.warning,
     PaymentStatus.failed => scheme.error,
     PaymentStatus.cancelled => scheme.outline,
   };
@@ -49,9 +48,9 @@ extension CommissionStatusLabel on CommissionStatus {
   };
 
   Color color(ColorScheme scheme) => switch (this) {
-    CommissionStatus.due => Colors.orange.shade800,
+    CommissionStatus.due => ZakaColors.warning,
     CommissionStatus.invoiced => scheme.primary,
-    CommissionStatus.paid => Colors.green.shade700,
+    CommissionStatus.paid => ZakaColors.success,
     CommissionStatus.waived => scheme.outline,
   };
 }
@@ -64,9 +63,14 @@ class StatusChip extends StatelessWidget {
   final Color color;
 
   @override
-  Widget build(BuildContext context) => Chip(
-    visualDensity: VisualDensity.compact,
-    side: BorderSide(color: color),
-    label: Text(label, style: TextStyle(color: color)),
+  Widget build(BuildContext context) => DecoratedBox(
+    decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(8)),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      child: Text(
+        label,
+        style: TextStyle(color: color, fontWeight: FontWeight.w700, fontSize: 12),
+      ),
+    ),
   );
 }

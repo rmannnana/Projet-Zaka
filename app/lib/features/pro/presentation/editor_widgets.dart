@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/theme.dart';
 import '../../../core/catalog.dart';
 import '../../../core/widgets/listing_widgets.dart';
 import '../../../l10n/app_localizations.dart';
@@ -10,7 +11,13 @@ import '../../organizations/data/organization_repository.dart';
 
 /// Photos d'une annonce : ajout (plusieurs à la fois), suppression, choix de la couverture.
 class PhotosEditor extends ConsumerStatefulWidget {
-  const PhotosEditor({super.key, required this.orgId, required this.listingId, required this.photos, required this.onChanged});
+  const PhotosEditor({
+    super.key,
+    required this.orgId,
+    required this.listingId,
+    required this.photos,
+    required this.onChanged,
+  });
 
   final String orgId;
   final String listingId;
@@ -69,18 +76,18 @@ class _PhotosEditorState extends ConsumerState<PhotosEditor> {
                 width: 160,
                 height: 120,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(ZakaRadius.medium),
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
                       NetImage(url),
-                      if (i == 0)
-                        Positioned(left: 6, top: 6, child: TagBadge(label: l10n.cover)),
+                      if (i == 0) Positioned(left: 6, top: 6, child: TagBadge(label: l10n.cover)),
                       Positioned(
                         right: 0,
                         top: 0,
                         child: PopupMenuButton<String>(
                           iconColor: Colors.white,
+                          style: IconButton.styleFrom(backgroundColor: Colors.black.withValues(alpha: 0.35)),
                           onSelected: (v) => v == 'cover' ? _makeCover(url) : _remove(url),
                           itemBuilder: (_) => [
                             if (i > 0) PopupMenuItem(value: 'cover', child: Text(l10n.makeCover)),
@@ -97,7 +104,11 @@ class _PhotosEditorState extends ConsumerState<PhotosEditor> {
                 width: 160,
                 height: 120,
                 child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: ZakaPalette.of(context).mint.withValues(alpha: 0.5),
+                    side: BorderSide(color: scheme.primary.withValues(alpha: 0.35), width: 1.2),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ZakaRadius.medium)),
+                  ),
                   onPressed: _uploading ? null : _add,
                   child: _uploading
                       ? const CircularProgressIndicator()
@@ -199,16 +210,11 @@ class FormSection extends StatelessWidget {
   final List<Widget> children;
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(bottom: 20),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
-        const SizedBox(height: 12),
-        for (final (i, c) in children.indexed) ...[if (i > 0) const SizedBox(height: 12), c],
-      ],
-    ),
+  Widget build(BuildContext context) => SectionCard(
+    title: title,
+    children: [
+      for (final (i, c) in children.indexed) ...[if (i > 0) const SizedBox(height: 12), c],
+    ],
   );
 }
 
@@ -222,18 +228,22 @@ class FieldRow extends StatelessWidget {
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) => constraints.maxWidth < 520
         ? Column(
-            children: [for (final (i, c) in children.indexed) ...[if (i > 0) const SizedBox(height: 12), c]],
+            children: [
+              for (final (i, c) in children.indexed) ...[if (i > 0) const SizedBox(height: 12), c],
+            ],
           )
         : Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [for (final (i, c) in children.indexed) ...[if (i > 0) const SizedBox(width: 12), Expanded(child: c)]],
+            children: [
+              for (final (i, c) in children.indexed) ...[if (i > 0) const SizedBox(width: 12), Expanded(child: c)],
+            ],
           ),
   );
 }
 
 /// Message d'erreur ou de confirmation après une action.
 void showResult(BuildContext context, String message, {bool error = false}) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text(message), backgroundColor: error ? Theme.of(context).colorScheme.error : null),
-  );
+  ScaffoldMessenger.of(
+    context,
+  ).showSnackBar(SnackBar(content: Text(message), backgroundColor: error ? Theme.of(context).colorScheme.error : null));
 }

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../app/theme.dart';
 import '../../../core/money.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../billing/data/billing_repository.dart';
@@ -94,9 +95,12 @@ class CommissionRulesTab extends ConsumerWidget {
                   subtitle: Text(validityLabel(rule)),
                   trailing: StatusChip(
                     _ruleStateLabels[state]!,
-                    state == RuleState.inForce ? Colors.green.shade700 : Theme.of(context).colorScheme.outline,
+                    state == RuleState.inForce ? ZakaColors.success : Theme.of(context).colorScheme.outline,
                   ),
-                  onTap: () => showDialog<void>(context: context, builder: (_) => _RuleDialog(rule: rule)),
+                  onTap: () => showDialog<void>(
+                    context: context,
+                    builder: (_) => _RuleDialog(rule: rule),
+                  ),
                 );
               }),
               if (!rules.any((r) => r.scope == scope))
@@ -146,11 +150,9 @@ class _SimulatorState extends ConsumerState<_Simulator> {
     }
     setState(() => _busy = true);
     try {
-      final preview = await ref.read(billingRepositoryProvider).previewCommission(
-        scope: _scope,
-        orgId: _orgId.isEmpty ? null : _orgId,
-        amount: amount,
-      );
+      final preview = await ref
+          .read(billingRepositoryProvider)
+          .previewCommission(scope: _scope, orgId: _orgId.isEmpty ? null : _orgId, amount: amount);
       setState(() {
         _result = preview.commission == null
             ? "Aucune règle en vigueur aujourd'hui : pas de commission."
@@ -286,19 +288,16 @@ class _RuleDialogState extends ConsumerState<_RuleDialog> {
       _error = null;
     });
     try {
-      await ref.read(billingRepositoryProvider).saveRule(
-        {
-          'scope': scopeKey(_scope),
-          'rateType': _rateType.name,
-          if (_rateType == RateType.percent) 'rate': rate,
-          if (_rateType == RateType.fixed) 'fixedAmount': fixed,
-          'orgId': _orgId.isEmpty ? null : _orgId,
-          'validFrom': _from.millisecondsSinceEpoch,
-          'validTo': _lastDay?.add(_oneDay).millisecondsSinceEpoch,
-          'active': _active,
-        },
-        ruleId: widget.rule?.id,
-      );
+      await ref.read(billingRepositoryProvider).saveRule({
+        'scope': scopeKey(_scope),
+        'rateType': _rateType.name,
+        if (_rateType == RateType.percent) 'rate': rate,
+        if (_rateType == RateType.fixed) 'fixedAmount': fixed,
+        'orgId': _orgId.isEmpty ? null : _orgId,
+        'validFrom': _from.millisecondsSinceEpoch,
+        'validTo': _lastDay?.add(_oneDay).millisecondsSinceEpoch,
+        'active': _active,
+      }, ruleId: widget.rule?.id);
       if (mounted) Navigator.pop(context);
     } catch (e) {
       if (mounted) setState(() => _error = functionErrorMessage(e));
@@ -412,8 +411,7 @@ class _RuleDialogState extends ConsumerState<_RuleDialog> {
                 value: _active,
                 onChanged: (v) => setState(() => _active = v),
               ),
-              if (_error != null)
-                Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+              if (_error != null) Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
             ],
           ),
         ),
@@ -462,11 +460,9 @@ class _CommissionsRegistryTabState extends ConsumerState<CommissionsRegistryTab>
       final ids = _selected.toList();
       // La fonction traite 100 commissions par appel.
       for (var i = 0; i < ids.length; i += 100) {
-        await ref.read(billingRepositoryProvider).updateCommissionStatus(
-          ids.sublist(i, i + 100 > ids.length ? ids.length : i + 100),
-          to,
-          note: note,
-        );
+        await ref
+            .read(billingRepositoryProvider)
+            .updateCommissionStatus(ids.sublist(i, i + 100 > ids.length ? ids.length : i + 100), to, note: note);
       }
       setState(_selected.clear);
     } catch (e) {
@@ -488,9 +484,7 @@ class _CommissionsRegistryTabState extends ConsumerState<CommissionsRegistryTab>
         Padding(
           padding: const EdgeInsets.all(16),
           child: SegmentedButton<CommissionStatus>(
-            segments: [
-              for (final s in CommissionStatus.values) ButtonSegment(value: s, label: Text(s.label(l10n))),
-            ],
+            segments: [for (final s in CommissionStatus.values) ButtonSegment(value: s, label: Text(s.label(l10n)))],
             selected: {_status},
             onSelectionChanged: (s) => setState(() {
               _status = s.first;
@@ -519,8 +513,7 @@ class _CommissionsRegistryTabState extends ConsumerState<CommissionsRegistryTab>
               for (final c in list) {
                 byPartner.putIfAbsent(c.orgName ?? c.orgId, () => []).add(c);
               }
-              final partners = byPartner.entries.toList()
-                ..sort((a, b) => totalOf(b.value).compareTo(totalOf(a.value)));
+              final partners = byPartner.entries.toList()..sort((a, b) => totalOf(b.value).compareTo(totalOf(a.value)));
               return ListView(
                 padding: const EdgeInsets.only(bottom: 24),
                 children: [
@@ -538,9 +531,11 @@ class _CommissionsRegistryTabState extends ConsumerState<CommissionsRegistryTab>
                           trailing: Text('${totalOf(p.value).format()} (${p.value.length})'),
                           onTap: actions.isEmpty
                               ? null
-                              : () => setState(() => _selected
-                                ..clear()
-                                ..addAll(p.value.map((c) => c.id))),
+                              : () => setState(
+                                  () => _selected
+                                    ..clear()
+                                    ..addAll(p.value.map((c) => c.id)),
+                                ),
                         ),
                     ],
                   ),
@@ -554,9 +549,11 @@ class _CommissionsRegistryTabState extends ConsumerState<CommissionsRegistryTab>
                         children: [
                           Text('${_selected.length} sélectionnée(s)'),
                           TextButton(
-                            onPressed: () => setState(() => _selected
-                              ..clear()
-                              ..addAll(list.map((c) => c.id))),
+                            onPressed: () => setState(
+                              () => _selected
+                                ..clear()
+                                ..addAll(list.map((c) => c.id)),
+                            ),
                             child: const Text('Tout sélectionner'),
                           ),
                           for (final to in actions)
@@ -574,12 +571,14 @@ class _CommissionsRegistryTabState extends ConsumerState<CommissionsRegistryTab>
                           ? null
                           : (v) => setState(() => v == true ? _selected.add(c.id) : _selected.remove(c.id)),
                       title: Text('${c.amount.format()} · ${c.orgName ?? c.orgId}'),
-                      subtitle: Text([
-                        if (c.createdAt != null) _day.format(c.createdAt!),
-                        'sur ${c.baseAmount.format()}',
-                        if (c.source != null) '${c.source!.type} ${c.source!.id}',
-                        if (c.statusNote != null) c.statusNote!,
-                      ].join(' · ')),
+                      subtitle: Text(
+                        [
+                          if (c.createdAt != null) _day.format(c.createdAt!),
+                          'sur ${c.baseAmount.format()}',
+                          if (c.source != null) '${c.source!.type} ${c.source!.id}',
+                          if (c.statusNote != null) c.statusNote!,
+                        ].join(' · '),
+                      ),
                     ),
                 ],
               );

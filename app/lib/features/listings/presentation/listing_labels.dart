@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../app/theme.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../requests/domain/requests.dart';
 import '../domain/listing.dart';
@@ -28,8 +29,8 @@ extension ListingStatusLabel on ListingStatus {
   };
 
   Color color(ColorScheme scheme) => switch (this) {
-    ListingStatus.published || ListingStatus.inProgress || ListingStatus.delivered => Colors.green.shade700,
-    ListingStatus.pendingReview || ListingStatus.underOffer => Colors.orange.shade800,
+    ListingStatus.published || ListingStatus.inProgress || ListingStatus.delivered => ZakaColors.success,
+    ListingStatus.pendingReview || ListingStatus.underOffer => ZakaColors.warning,
     ListingStatus.rejected || ListingStatus.suspended => scheme.error,
     _ => scheme.outline,
   };
@@ -47,8 +48,8 @@ extension BookingStatusLabel on BookingStatus {
   };
 
   Color color(ColorScheme scheme) => switch (this) {
-    BookingStatus.accepted || BookingStatus.completed => Colors.green.shade700,
-    BookingStatus.pending || BookingStatus.infoRequested => Colors.orange.shade800,
+    BookingStatus.accepted || BookingStatus.completed => ZakaColors.success,
+    BookingStatus.pending || BookingStatus.infoRequested => ZakaColors.warning,
     BookingStatus.rejected => scheme.error,
     BookingStatus.cancelled || BookingStatus.expired => scheme.outline,
   };
@@ -73,9 +74,9 @@ extension LeadStatusLabel on LeadStatus {
   };
 
   Color color(ColorScheme scheme) => switch (this) {
-    LeadStatus.fresh => Colors.orange.shade800,
+    LeadStatus.fresh => ZakaColors.warning,
     LeadStatus.inProgress => scheme.primary,
-    LeadStatus.visitScheduled => Colors.green.shade700,
+    LeadStatus.visitScheduled => ZakaColors.success,
     LeadStatus.closed => scheme.outline,
   };
 }
@@ -124,8 +125,8 @@ extension UnitStatusLabel on UnitStatus {
   };
 
   Color color(ColorScheme scheme) => switch (this) {
-    UnitStatus.available => Colors.green.shade700,
-    UnitStatus.reserved => Colors.orange.shade800,
+    UnitStatus.available => ZakaColors.success,
+    UnitStatus.reserved => ZakaColors.warning,
     UnitStatus.sold => scheme.outline,
   };
 }

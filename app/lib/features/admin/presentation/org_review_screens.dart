@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/open_bytes.dart';
+import '../../../core/widgets/listing_widgets.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../organizations/data/organization_repository.dart';
 import '../../organizations/domain/organization.dart';
@@ -33,14 +34,12 @@ class OrgReviewListScreen extends ConsumerWidget {
       length: _tabs.length,
       child: Column(
         children: [
-          TabBar(
-            isScrollable: true,
-            tabs: [for (final s in _tabs) Tab(text: s.label(l10n))],
+          Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: PillTabBar(scrollable: true, labels: [for (final s in _tabs) s.label(l10n)]),
           ),
           Expanded(
-            child: TabBarView(
-              children: [for (final s in _tabs) _OrgList(status: s)],
-            ),
+            child: TabBarView(children: [for (final s in _tabs) _OrgList(status: s)]),
           ),
         ],
       ),
@@ -61,24 +60,27 @@ class _OrgList extends ConsumerWidget {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => Center(child: Text('Chargement impossible : $e')),
       data: (orgs) => orgs.isEmpty
-          ? const Center(child: Text('Aucun compte.'))
+          ? const EmptyState(icon: Icons.verified_user_outlined, title: 'Aucun compte.')
           : ListView.separated(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
               itemCount: orgs.length,
-              separatorBuilder: (_, _) => const Divider(height: 1),
+              separatorBuilder: (_, _) => const SizedBox(height: 8),
               itemBuilder: (context, i) {
                 final org = orgs[i];
-                final when = status == VerificationStatus.pending
-                    ? org.verification.submittedAt
-                    : org.updatedAt;
-                return ListTile(
-                  leading: CircleAvatar(child: Icon(org.type.icon)),
-                  title: Text(org.name),
-                  subtitle: Text(
-                    '${org.type.label(l10n)} · ${org.contact.city} (${org.contact.country})'
-                    '${when == null ? '' : ' · ${_date.format(when)}'}',
+                final when = status == VerificationStatus.pending ? org.verification.submittedAt : org.updatedAt;
+                return Card(
+                  margin: EdgeInsets.zero,
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                    leading: ToneIcon(org.type.icon, tone: org.type.tone),
+                    title: Text(org.name, style: const TextStyle(fontWeight: FontWeight.w700)),
+                    subtitle: Text(
+                      '${org.type.label(l10n)} · ${org.contact.city} (${org.contact.country})'
+                      '${when == null ? '' : ' · ${_date.format(when)}'}',
+                    ),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => context.go('/comptes/${org.id}'),
                   ),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => context.go('/comptes/${org.id}'),
                 );
               },
             ),
@@ -110,29 +112,50 @@ class OrgReviewScreen extends ConsumerWidget {
         };
 
         return ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
           children: [
-            Row(
-              children: [
-                IconButton(
-                  tooltip: 'Retour',
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => context.go('/comptes'),
-                ),
-                Expanded(child: Text(org.name, style: Theme.of(context).textTheme.headlineSmall)),
-                VerificationStatusChip(v.status),
-              ],
-            ),
-            const SizedBox(height: 8),
-            _DecisionBar(org: org),
-            if (v.note != null)
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.comment_outlined),
-                  title: const Text('Dernier motif'),
-                  subtitle: Text(v.note!),
+            Card(
+              margin: const EdgeInsets.only(bottom: 12),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        IconButton(
+                          tooltip: 'Retour',
+                          icon: const Icon(Icons.arrow_back),
+                          onPressed: () => context.go('/comptes'),
+                        ),
+                        const SizedBox(width: 4),
+                        ToneIcon(org.type.icon, tone: org.type.tone, size: 52),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                org.name,
+                                style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+                              ),
+                              Text('${org.type.label(l10n)} · ${org.contact.city} (${org.contact.country})'),
+                            ],
+                          ),
+                        ),
+                        VerificationStatusChip(v.status),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    _DecisionBar(org: org),
+                  ],
                 ),
               ),
+            ),
+            if (v.note != null) ...[
+              NoticeCard(title: 'Dernier motif', text: v.note!, icon: Icons.comment_outlined, tone: Tone.peach),
+              const SizedBox(height: 12),
+            ],
             _Section('Profil', [
               _Field('Type', org.type.label(l10n)),
               _Field('Ville', '${org.contact.city} (${org.contact.country})'),
@@ -152,8 +175,13 @@ class OrgReviewScreen extends ConsumerWidget {
               _Section('Pièces justificatives', [
                 for (final MapEntry(key: kind, value: path) in docs.entries)
                   ListTile(
-                    leading: const Icon(Icons.description_outlined),
-                    title: Text(kind.label(l10n)),
+                    contentPadding: EdgeInsets.zero,
+                    leading: ToneIcon(
+                      Icons.description_outlined,
+                      tone: path == null ? Tone.neutral : Tone.sage,
+                      size: 40,
+                    ),
+                    title: Text(kind.label(l10n), style: const TextStyle(fontWeight: FontWeight.w700)),
                     subtitle: Text(path ?? 'Non fournie'),
                     trailing: path == null
                         ? null
@@ -165,9 +193,7 @@ class OrgReviewScreen extends ConsumerWidget {
                   ),
               ]),
             ],
-            _Section('Historique', [
-              SizedBox(height: 320, child: AuditList(targetRef: 'organizations/$orgId')),
-            ]),
+            _Section('Historique', [SizedBox(height: 320, child: AuditList(targetRef: 'organizations/$orgId'))]),
           ],
         );
       },
@@ -291,22 +317,8 @@ class _Section extends StatelessWidget {
   final List<Widget> children;
 
   @override
-  Widget build(BuildContext context) => Card.outlined(
-    margin: const EdgeInsets.only(top: 12),
-    child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-            child: Text(title, style: Theme.of(context).textTheme.titleMedium),
-          ),
-          ...children,
-        ],
-      ),
-    ),
-  );
+  Widget build(BuildContext context) =>
+      SectionCard(title: title, margin: const EdgeInsets.only(bottom: 12), children: children);
 }
 
 class _Field extends StatelessWidget {
@@ -316,9 +328,5 @@ class _Field extends StatelessWidget {
   final String? value;
 
   @override
-  Widget build(BuildContext context) => ListTile(
-    dense: true,
-    title: Text(label),
-    subtitle: SelectableText(value == null || value!.isEmpty ? '-' : value!),
-  );
+  Widget build(BuildContext context) => FieldLine(label, value, selectable: true);
 }
