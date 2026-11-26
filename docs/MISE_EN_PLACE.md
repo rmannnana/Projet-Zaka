@@ -29,30 +29,33 @@ Ouvrir ces comptes au nom de **la structure ZAKA**, avec une adresse e-mail part
 
 | Projet | Usage | Données |
 |---|---|---|
-| ☐ `zaka-dev` | Développement quotidien | Données factices |
-| ☐ `zaka-staging` | Tests avant mise en production, démos | Copie anonymisée ou jeu de test |
-| ☐ `zaka-prod` | Production | Données réelles |
+| ☑ `zaka-dev-01` | Développement quotidien | Données factices |
+| ☑ `zaka-staging` | Tests avant mise en production, démos | Copie anonymisée ou jeu de test |
+| ☑ `zaka-prod-8c5c8` | Production | Données réelles |
+
+Les ID `zaka-dev` et `zaka-prod` étant déjà pris, Firebase a ajouté un suffixe. Les alias `dev`, `staging` et `prod` de `.firebaserc` pointent vers ces ID : `firebase deploy -P dev`.
 
 Pour **chaque** projet :
 
-- ☐ Passer au plan **Blaze** et le rattacher au compte de facturation
-- ☐ Créer la base **Firestore** en mode natif, région **`europe-west1`** (⚠️ choix définitif)
-- ☐ Créer le bucket **Storage** en `europe-west1`
-- ☐ Fixer la région par défaut des **Cloud Functions** : `europe-west1`
-- ☐ Créer une **alerte de budget** (par exemple 20 €, 50 € et 100 € par mois en dev/staging, à ajuster en prod)
+- ☑ (dev) Passer au plan **Blaze** et le rattacher au compte de facturation
+- ☑ (dev) Créer la base **Firestore** en mode natif, région **`europe-west1`** (⚠️ choix définitif)
+- ☑ (dev) Créer le bucket **Storage** en `europe-west1`
+- ☑ Fixer la région par défaut des **Cloud Functions** : `europe-west1`
+- ☑ (dev) Créer une **alerte de budget** (par exemple 20 €, 50 € et 100 € par mois en dev/staging, à ajuster en prod)
 
 ### 2.2 Services Firebase à activer
 
 | Service | Réglages à faire |
 |---|---|
-| ☐ **Authentication** | Activer Téléphone, E-mail/mot de passe et Google. Dans *Paramètres → Politique de région SMS*, **autoriser uniquement** les 8 pays UEMOA. Ajouter des numéros de test en dev. Dans *Paramètres → Domaines autorisés*, ajouter les domaines des deux sites web |
-| ☐ **Empreintes Android** | Ajouter les empreintes **SHA-1 et SHA-256** de chaque clé de signature (debug, upload, et clé Google Play App Signing) dans les paramètres de l'app Android. Indispensable pour la connexion par SMS (Play Integrity) et Google |
-| ☐ **Firestore** | Déployer `firestore.rules` et `firestore.indexes.json` depuis le dépôt (jamais à la main dans la console) |
-| ☐ **Storage** | Déployer `storage.rules`. Dossiers : `public/` (photos d'annonces) et `private/verification/` (IFU, RCCM, justificatifs) |
-| ☐ **Cloud Functions** | Déployées depuis le dossier `functions/` |
-| ☐ **Hosting** | Créer **2 sites** : `zaka-<env>` (site public + espace pro) et `zaka-admin-<env>` (back-office) |
-| ☐ **Cloud Messaging (FCM)** | Rien à configurer pour Android. Pour le web : générer la **clé VAPID** (*Paramètres → Cloud Messaging → Web Push*) |
-| ☐ **App Check** | Play Integrity (Android), reCAPTCHA Enterprise (web). Commencer en mode « surveillance » avant de l'imposer |
+| ☑ (dev) **Authentication** | Activer Téléphone, E-mail/mot de passe et Google. Dans *Paramètres → Politique de région SMS*, **autoriser uniquement** les 8 pays UEMOA. Ajouter des numéros de test en dev. Dans *Paramètres → Domaines autorisés*, ajouter les domaines des deux sites web |
+| ◐ **Empreintes Android** | Fait pour la clé de debug en dev (`firebase apps:android:sha:create`). Ajouter les empreintes **SHA-1 et SHA-256** de chaque clé de signature (debug, upload, et clé Google Play App Signing) dans les paramètres de l'app Android. Indispensable pour la connexion par SMS (Play Integrity) et Google |
+| ☑ (dev) **Firestore** | Déployer `firestore.rules` et `firestore.indexes.json` depuis le dépôt (jamais à la main dans la console) |
+| ☑ (dev) **Storage** | Déployer `storage.rules`. Dossiers : `public/` (photos d'annonces) et `private/verification/` (IFU, RCCM, justificatifs) |
+| ☑ (dev) **Cloud Functions** | Déployées depuis le dossier `functions/` |
+| ☑ (dev) **Hosting** | Créer **2 sites** : `zaka-<env>` (site public + espace pro) et `zaka-admin-<env>` (back-office). En dev : `zaka-dev-01` et `zaka-admin-dev`, reliés aux cibles `public` et `admin` par `firebase target:apply` |
+| ☑ **Cloud Messaging (FCM)** | Rien à configurer pour Android. Pour le web : clé VAPID générée (dev : dans `app/config/dev.json`) ; pour staging et prod, générer la **clé VAPID** (*Paramètres → Cloud Messaging → Web Push*) et la passer au build web : `--dart-define=FCM_VAPID_KEY=…`. Sans elle, le web n'a pas de push (les notifications restent visibles dans l'app) |
+| ☐ **App Check** | Play Integrity (Android), reCAPTCHA Enterprise (web). Créer la clé reCAPTCHA Enterprise, l'enregistrer dans *App Check*, puis builder avec `--dart-define=APP_CHECK=true --dart-define=RECAPTCHA_ENTERPRISE_KEY=…`. Commencer en mode « surveillance » avant de l'imposer. À faire avec la création de la fiche Play Console : tant que Play Integrity ne marche pas sur Android, App Check ne peut pas être imposé et n'apporte aucune protection |
+| ◐ **Clés d'API** | Dans *Google Cloud → API et services → Identifiants*, garder la restriction d'API posée par Firebase (API Firebase seulement) et ajouter une restriction d'application. **Clé web** : sites `https://<site>.web.app/*` et `https://<projet>.firebaseapp.com/*` de chaque site, plus `http://localhost:5000/*` en dev (fait sur `zaka-dev-01`). **Clé Android** : nom du paquet et SHA-1 de chaque clé de signature, **à faire après les premiers tests sur téléphone** (une restriction mal posée bloque la connexion par SMS) |
 | ☐ **Remote Config** | Créer les paramètres `payments_provider` = `simulation`, `module_installments` = `false`, `module_investments` = `false`, `min_app_version` |
 | ☐ **Crashlytics** + **Analytics** | Activés par défaut avec FlutterFire |
 
@@ -61,7 +64,7 @@ Pour **chaque** projet :
 | Extension | Réglages |
 |---|---|
 | ☐ **Resize Images** | Tailles 200×200, 600×400, 1200×800, format WebP. Uniquement sur le dossier `public/` |
-| ☐ **Trigger Email from Firestore** | Branchée sur le SMTP de Brevo, collection `mail` |
+| ☐ **Trigger Email from Firestore** | Branchée sur le SMTP de Brevo, collection `mail` (déjà alimentée par la fonction `onNotificationCreated` : tant que l'extension n'est pas installée, les e-mails attendent dans la collection) |
 | ☐ **Stream Firestore to BigQuery** (optionnel au début) | Pour les statistiques avancées |
 
 ### 2.4 Services Google Cloud à configurer
@@ -69,7 +72,7 @@ Pour **chaque** projet :
 | Service | Réglages |
 |---|---|
 | ☐ **Secret Manager** | Secrets : `BREVO_SMTP_PASSWORD`, `CINETPAY_API_KEY`, `CINETPAY_SITE_ID`, `CINETPAY_SECRET_KEY` (sandbox en dev/staging) |
-| ☐ **Sauvegardes Firestore** | Activer le **Point-in-time recovery**, plus une sauvegarde planifiée quotidienne avec 30 jours de rétention (`gcloud firestore backups schedules create`) |
+| ◐ **Sauvegardes Firestore et Storage** | Point-in-time recovery, sauvegardes quotidienne (7 jours) et hebdomadaire (14 semaines), versionnage Storage (30 jours) : commandes dans [SAUVEGARDE_RESTAURATION.md](SAUVEGARDE_RESTAURATION.md). En place sur `zaka-dev-01`, à refaire sur staging et prod |
 | ☐ **Cloud Scheduler** | Créé automatiquement par les fonctions planifiées (expiration des demandes, rappels, stats) |
 | ☐ **BigQuery** | Dataset `zaka_analytics` en `EU` |
 | ☐ **Cloud Monitoring** | Alertes : erreurs des Functions, pics de lectures Firestore |
@@ -106,7 +109,7 @@ zaka/
 
 - ☑ `flutter create --org com.zaka --platforms android,web app`
 - ☑ Configurer les **flavors** `dev`, `staging`, `prod` (identifiants d'app distincts, par exemple `com.zaka.app.dev`)
-- ☐ `flutterfire configure` une fois **par flavor**, ce qui génère un `firebase_options_<env>.dart` pour chacun
+- ◐ `flutterfire configure` une fois **par flavor** (fait pour dev, commande dans `lib/app/firebase_options.dart`), ce qui génère un `firebase_options_<env>.dart` et un `android/app/src/<env>/google-services.json` pour chacun
 - ☑ Deux points d'entrée : `lib/main.dart` (app publique) et `lib/main_admin.dart` (admin, build web avec `-t lib/main_admin.dart`)
 - ☐ Créer la **clé de signature Android** (upload key) et la conserver hors du dépôt, dans un coffre partagé
 
@@ -155,10 +158,10 @@ La publication sur Google Play peut être automatisée plus tard (piste interne 
 
 ## 5. Données et comptes de départ
 
-- ☑ Script `functions/scripts/seed-catalog.mjs` (`npm run seed-catalog`) : villes des 8 pays UEMOA (Burkina Faso en tête), équipements, types de biens. À lancer une fois par projet, puis les listes se gèrent dans le back-office
-- ☐ Plan d'abonnement **« Gratuit »** et règle de commission par défaut (valeurs provisoires, modifiables ensuite dans l'admin)
+- ☑ Script `functions/scripts/seed-catalog.mjs` (`npm run seed-catalog`) : villes des 8 pays UEMOA (Burkina Faso en tête), équipements, types de biens. À lancer une fois par projet, puis les listes se gèrent dans le back-office. Lancé sur `zaka-dev-01`
+- ◐ Plan d'abonnement **« Gratuit »** et règle de commission hôtelière par défaut : script `npm run seed-billing` (valeurs **provisoires** : 3 annonces, 10 % par réservation, à fixer par l'équipe dans *Facturation* du back-office). À lancer sur chaque projet ; fait sur `zaka-dev-01`
 - ☐ `config/app` avec `bookingExpiryHours: 48`
-- ☐ Premier compte **admin** : `npm run set-role -- email admin` (script prêt), une seule fois par projet ; les rôles suivants se donnent depuis le back-office
+- ◐ Premier compte **admin** : `npm run set-role -- email admin`, une seule fois par projet (mode d'emploi PowerShell en tête du script) ; les rôles suivants se donnent depuis le back-office. Fait sur `zaka-dev-01`
 - ☐ Comptes de test en dev/staging : 1 client, 1 hôtel vérifié, 1 agence vérifiée, 1 particulier, 1 modérateur
 - ☐ Jeu de démonstration : quelques hôtels, chambres et biens avec photos
 
@@ -172,7 +175,7 @@ Ils sont obligatoires pour publier sur les stores ou exigés par le cahier des c
 - ☐ Vérifier auprès de la **CIL du Burkina Faso** les formalités de déclaration du traitement des données
 - ☐ **Conditions partenaires** (règles de publication, commissions, abonnements)
 - ☐ Fiches des stores : nom, description, captures d'écran, icône, catégorie
-- ☐ Procédure de **sauvegarde et restauration** (livrable du cahier des charges)
+- ☑ Procédure de **sauvegarde et restauration** (livrable du cahier des charges) : [SAUVEGARDE_RESTAURATION.md](SAUVEGARDE_RESTAURATION.md)
 
 ---
 

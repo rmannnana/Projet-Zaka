@@ -7,7 +7,17 @@ import {
   initializeTestEnvironment,
   type RulesTestEnvironment,
 } from "@firebase/rules-unit-testing";
-import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 
 // Lancer avec : npm run test:emulators (démarre l'émulateur Firestore).
@@ -66,6 +76,34 @@ beforeEach(async () => {
     await setDoc(doc(db, "users/awa"), { displayName: "Awa", orgIds: ["owner1"], status: "active" });
     await setDoc(doc(db, "properties/published1"), { orgId: "owner1", status: "published", title: "Villa" });
     await setDoc(doc(db, "properties/draft1"), { orgId: "agency1", status: "draft", title: "F3" });
+
+    // Facturation : écrite uniquement par les Cloud Functions.
+    const xof = (amount: number) => ({ amount, currency: "XOF" });
+    await setDoc(doc(db, "subscriptionPlans/free"), { name: "Gratuit", price: xof(0), active: true });
+    await setDoc(doc(db, "commissionRules/rule1"), { scope: "hotel_booking", rate: 10, active: true });
+    await setDoc(doc(db, "subscriptions/sub1"), { orgId: "agency1", planId: "pro", status: "active" });
+    await setDoc(doc(db, "payments/pay1"), {
+      payerUid: "moussa",
+      payerOrgId: "agency1",
+      amount: xof(15000),
+      status: "succeeded",
+    });
+    await setDoc(doc(db, "commissions/com1"), { orgId: "hotel1", amount: xof(4500), status: "due" });
+    await setDoc(doc(db, "organizations/agency1/members/fatou"), { role: "editor" });
+
+    // Annonces et demandes (phases 3 et 4).
+    await setDoc(doc(db, "organizations/hotel2"), {
+      type: "hotel",
+      name: "Hôtel Splendid",
+      contact,
+      verification: { status: "verified" },
+      publishingMode: "direct",
+    });
+    await setDoc(doc(db, "organizations/hotel2/members/sali"), { role: "owner" });
+    await setDoc(doc(db, "hotels/banned"), { orgId: "hotel2", status: "suspended", name: "Suspendu" });
+    await setDoc(doc(db, "properties/live2"), { orgId: "agency1", status: "published", title: "Duplex" });
+    await setDoc(doc(db, "bookingRequests/b1"), { clientUid: "awa", orgId: "hotel2", status: "pending" });
+    await setDoc(doc(db, "leads/l1"), { clientUid: "awa", orgId: "agency1", status: "new", message: "Bonjour" });
   });
 });
 
@@ -78,15 +116,15 @@ describe("annonces immobilières", () => {
     await assertFails(getDoc(doc(anon(), "properties/draft1")));
   });
 
-  it("un particulier ne peut pas publier directement", async () => {
-    await assertFails(
-      setDoc(doc(as("awa"), "properties/new1"), { orgId: "owner1", status: "published", title: "F2" }),
-    );
-  });
-
-  it("un particulier peut soumettre une annonce à validation", async () => {
+  it("une annonce se crée en brouillon : la mise en ligne passe par publishListing", async () => {
     await assertSucceeds(
-      setDoc(doc(as("awa"), "properties/new1"), { orgId: "owner1", status: "pending_review", title: "F2" }),
+      setDoc(doc(as("awa"), "properties/new1"), { orgId: "owner1", status: "draft", title: "F2" }),
+    );
+    await assertFails(
+      setDoc(doc(as("awa"), "properties/new2"), { orgId: "owner1", status: "pending_review", title: "F2" }),
+    );
+    await assertFails(
+      setDoc(doc(as("moussa"), "properties/new3"), { orgId: "agency1", status: "published", title: "Duplex" }),
     );
   });
 
@@ -96,32 +134,80 @@ describe("annonces immobilières", () => {
     await assertSucceeds(
       updateDoc(doc(db, "properties/published1"), { title: "Villa rénovée", status: "pending_review" }),
     );
+    // En attente de validation : plus modifiable avant la décision de ZAKA.
+    await assertFails(updateDoc(doc(db, "properties/published1"), { title: "Autre", status: "pending_review" }));
   });
 
-  it("une agence vérifiée publie directement", async () => {
-    await assertSucceeds(
-      setDoc(doc(as("moussa"), "properties/new2"), { orgId: "agency1", status: "published", title: "Duplex" }),
-    );
+  it("une agence modifie son annonce en ligne et la passe en louée, sans pouvoir la republier seule", async () => {
+    const db = as("moussa");
+    await assertSucceeds(updateDoc(doc(db, "properties/live2"), { title: "Duplex rénové" }));
+    await assertSucceeds(updateDoc(doc(db, "properties/live2"), { status: "rented" }));
+    await assertFails(updateDoc(doc(db, "properties/live2"), { status: "published" }));
+    await assertFails(updateDoc(doc(db, "properties/draft1"), { status: "rented" }));
   });
 
   it("personne ne publie pour une autre organisation", async () => {
     await assertFails(
-      setDoc(doc(as("moussa"), "properties/new3"), { orgId: "owner1", status: "pending_review", title: "X" }),
+      setDoc(doc(as("moussa"), "properties/new4"), { orgId: "owner1", status: "draft", title: "X" }),
     );
   });
 
-  it("un pro ne peut pas se mettre lui-même en avant", async () => {
+  it("un pro ne touche ni à la mise en avant, ni à la modération, ni aux statistiques", async () => {
+    const db = as("moussa");
     await assertFails(
-      setDoc(doc(as("moussa"), "properties/new4"), { orgId: "agency1", status: "published", featured: true }),
+      setDoc(doc(db, "properties/new5"), { orgId: "agency1", status: "draft", featured: true }),
     );
+    await assertFails(updateDoc(doc(db, "properties/live2"), { featured: true }));
+    await assertFails(updateDoc(doc(db, "properties/live2"), { "stats.views": 1000 }));
+    await assertFails(updateDoc(doc(db, "properties/live2"), { moderation: { reason: null } }));
   });
 });
 
 describe("hôtels", () => {
-  it("un hôtel non vérifié ne peut rien publier", async () => {
+  it("un hôtel non vérifié ne peut rien créer", async () => {
     await assertFails(
       setDoc(doc(as("ali"), "hotels/h1"), { orgId: "hotel1", status: "draft", name: "Nazemse" }),
     );
+  });
+
+  it("un hôtel vérifié crée sa fiche en brouillon, sans prix calculé ni mise en avant", async () => {
+    const db = as("sali");
+    await assertSucceeds(setDoc(doc(db, "hotels/h2"), { orgId: "hotel2", status: "draft", name: "Splendid" }));
+    await assertFails(
+      setDoc(doc(db, "hotels/h3"), { orgId: "hotel2", status: "draft", name: "X", minPricePerNight: { amount: 1 } }),
+    );
+    await assertFails(setDoc(doc(db, "hotels/h4"), { orgId: "hotel2", status: "published", name: "X" }));
+    await assertSucceeds(setDoc(doc(db, "hotels/h2/roomTypes/r1"), { name: "Double", active: true }));
+  });
+
+  it("une fiche suspendue par ZAKA n'est plus modifiable par l'hôtel", async () => {
+    await assertFails(updateDoc(doc(as("sali"), "hotels/banned"), { name: "Nouveau nom" }));
+    await assertFails(getDoc(doc(anon(), "hotels/banned")));
+  });
+});
+
+describe("messagerie", () => {
+  const msg = (fromUid: string, fromRole = "client") => ({
+    fromUid,
+    fromRole,
+    text: "Bonjour, avez-vous un parking ?",
+    createdAt: serverTimestamp(),
+  });
+
+  it("le client et l'hôtel écrivent dans leur demande, personne d'autre", async () => {
+    await assertSucceeds(setDoc(doc(as("awa"), "bookingRequests/b1/messages/m1"), msg("awa")));
+    await assertSucceeds(setDoc(doc(as("sali"), "bookingRequests/b1/messages/m2"), msg("sali", "hotel")));
+    await assertFails(setDoc(doc(as("moussa"), "bookingRequests/b1/messages/m3"), msg("moussa")));
+    await assertFails(setDoc(doc(as("awa"), "bookingRequests/b1/messages/m4"), msg("sali", "hotel")));
+    await assertFails(
+      setDoc(doc(as("awa"), "bookingRequests/b1/messages/m5"), { ...msg("awa"), silent: true }),
+    );
+  });
+
+  it("une réservation ne s'écrit que par les Cloud Functions", async () => {
+    await assertFails(updateDoc(doc(as("sali"), "bookingRequests/b1"), { status: "accepted" }));
+    await assertSucceeds(getDoc(doc(as("awa"), "bookingRequests/b1")));
+    await assertFails(getDoc(doc(as("moussa"), "bookingRequests/b1")));
   });
 });
 
@@ -190,12 +276,49 @@ describe("demandes", () => {
     await assertFails(updateDoc(doc(as("awa"), "deletionRequests/d1"), { status: "done" }));
   });
 
-  it("un client crée une demande de contact à son nom uniquement", async () => {
-    await assertSucceeds(
-      setDoc(doc(as("awa"), "leads/l1"), { clientUid: "awa", orgId: "agency1", status: "new" }),
-    );
+  it("une demande de contact passe par createLead ; le pro en change seulement le statut", async () => {
     await assertFails(
-      setDoc(doc(as("awa"), "leads/l2"), { clientUid: "moussa", orgId: "agency1", status: "new" }),
+      setDoc(doc(as("awa"), "leads/l2"), { clientUid: "awa", orgId: "agency1", status: "new" }),
     );
+    await assertSucceeds(updateDoc(doc(as("moussa"), "leads/l1"), { status: "in_progress" }));
+    await assertFails(updateDoc(doc(as("moussa"), "leads/l1"), { message: "modifié" }));
+    await assertFails(updateDoc(doc(as("awa"), "leads/l1"), { status: "closed" }));
+  });
+});
+
+describe("facturation", () => {
+  it("la grille des plans est publique, les règles de commission réservées à l'équipe", async () => {
+    await assertSucceeds(getDoc(doc(anon(), "subscriptionPlans/free")));
+    await assertFails(getDoc(doc(as("ali"), "commissionRules/rule1")));
+    await assertSucceeds(getDoc(doc(as("modo", { role: "moderator" }), "commissionRules/rule1")));
+  });
+
+  it("personne n'écrit les plans, règles, abonnements, paiements ou commissions depuis l'app", async () => {
+    const admin = as("boss", { role: "admin" });
+    await assertFails(setDoc(doc(admin, "subscriptionPlans/pro"), { name: "Pro", active: true }));
+    await assertFails(updateDoc(doc(admin, "commissionRules/rule1"), { rate: 1 }));
+    await assertFails(updateDoc(doc(as("moussa"), "subscriptions/sub1"), { status: "active" }));
+    await assertFails(updateDoc(doc(as("moussa"), "payments/pay1"), { status: "succeeded" }));
+    await assertFails(setDoc(doc(as("moussa"), "payments/pay2"), { payerUid: "moussa", status: "succeeded" }));
+    await assertFails(updateDoc(doc(as("ali"), "commissions/com1"), { status: "paid" }));
+  });
+
+  it("les membres d'un compte voient ses abonnements et paiements, pas les autres", async () => {
+    await assertSucceeds(getDoc(doc(as("fatou"), "subscriptions/sub1")));
+    await assertSucceeds(getDoc(doc(as("fatou"), "payments/pay1")));
+    await assertSucceeds(
+      getDocs(query(collection(as("fatou"), "payments"), where("payerOrgId", "==", "agency1"))),
+    );
+    await assertFails(getDoc(doc(as("awa"), "subscriptions/sub1")));
+    await assertFails(getDoc(doc(as("awa"), "payments/pay1")));
+    await assertFails(
+      getDocs(query(collection(as("awa"), "payments"), where("payerOrgId", "==", "agency1"))),
+    );
+  });
+
+  it("un hôtel voit ses commissions, pas celles des autres", async () => {
+    await assertSucceeds(getDoc(doc(as("ali"), "commissions/com1")));
+    await assertFails(getDoc(doc(as("moussa"), "commissions/com1")));
+    await assertSucceeds(getDocs(query(collection(as("ali"), "commissions"), where("orgId", "==", "hotel1"))));
   });
 });

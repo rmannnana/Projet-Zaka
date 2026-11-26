@@ -1,11 +1,11 @@
 {
-    "name": "zaka",
-    "short_name": "zaka",
+    "name": "ZAKA",
+    "short_name": "ZAKA",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "ZAKA - marketplace hotellerie et immobilier",
+    "background_color": "#0B4A3C",
+    "theme_color": "#0B4A3C",
+    "description": "ZAKA : hôtels, locations et ventes immobilières",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

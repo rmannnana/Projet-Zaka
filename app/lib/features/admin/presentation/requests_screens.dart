@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../listings/domain/listing.dart';
 import '../data/admin_repository.dart';
 import 'admin_shell.dart';
+import 'moderation_screens.dart';
 
 final _date = DateFormat('d MMM yyyy, HH:mm', 'fr');
 
@@ -103,6 +105,18 @@ class _ReportTile extends ConsumerWidget {
               icon: const Icon(Icons.open_in_new),
               onPressed: () => context.go('/comptes/$targetId'),
             ),
+          if (ListingKind.values.any((k) => k.name == type)) ...[
+            IconButton(
+              tooltip: "Voir l'annonce",
+              icon: const Icon(Icons.open_in_new),
+              onPressed: () => openPublicListing(ListingKind.values.byName(type), targetId),
+            ),
+            IconButton(
+              tooltip: "Suspendre ou rétablir l'annonce",
+              icon: const Icon(Icons.block),
+              onPressed: () => moderateFromReport(context, ref, ListingKind.values.byName(type), targetId),
+            ),
+          ],
           IconButton(
             tooltip: 'Traité',
             icon: const Icon(Icons.check),

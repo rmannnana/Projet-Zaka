@@ -4,7 +4,9 @@ import { HttpsError, onCall } from "firebase-functions/v2/https";
 
 import { writeAudit } from "../shared/audit";
 import { db } from "../shared/config";
+import { adminUrl } from "../shared/appConfig";
 import { parseInput, requireAuth } from "../shared/guards";
+import { notifyUser, staffUids } from "../shared/notify";
 import {
   DocumentKinds,
   SubmitVerificationInput,
@@ -35,7 +37,7 @@ export const submitOrgVerification = onCall(async (request) => {
   }
 
   const orgRef = db.collection("organizations").doc(orgId);
-  await db.runTransaction(async (tx) => {
+  const orgName = await db.runTransaction(async (tx) => {
     const [orgSnap, memberSnap] = await Promise.all([
       tx.get(orgRef),
       tx.get(orgRef.collection("members").doc(uid)),
@@ -70,7 +72,21 @@ export const submitOrgVerification = onCall(async (request) => {
       before: { status: org.verification?.status ?? "draft" },
       after: { status: "pending", documents },
     });
+    return org.name as string;
   });
+
+  const staff = await staffUids();
+  if (staff.length > 0) {
+    const batch = db.batch();
+    for (const staffUid of staff) {
+      notifyUser(batch, staffUid, {
+        title: "Dossier à vérifier",
+        body: `${orgName} a envoyé son dossier de vérification.`,
+        link: `${adminUrl()}/comptes/${orgId}`,
+      });
+    }
+    await batch.commit();
+  }
 
   return { status: "pending" };
 });

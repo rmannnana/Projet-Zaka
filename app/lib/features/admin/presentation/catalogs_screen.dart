@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/phone.dart';
+import '../../../core/widgets/listing_widgets.dart';
 import '../data/admin_repository.dart';
 import 'admin_shell.dart';
 
@@ -49,8 +50,13 @@ class CatalogsScreen extends StatelessWidget {
     length: _catalogs.length,
     child: Column(
       children: [
-        TabBar(tabs: [for (final c in _catalogs) Tab(text: c.title)]),
-        Expanded(child: TabBarView(children: [for (final c in _catalogs) _CatalogEditor(catalog: c)])),
+        Padding(
+          padding: const EdgeInsets.only(top: 12),
+          child: PillTabBar(labels: [for (final c in _catalogs) c.title]),
+        ),
+        Expanded(
+          child: TabBarView(children: [for (final c in _catalogs) _CatalogEditor(catalog: c)]),
+        ),
       ],
     ),
   );
@@ -112,8 +118,7 @@ class _CatalogEditor extends ConsumerWidget {
                             initialValue: values[f.key],
                             decoration: InputDecoration(labelText: f.label),
                             items: [
-                              for (final e in f.choices!.entries)
-                                DropdownMenuItem(value: e.key, child: Text(e.value)),
+                              for (final e in f.choices!.entries) DropdownMenuItem(value: e.key, child: Text(e.value)),
                             ],
                             onChanged: (v) => setState(() => values[f.key] = v!),
                           ),

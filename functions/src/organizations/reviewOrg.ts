@@ -5,6 +5,7 @@ import { writeAudit } from "../shared/audit";
 import { db } from "../shared/config";
 import { parseInput, requireStaff } from "../shared/guards";
 import { notifyUser } from "../shared/notify";
+import { setOrgListingsSuspended } from "../listings/triggers";
 import { ReviewOrgInput, decisionMessage, nextStatus } from "./verification";
 
 /**
@@ -51,6 +52,10 @@ export const reviewOrg = onCall(async (request) => {
     }
     return next;
   });
+
+  // Annonces retirées pendant la suspension, remises en l'état au rétablissement.
+  if (decision === "suspend") await setOrgListingsSuspended(orgId, true);
+  if (decision === "reinstate") await setOrgListingsSuspended(orgId, false);
 
   return { status };
 });

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "462273565549",
+    "project_id": "zaka-dev-01",
+    "storage_bucket": "zaka-dev-01.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:462273565549:android:5ac2e1c4bd7a074cd3c064",
+        "android_client_info": {
+          "package_name": "com.zaka.app.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "462273565549-kd2m58fljal2jj2ra31guruc31t8pvql.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zaka.app.dev",
+            "certificate_hash": "ac0b485cec3d6dbc5a200d0723c8ffb41b544955"
+          }
+        },
+        {
+          "client_id": "462273565549-mvhu3mf4l25he289ilv009c5mq7v44tn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqg_NOZwxfXi0WrL5jg8HMSj7TWrjqsRY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "462273565549-mvhu3mf4l25he289ilv009c5mq7v44tn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

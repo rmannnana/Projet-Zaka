@@ -1,10 +1,14 @@
-// Remplit les catalogues de référence (villes, équipements, types de biens).
+// Remplit les catalogues de référence (villes, équipements, types de biens)
+// et la configuration de l'app (`config/app` : délai de réponse aux réservations).
 // Les listes restent ensuite modifiables depuis le back-office (admin).
 //
 // Sur les émulateurs (par défaut) :
 //   npm run seed-catalog
-// Sur un vrai projet (identifiants gcloud requis) :
-//   USE_EMULATORS=false GCLOUD_PROJECT=zaka-dev npm run seed-catalog
+// Sur un vrai projet, en PowerShell (identifiants gcloud requis :
+// gcloud auth application-default login) :
+//   $env:USE_EMULATORS = "false"; $env:GCLOUD_PROJECT = "zaka-dev-01"
+//   npm run seed-catalog
+//   Remove-Item Env:USE_EMULATORS, Env:GCLOUD_PROJECT
 // Option --force : remplace les listes existantes.
 import { initializeApp } from "firebase-admin/app";
 import { FieldValue, getFirestore } from "firebase-admin/firestore";
@@ -91,4 +95,13 @@ for (const [name, items] of Object.entries(catalogs)) {
   }
   await ref.set({ items, updatedAt: FieldValue.serverTimestamp() });
   console.log(`catalog/${name} : ${items.length} entrées.`);
+}
+
+// Configuration générale : délai de réponse d'un hôtel à une demande de réservation.
+const configRef = db.doc("config/app");
+if ((await configRef.get()).exists && !force) {
+  console.log("config/app : déjà rempli, ignoré.");
+} else {
+  await configRef.set({ bookingExpiryHours: 48, minAppVersion: "1.0.0", updatedAt: FieldValue.serverTimestamp() });
+  console.log("config/app : créé (réponse sous 48 h).");
 }

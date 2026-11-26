@@ -58,7 +58,7 @@ Il n'y a **pas de serveur classique** à maintenir : le « serveur » est consti
 │ BigQuery (statistiques) · Cloud Logging / Monitoring         │
 │ Alertes de budget                                            │
 └──────────────────────────────────────────────────────────────┘
-   Services externes : e-mail (Brevo), CinetPay (phase 5),
+   Services externes : e-mail (Brevo), CinetPay (phase 6),
    SMS / WhatsApp (plus tard)
 ```
 
@@ -230,16 +230,28 @@ erDiagram
 | features | map `{ maxListings, featuredListings, advancedStats }` |
 | active | bool |
 
-Un plan **« Gratuit »** existe par défaut pour que tout pro vérifié puisse publier.
+Un plan **« Gratuit »** (identifiant `free`, créé par `npm run seed-billing`) s'applique à tout compte sans abonnement payant en cours : il reste à 0 FCFA, actif et ouvert à tous.
 
-**`subscriptions/{id}`** 🔒 → `{ orgId, planId, planSnapshot, status: active|expired|cancelled, currentPeriodStart, currentPeriodEnd, lastPaymentId }`
+**`subscriptions/{id}`** 🔒 → `{ orgId, orgName, planId, planSnapshot, status: active|expired|cancelled, currentPeriodStart, currentPeriodEnd, lastPaymentId, renewalReminderSentAt, replacedBy }`
+
+Règles des abonnements (phase 2) :
+- seul un **propriétaire** d'un compte **vérifié** souscrit, à un plan qui correspond à son type de compte ;
+- le montant vient toujours du plan enregistré, jamais de l'app, et l'abonnement garde une copie du plan payé (`planSnapshot`) ;
+- **pas de renouvellement automatique** : chaque période est payée. Repayer le même plan prolonge la période en cours ; choisir un autre plan remplace l'abonnement tout de suite, sans remboursement au prorata ;
+- la tâche quotidienne `expireSubscriptions` prévient les propriétaires **7 jours** avant la fin, puis repasse le compte au plan Gratuit à l'échéance.
+
+Règles des commissions (phase 2) :
+- la règle propre au partenaire passe avant la règle par défaut ; si plusieurs règles sont en vigueur, la plus récente (date de début la plus tardive) l'emporte. Un nouveau taux se programme donc en créant une règle avec sa date de début ;
+- la date de fin d'une règle est exclue ; le pourcentage est arrondi au franc près ;
+- registre : `due` → `invoiced` → `paid`, ou `waived` (offerte, avec motif). `paid` et `waived` sont définitifs ; une facture peut être annulée (`invoiced` → `due`).
 
 **`payments/{id}`** 🔒
 | Champ | Type | Note |
 |---|---|---|
-| provider | enum | `simulation` (MVP) · `cinetpay` (phase 5) |
-| purpose | map | `{ type: subscription|booking|commission, id }` |
-| payerUid / payerOrgId | string | |
+| provider | enum | `simulation` (MVP) · `cinetpay` (phase 6) |
+| purpose | map | `{ type: subscription, planId, subscriptionId }` ; en phase 3 : `{ type: booking, bookingRequestId }` |
+| payerUid / payerOrgId / orgName | string | lisible par le payeur, les membres du compte payeur et l'équipe |
+| planSnapshot | map | plan payé, appliqué tel quel à la confirmation |
 | amount | Money | |
 | status | enum | `pending` · `succeeded` · `failed` · `cancelled` |
 | providerRef | string? | identifiant de transaction CinetPay (plus tard) |
@@ -471,24 +483,30 @@ Le détail des champs figure dans la version précédente du plan et sera repris
 | `createOrganization` | Callable | Crée l'espace d'un pro (`draft`) ou d'un particulier (téléphone vérifié obligatoire, vérifié d'office, mode `review`) |
 | `addOrgMember` / `removeOrgMember` | Callable (propriétaire) | Gère les membres d'un compte pro ; le dernier propriétaire ne peut pas être retiré |
 | `syncProfileFromAuth` | Callable | Recopie dans le profil le téléphone et l'e-mail vérifiés par Firebase Auth |
-| `submitListingForReview` / `reviewListing` | Callable | Le particulier soumet son annonce ; le modérateur la publie ou la refuse avec motif. Notification et audit |
+| `publishListing` | Callable (membre) | Met une annonce en ligne (pro vérifié) ou l'envoie à la validation (particulier), après contrôle du contenu minimal et de la limite d'annonces du plan. Une annonce se crée toujours en brouillon depuis l'app |
+| `reviewListing` | Callable (modérateur) | Publie ou refuse (motif obligatoire) une annonce de particulier. Notification et audit |
+| `moderateListing` | Callable (modérateur) | Suspend (motif obligatoire) ou rétablit une annonce, dans son état précédent |
+| `setFeatured` / `recordView` | Callable | Mise à la une dans la limite du plan ; compteur de vues des fiches |
 | `setUserRole` | Callable (admin) | Pose les custom claims |
 | `createBookingRequest` | Callable | Valide les dates et la capacité, calcule l'estimation, fixe `expiresAt` à +48 h, notifie l'hôtel |
 | `updateBookingStatus` | Callable | Vérifie la transition et les droits, notifie le client, écrit l'audit |
-| `remindPendingRequests` | Planifiée (toutes les heures) | Rappelle l'hôtel quand il reste moins de 12 h pour répondre |
-| `expirePendingRequests` | Planifiée (toutes les 15 min) | Passe en `expired` les demandes dont `expiresAt` est dépassé, notifie le client |
-| `onBookingCompleted` | Firestore | Calcule la commission avec la règle active et enregistre une copie de la règle |
+| `bookingMaintenance` | Planifiée (toutes les 15 min) | Passe en `expired` les demandes sans réponse dans le délai, rappelle l'hôtel quand il reste moins de 12 h, termine d'office les séjours acceptés 3 jours après le départ |
+| (fin de séjour) | `updateBookingStatus` ou `bookingMaintenance` | Commission inscrite au registre (`commissions/bookingRequest_{id}`) avec la règle en vigueur et sa copie |
 | `startPayment` | Callable | Crée le `payment` via `PaymentGateway` (simulation au MVP) |
-| `confirmSimulatedPayment` | Callable | Clôture un paiement simulé (succès ou échec) et met à jour la réservation ou l'abonnement |
+| `confirmSimulatedPayment` | Callable | Clôture un paiement simulé (succès, échec ou annulation) et met à jour la réservation ou l'abonnement |
 | `upsertCommissionRule` / `upsertSubscriptionPlan` | Callable (admin) | Enregistre la modification et écrit l'audit |
-| `exportDisputeFile` | Callable (modérateur) | Génère un PDF ou JSON du dossier, le stocke en privé, trace l'export |
-| `onRoomTypeWrite` | Firestore | Recalcule `minPricePerNight` de l'hôtel |
-| `onLeadCreated` / `onMessageCreated` | Firestore | Notifie l'autre partie (push + e-mail) |
+| `previewCommission` | Callable (équipe) | Simulateur du back-office : règle appliquée et montant, avec le calcul des vraies commissions |
+| `updateCommissionStatus` | Callable (admin) | Registre : facturer, encaisser ou offrir des commissions (100 par appel), avec audit |
+| `exportDisputeFile` | Callable (modérateur) | Génère le dossier en JSON (demande, historique, messages), le stocke en privé (`private/exports/`), trace l'export |
+| `onRoomTypeWritten` / `onUnitWritten` | Firestore | Recalcule le prix « à partir de » et la capacité d'un hôtel, ou les lots disponibles d'un programme |
+| `createLead` / `onLeadUpdated` | Callable / Firestore | Crée une demande de contact ou de visite (contrôles, notification du pro) ; prévient le client à chaque étape |
+| `onBookingMessageCreated` / `onLeadMessageCreated` | Firestore | Notifie l'autre partie d'un message ; la réponse du client à une demande de précisions remet la réservation en attente |
+| `onNotificationCreated` | Firestore | Envoie chaque notification de l'app en push (FCM) et par e-mail (collection `mail`, extension Trigger Email) |
 | `onReportCreated` | Firestore | Alerte les modérateurs |
 | `processDataDeletion` | Callable (modérateur) | Efface le profil, les photos et le compte Auth ; remplace les données personnelles dans les demandes et messages par « Utilisateur supprimé » ; garde les montants pour la comptabilité |
-| `expireSubscriptions` | Planifiée (chaque jour) | Repasse au plan Gratuit les abonnements échus |
-| `dailyStats` | Planifiée (chaque nuit) | Agrège les statistiques, export BigQuery |
-| `cinetpayWebhook` | HTTPS | Retour de paiement CinetPay (phase 5) |
+| `expireSubscriptions` | Planifiée (chaque jour, 3 h) | Prévient 7 jours avant la fin, puis repasse au plan Gratuit les abonnements échus |
+| `dailyStats` | Planifiée (chaque nuit) | *Pas encore développée* : au MVP, les statistiques sont des compteurs par annonce et les compteurs du tableau de bord ; export BigQuery après le lancement |
+| `cinetpayWebhook` | HTTPS | Retour de paiement CinetPay (phase 6) |
 
 ---
 
@@ -513,12 +531,12 @@ Le détail des champs figure dans la version précédente du plan et sera repris
 
 | Phase | Contenu | Livrable |
 |---|---|---|
-| **0. Setup** ✅ (en local) | Comptes et projets ([MISE_EN_PLACE.md](MISE_EN_PLACE.md)), flavors, CI, structure du code, design system, i18n | App vide déployée en dev |
-| **1. Socle** ✅ (en local) | Auth, profils, organisations, vérification pro (IFU, RCCM, justificatif), comptes particuliers, rôles, catalogues, admin de base, signalements, suppression de compte. *La file de validation des annonces de particuliers arrive avec les annonces (phase 4)* | Un pro peut créer son compte et se faire valider |
-| **2. Facturation (simulée)** | Plans d'abonnement et règles de commission éditables dans l'admin, paiement simulé, registre des commissions | L'admin pilote les tarifs sans développeur |
-| **3. Hôtellerie** | Fiche hôtel, chambres, offres, disponibilités, recherche, demandes avec expiration à 48 h, paiement simulé, notifications | Parcours de réservation complet |
-| **4. Immobilier** | Biens, programmes et lots, recherche, leads, visites, espace pro, validation des annonces de particuliers | Parcours immobilier complet |
-| **5. Lancement MVP** | Tests utilisateurs, sécurité, sauvegardes, statistiques, mise en ligne des CGU et de la politique de confidentialité, publication sur les stores et le web | **Lancement MVP** (focus Burkina Faso) |
+| **0. Setup** ✅ (déployée sur `zaka-dev-01`) | Comptes et projets ([MISE_EN_PLACE.md](MISE_EN_PLACE.md)), flavors, CI, structure du code, design system, i18n | App vide déployée en dev |
+| **1. Socle** ✅ (déployée sur `zaka-dev-01`) | Auth, profils, organisations, vérification pro (IFU, RCCM, justificatif), comptes particuliers, rôles, catalogues, admin de base, signalements, suppression de compte. *La file de validation des annonces de particuliers arrive avec les annonces (phase 4)* | Un pro peut créer son compte et se faire valider |
+| **2. Facturation (simulée)** ✅ (déployée sur `zaka-dev-01`) | Plans d'abonnement et règles de commission éditables dans l'admin, paiement simulé, registre des commissions | L'admin pilote les tarifs sans développeur |
+| **3. Hôtellerie** ✅ (déployée sur `zaka-dev-01`) | Fiche hôtel, chambres, offres, disponibilités, recherche, demandes avec expiration à 48 h, paiement simulé, notifications | Parcours de réservation complet |
+| **4. Immobilier** ✅ (déployée sur `zaka-dev-01`) | Biens, programmes et lots, recherche, leads, visites, espace pro, validation des annonces de particuliers | Parcours immobilier complet |
+| **5. Lancement MVP** ◐ (partie code faite : CGU dans l'app, push, App Check prêt, procédure de sauvegarde) | Tests utilisateurs, sécurité, sauvegardes, statistiques, mise en ligne des CGU et de la politique de confidentialité, publication sur les stores et le web | **Lancement MVP** (focus Burkina Faso) |
 | **6. Paiements réels** | Intégration CinetPay (Mobile Money + carte), webhooks, rapprochement | Paiement réel activé par Remote Config |
 | **Stand-by** | Achat échelonné, investissement participatif | À relancer après validation juridique |
 

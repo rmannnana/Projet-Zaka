@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/widgets/listing_widgets.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../account/data/user_repository.dart';
 import '../../auth/data/auth_repository.dart';
@@ -23,12 +24,7 @@ class CreateOrgScreen extends ConsumerWidget {
     final type = this.type;
     return Scaffold(
       appBar: AppBar(title: Text(type == null ? l10n.proCreate : type.label(l10n))),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 560),
-          child: type == null ? const _TypeChoice() : _ProfileStep(type: type),
-        ),
-      ),
+      body: Readable(maxWidth: 640, child: type == null ? const _TypeChoice() : _ProfileStep(type: type)),
     );
   }
 }
@@ -43,10 +39,12 @@ class _TypeChoice extends ConsumerWidget {
     final hasIndividual = orgs.any((o) => o.type == OrgType.individualOwner);
 
     Widget option(OrgType type, String description) => Card(
+      margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
-        leading: Icon(type.icon),
-        title: Text(type.label(l10n)),
-        subtitle: Text(description),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        leading: ToneIcon(type.icon, tone: type.tone, size: 48),
+        title: Text(type.label(l10n), style: const TextStyle(fontWeight: FontWeight.w800)),
+        subtitle: Padding(padding: const EdgeInsets.only(top: 2), child: Text(description)),
         trailing: const Icon(Icons.chevron_right),
         onTap: () {
           final phone = ref.read(authStateProvider).value?.phoneNumber;
@@ -63,8 +61,11 @@ class _TypeChoice extends ConsumerWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Text(l10n.proChooseType, style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 12),
+        PageIntro(title: l10n.proTypeTitle, text: l10n.proTypeIntro),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10, left: 4),
+          child: Text(l10n.proChooseType, style: Theme.of(context).textTheme.titleSmall),
+        ),
         if (!hasIndividual) option(OrgType.individualOwner, l10n.orgTypeIndividualHelp),
         option(OrgType.hotel, l10n.orgTypeHotelHelp),
         option(OrgType.agency, l10n.orgTypeAgencyHelp),
@@ -100,11 +101,12 @@ class _ProfileStep extends ConsumerWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Text(
-          isIndividual ? l10n.proIndividualIntro : l10n.proBusinessIntro,
-          style: Theme.of(context).textTheme.bodyMedium,
+        NoticeCard(
+          icon: type.icon,
+          tone: type.tone,
+          text: isIndividual ? l10n.proIndividualIntro : l10n.proBusinessIntro,
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
         OrgProfileForm(
           type: type,
           submitLabel: l10n.proCreateSubmit,
@@ -120,18 +122,20 @@ class _ProfileStep extends ConsumerWidget {
           ),
           onSubmit: (values) async {
             try {
-              final orgId = await ref.read(organizationRepositoryProvider).create(
-                NewOrganization(
-                  type: type,
-                  name: values.name,
-                  description: values.description,
-                  phone: values.contact.phone,
-                  email: values.contact.email,
-                  address: values.contact.address,
-                  city: values.contact.city,
-                  country: values.contact.country,
-                ),
-              );
+              final orgId = await ref
+                  .read(organizationRepositoryProvider)
+                  .create(
+                    NewOrganization(
+                      type: type,
+                      name: values.name,
+                      description: values.description,
+                      phone: values.contact.phone,
+                      email: values.contact.email,
+                      address: values.contact.address,
+                      city: values.contact.city,
+                      country: values.contact.country,
+                    ),
+                  );
               if (context.mounted) {
                 context.pushReplacement(isIndividual ? '/pro/$orgId' : '/pro/$orgId/dossier');
               }

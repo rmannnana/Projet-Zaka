@@ -2,6 +2,7 @@ import { getAuth } from "firebase-admin/auth";
 import { FieldValue } from "firebase-admin/firestore";
 import { getStorage } from "firebase-admin/storage";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
+import { setOrgListingsSuspended } from "../listings/triggers";
 
 import { writeAudit } from "../shared/audit";
 import { db } from "../shared/config";
@@ -116,6 +117,7 @@ export const processDataDeletion = onCall(async (request) => {
     }
   }
   await writer.close();
+  for (const orgId of plan.anonymize) await setOrgListingsSuspended(orgId, true);
 
   // 3. Profil (avec favoris et notifications), photos, compte Auth.
   await db.recursiveDelete(userRef);

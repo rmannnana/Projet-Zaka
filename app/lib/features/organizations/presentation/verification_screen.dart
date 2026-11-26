@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/theme.dart';
+import '../../../core/widgets/listing_widgets.dart';
 import '../../../l10n/app_localizations.dart';
 import '../data/organization_repository.dart';
 import '../domain/organization.dart';
@@ -23,13 +25,9 @@ class VerificationScreen extends ConsumerWidget {
       appBar: AppBar(title: Text(l10n.verificationFile)),
       body: org == null
           ? const Center(child: CircularProgressIndicator())
-          : Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 560),
-                child: org.canEditVerification
-                    ? _VerificationForm(org: org)
-                    : _ReadOnly(org: org),
-              ),
+          : Readable(
+              maxWidth: 640,
+              child: org.canEditVerification ? _VerificationForm(org: org) : _ReadOnly(org: org),
             ),
     );
   }
@@ -47,19 +45,32 @@ class _ReadOnly extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        VerificationStatusChip(org.verification.status),
-        const SizedBox(height: 8),
-        Text(l10n.verificationLocked),
-        const SizedBox(height: 16),
-        ListTile(title: Text(l10n.ifuNumber), subtitle: Text(legal.ifuNumber ?? '-')),
-        ListTile(title: Text(l10n.rccmNumber), subtitle: Text(legal.rccmNumber ?? '-')),
-        ListTile(title: Text(l10n.representativeName), subtitle: Text(legal.representativeName ?? '-')),
-        for (final kind in DocumentKind.values)
-          ListTile(
-            leading: const Icon(Icons.description_outlined),
-            title: Text(kind.label(l10n)),
-            subtitle: Text(_documentPath(org, kind) == null ? '-' : l10n.documentReceived),
-          ),
+        NoticeCard(
+          title: org.verification.status.label(l10n),
+          text: l10n.verificationLocked,
+          icon: Icons.lock_outline,
+          tone: org.isVerified ? Tone.sage : Tone.peach,
+        ),
+        const SizedBox(height: 14),
+        SectionCard(
+          title: l10n.legalInfo,
+          children: [
+            FieldLine(l10n.ifuNumber, legal.ifuNumber),
+            FieldLine(l10n.rccmNumber, legal.rccmNumber),
+            FieldLine(l10n.representativeName, legal.representativeName),
+          ],
+        ),
+        SectionCard(
+          title: l10n.documents,
+          children: [
+            for (final kind in DocumentKind.values)
+              _DocumentRow(
+                label: kind.label(l10n),
+                status: _documentPath(org, kind) == null ? l10n.documentMissing : l10n.documentReceived,
+                received: _documentPath(org, kind) != null,
+              ),
+          ],
+        ),
       ],
     );
   }
@@ -110,10 +121,7 @@ class _VerificationFormState extends ConsumerState<_VerificationForm> {
 
   Future<void> _pick(DocumentKind kind) async {
     final l10n = AppLocalizations.of(context);
-    final file = await FilePicker.pickFile(
-      type: FileType.custom,
-      allowedExtensions: allowedDocumentExtensions,
-    );
+    final file = await FilePicker.pickFile(type: FileType.custom, allowedExtensions: allowedDocumentExtensions);
     if (file == null) return;
     final ext = file.extension?.toLowerCase();
     if (ext == null || !allowedDocumentExtensions.contains(ext)) {
@@ -186,61 +194,54 @@ class _VerificationFormState extends ConsumerState<_VerificationForm> {
       child: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          if (widget.org.verification.status == VerificationStatus.rejected && note != null)
-            Card(
-              color: Theme.of(context).colorScheme.errorContainer,
-              child: ListTile(
-                leading: const Icon(Icons.info_outline),
-                title: Text(l10n.statusRejected),
-                subtitle: Text(note),
+          if (widget.org.verification.status == VerificationStatus.rejected && note != null) ...[
+            NoticeCard(title: l10n.statusRejected, text: note, icon: Icons.error_outline, tone: Tone.danger),
+            const SizedBox(height: 14),
+          ],
+          PageIntro(text: l10n.verificationIntro),
+          SectionCard(
+            title: l10n.legalInfo,
+            children: [
+              TextFormField(
+                controller: _ifu,
+                decoration: InputDecoration(labelText: l10n.ifuNumber),
+                validator: required,
               ),
-            ),
-          Text(l10n.verificationIntro),
-          const SizedBox(height: 16),
-          Text(l10n.legalInfo, style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          TextFormField(
-            controller: _ifu,
-            decoration: InputDecoration(labelText: l10n.ifuNumber),
-            validator: required,
-          ),
-          const SizedBox(height: 12),
-          TextFormField(
-            controller: _rccm,
-            decoration: InputDecoration(labelText: l10n.rccmNumber, hintText: 'BF-OUA-2026-B-1234'),
-            validator: required,
-          ),
-          const SizedBox(height: 12),
-          TextFormField(
-            controller: _representative,
-            decoration: InputDecoration(labelText: l10n.representativeName),
-            textCapitalization: TextCapitalization.words,
-            validator: required,
-          ),
-          const SizedBox(height: 24),
-          Text(l10n.documents, style: Theme.of(context).textTheme.titleMedium),
-          Text(l10n.documentsHelp, style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(height: 8),
-          for (final kind in DocumentKind.values)
-            Card(
-              child: ListTile(
-                leading: Icon(
-                  _documents.containsKey(kind) ? Icons.check_circle : Icons.upload_file,
-                  color: _documents.containsKey(kind) ? Colors.green.shade700 : null,
-                ),
-                title: Text(kind.label(l10n)),
-                subtitle: Text(
-                  _fileNames[kind] ??
-                      (_documents.containsKey(kind) ? l10n.documentReceived : l10n.documentMissing),
-                ),
-                trailing: _uploading == kind
-                    ? const SizedBox.square(dimension: 24, child: CircularProgressIndicator(strokeWidth: 2))
-                    : TextButton(
-                        onPressed: busy ? null : () => _pick(kind),
-                        child: Text(_documents.containsKey(kind) ? l10n.replace : l10n.choose),
-                      ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _rccm,
+                decoration: InputDecoration(labelText: l10n.rccmNumber, hintText: 'BF-OUA-2026-B-1234'),
+                validator: required,
               ),
-            ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _representative,
+                decoration: InputDecoration(labelText: l10n.representativeName),
+                textCapitalization: TextCapitalization.words,
+                validator: required,
+              ),
+            ],
+          ),
+          SectionCard(
+            title: l10n.documents,
+            subtitle: l10n.documentsHelp,
+            children: [
+              for (final kind in DocumentKind.values)
+                _DocumentRow(
+                  label: kind.label(l10n),
+                  status:
+                      _fileNames[kind] ?? (_documents.containsKey(kind) ? l10n.documentReceived : l10n.documentMissing),
+                  received: _documents.containsKey(kind),
+                  trailing: _uploading == kind
+                      ? const SizedBox.square(dimension: 24, child: CircularProgressIndicator(strokeWidth: 2))
+                      : OutlinedButton(
+                          style: OutlinedButton.styleFrom(minimumSize: const Size(0, 38)),
+                          onPressed: busy ? null : () => _pick(kind),
+                          child: Text(_documents.containsKey(kind) ? l10n.replace : l10n.choose),
+                        ),
+                ),
+            ],
+          ),
           if (_error != null) ...[
             const SizedBox(height: 12),
             Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
@@ -258,4 +259,44 @@ class _VerificationFormState extends ConsumerState<_VerificationForm> {
       ),
     );
   }
+}
+
+/// Une pièce du dossier : reçue (coche verte) ou à fournir.
+class _DocumentRow extends StatelessWidget {
+  const _DocumentRow({required this.label, required this.status, required this.received, this.trailing});
+
+  final String label;
+  final String status;
+  final bool received;
+  final Widget? trailing;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 6),
+    child: Row(
+      children: [
+        ToneIcon(
+          received ? Icons.check_circle_outline : Icons.upload_file,
+          tone: received ? Tone.sage : Tone.neutral,
+          size: 40,
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(label, style: const TextStyle(fontWeight: FontWeight.w700)),
+              Text(
+                status,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: received ? ZakaColors.success : ZakaPalette.of(context).muted, fontSize: 12.5),
+              ),
+            ],
+          ),
+        ),
+        if (trailing != null) ...[const SizedBox(width: 8), trailing!],
+      ],
+    ),
+  );
 }

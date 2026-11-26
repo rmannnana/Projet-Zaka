@@ -73,7 +73,11 @@ service cloud.firestore {
         && onlyChanges(['displayName', 'photoUrl', 'country', 'locale', 'fcmTokens', 'updatedAt']);
 
       match /favorites/{targetId} {
-        allow read, write: if isSelf(uid);
+        allow read, delete: if isSelf(uid);
+        allow create, update: if isSelf(uid)
+          && request.resource.data.targetType in ['hotel', 'property', 'project']
+          && request.resource.data.keys().hasOnly(
+               ['targetType', 'title', 'photo', 'city', 'price', 'addedAt']);
       }
 
       match /notifications/{notificationId} {
@@ -102,6 +106,29 @@ service cloud.firestore {
       }
     }
 
+    // ---------- Annonces : principes communs ----------
+    // Un pro crée et modifie le contenu de ses annonces. La mise en ligne passe
+    // par la fonction publishListing (limite du plan, validation des annonces de
+    // particuliers) ; la suspension, par l'équipe ZAKA. Les champs calculés ou
+    // de modération ne s'écrivent jamais depuis l'app.
+
+    function protectedListingFields() {
+      return ['orgId', 'featured', 'moderation', 'stats', 'publishedAt', 'submittedAt',
+              'previousStatus', 'suspendedWithOrg', 'createdAt'];
+    }
+
+    function newListingOk(kindAllowed) {
+      return canManage(request.resource.data.orgId)
+        && kindAllowed
+        && request.resource.data.status == 'draft'
+        && !request.resource.data.keys().hasAny(protectedListingFields().removeAll(['orgId', 'createdAt']));
+    }
+
+    function isText(field, max) {
+      return !(field in request.resource.data)
+        || (request.resource.data[field] is string && request.resource.data[field].size() <= max);
+    }
+
     // ---------- Hôtellerie ----------
 
     match /hotels/{hotelId} {
@@ -109,15 +136,17 @@ service cloud.firestore {
         || isMember(resource.data.orgId)
         || isStaff();
 
-      allow create: if canManage(request.resource.data.orgId)
-        && org(request.resource.data.orgId).type == 'hotel'
-        && request.resource.data.status in ['draft', 'published', 'inactive']
-        && !request.resource.data.keys().hasAny(['minPricePerNight', 'featured']);
+      allow create: if newListingOk(org(request.resource.data.orgId).type == 'hotel')
+        && !request.resource.data.keys().hasAny(['minPricePerNight', 'maxGuests', 'roomTypesCount'])
+        && isText('name', 120) && isText('description', 5000);
 
+      // Statut : inchangé, ou retiré (brouillon, hors ligne). La mise en ligne passe par publishListing.
       allow update: if canManage(resource.data.orgId)
         && resource.data.status != 'suspended'
-        && request.resource.data.status in ['draft', 'published', 'inactive']
-        && keeps(['orgId', 'minPricePerNight', 'featured', 'createdAt']);
+        && keeps(protectedListingFields().concat(['minPricePerNight', 'maxGuests', 'roomTypesCount']))
+        && (request.resource.data.status == resource.data.status
+            || request.resource.data.status in ['draft', 'inactive'])
+        && isText('name', 120) && isText('description', 5000);
 
       allow delete: if false;
 
@@ -131,7 +160,7 @@ service cloud.firestore {
 
         match /availability/{month} {
           allow read: if true;
-          allow write: if canManage(hotelOrg());
+          allow write: if canManage(hotelOrg()) && month.matches('[0-9]{4}-[0-9]{2}');
         }
       }
 
@@ -143,35 +172,32 @@ service cloud.firestore {
 
     // ---------- Immobilier ----------
 
-    function directStatuses() {
-      return ['draft', 'published', 'under_offer', 'rented', 'sold', 'inactive'];
-    }
-
-    // Un particulier ne peut jamais écrire "published" : toute modification
-    // d'une annonce publiée la renvoie en "pending_review".
-    function reviewStatuses() {
-      return ['draft', 'pending_review', 'under_offer', 'rented', 'sold', 'inactive'];
-    }
-
-    function allowedStatuses(orgId) {
-      return org(orgId).publishingMode == 'direct' ? directStatuses() : reviewStatuses();
-    }
-
     match /properties/{propertyId} {
       allow read: if resource.data.status in ['published', 'under_offer']
         || isMember(resource.data.orgId)
         || isStaff();
 
-      allow create: if canManage(request.resource.data.orgId)
-        && org(request.resource.data.orgId).type in ['individual_owner', 'agency', 'developer']
-        && request.resource.data.status in ['draft', 'pending_review', 'published']
-        && request.resource.data.status in allowedStatuses(request.resource.data.orgId)
-        && !request.resource.data.keys().hasAny(['featured', 'moderation']);
+      allow create: if newListingOk(
+          org(request.resource.data.orgId).type in ['individual_owner', 'agency', 'developer'])
+        && isText('title', 120) && isText('description', 5000);
 
+      // Particulier : toute modification d'une annonce publiée la renvoie en validation.
+      // Loué, vendu, sous offre : seulement pour une annonce déjà en ligne.
       allow update: if canManage(resource.data.orgId)
         && !(resource.data.status in ['suspended', 'pending_review'])
-        && request.resource.data.status in allowedStatuses(resource.data.orgId)
-        && keeps(['orgId', 'featured', 'moderation', 'createdAt']);
+        && keeps(protectedListingFields())
+        && isText('title', 120) && isText('description', 5000)
+        && (
+          (request.resource.data.status == resource.data.status
+            && (resource.data.status != 'published'
+                || org(resource.data.orgId).publishingMode == 'direct'))
+          || request.resource.data.status in ['draft', 'inactive']
+          || (request.resource.data.status in ['under_offer', 'rented', 'sold']
+              && resource.data.status in ['published', 'under_offer', 'rented', 'sold'])
+          || (request.resource.data.status == 'pending_review'
+              && resource.data.status == 'published'
+              && org(resource.data.orgId).publishingMode == 'review')
+        );
 
       allow delete: if false;
     }
@@ -181,14 +207,18 @@ service cloud.firestore {
         || isMember(resource.data.orgId)
         || isStaff();
 
-      allow create: if canManage(request.resource.data.orgId)
-        && org(request.resource.data.orgId).type == 'developer'
-        && request.resource.data.status in ['draft', 'published'];
+      allow create: if newListingOk(org(request.resource.data.orgId).type == 'developer')
+        && !request.resource.data.keys().hasAny(['priceFrom', 'unitsCount', 'unitsAvailable'])
+        && isText('title', 120) && isText('description', 5000);
 
+      // Avancement : publié → travaux en cours → livré, sans repasser par la publication.
       allow update: if canManage(resource.data.orgId)
         && resource.data.status != 'suspended'
-        && request.resource.data.status in ['draft', 'published', 'in_progress', 'delivered', 'inactive']
-        && keeps(['orgId', 'createdAt']);
+        && keeps(protectedListingFields().concat(['priceFrom', 'unitsCount', 'unitsAvailable']))
+        && (request.resource.data.status == resource.data.status
+            || request.resource.data.status in ['draft', 'inactive']
+            || (request.resource.data.status in ['published', 'in_progress', 'delivered']
+                && resource.data.status in ['published', 'in_progress', 'delivered']));
 
       allow delete: if false;
 
@@ -199,6 +229,17 @@ service cloud.firestore {
     }
 
     // ---------- Demandes ----------
+
+    // Messages d'une discussion : écrits au nom de leur auteur, jamais modifiés.
+    function messageOk() {
+      return request.resource.data.keys().hasOnly(['fromUid', 'fromRole', 'text', 'createdAt'])
+        && request.resource.data.fromUid == request.auth.uid
+        && request.resource.data.fromRole in ['client', 'hotel', 'pro']
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 2000
+        && request.resource.data.createdAt == request.time;
+    }
 
     // Réservations : créées et modifiées uniquement via Cloud Functions
     // (contrôle des dates, expiration à 48 h, transitions de statut).
@@ -211,20 +252,20 @@ service cloud.firestore {
           return get(/databases/$(database)/documents/bookingRequests/$(requestId)).data;
         }
         allow read: if isSelf(request_().clientUid) || isMember(request_().orgId) || isStaff();
-        allow create: if request.resource.data.fromUid == request.auth.uid
+        allow create: if messageOk()
           && (isSelf(request_().clientUid) || isMember(request_().orgId));
         allow update, delete: if false;
       }
     }
 
+    // Demandes de contact et de visite : créées via la fonction createLead.
     match /leads/{leadId} {
       allow read: if isSelf(resource.data.clientUid) || isMember(resource.data.orgId) || isStaff();
-      allow create: if signedIn()
-        && request.resource.data.clientUid == request.auth.uid
-        && request.resource.data.status == 'new';
+      allow create: if false;
       allow update: if isMember(resource.data.orgId)
-        && onlyChanges(['status', 'updatedAt'])
-        && request.resource.data.status in ['new', 'in_progress', 'visit_scheduled', 'closed'];
+        && onlyChanges(['status', 'visitAt', 'updatedAt'])
+        && request.resource.data.status in ['new', 'in_progress', 'visit_scheduled', 'closed']
+        && (request.resource.data.get('visitAt', null) == null || request.resource.data.visitAt is timestamp);
       allow delete: if false;
 
       match /messages/{messageId} {
@@ -232,7 +273,7 @@ service cloud.firestore {
           return get(/databases/$(database)/documents/leads/$(leadId)).data;
         }
         allow read: if isSelf(lead().clientUid) || isMember(lead().orgId) || isStaff();
-        allow create: if request.resource.data.fromUid == request.auth.uid
+        allow create: if messageOk()
           && (isSelf(lead().clientUid) || isMember(lead().orgId));
         allow update, delete: if false;
       }
@@ -245,6 +286,7 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Grille tarifaire publique (affichée aux pros et sur le site).
     match /subscriptionPlans/{planId} {
       allow read: if true;
       allow write: if false;
@@ -260,8 +302,11 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Payeur, membres du compte payeur (historique des paiements) et équipe ZAKA.
     match /payments/{paymentId} {
-      allow read: if isSelf(resource.data.payerUid) || isStaff();
+      allow read: if isSelf(resource.data.payerUid)
+        || (resource.data.payerOrgId is string && isMember(resource.data.payerOrgId))
+        || isStaff();
       allow write: if false;
     }
 

@@ -55,7 +55,23 @@ flutter run --flavor dev --dart-define=FLAVOR=dev --dart-define=EMULATOR_HOST=10
 ```bash
 cd functions
 npm run seed-catalog     # villes UEMOA, équipements, types de biens
+npm run seed-billing     # plan Gratuit et commission hôtelière par défaut (valeurs provisoires)
 ```
+
+### Options de build (vrais projets)
+
+| Option | Effet |
+|---|---|
+| `--dart-define=USE_EMULATORS=false` | Vise le vrai projet dev (`zaka-dev-01`) au lieu des émulateurs |
+| `--dart-define=FCM_VAPID_KEY=…` | Notifications push sur le web (clé Web Push de la console, publique) |
+| `--dart-define=APP_CHECK=true --dart-define=RECAPTCHA_ENTERPRISE_KEY=…` | Active App Check |
+| `--dart-define=PUBLIC_SITE_URL=…` | Back-office : adresse du site public (liens « Voir l'annonce ») |
+
+### Paiements
+
+Au MVP, les paiements sont **simulés** : l'écran de paiement affiche « Mode test : aucun
+paiement réel » et l'on choisit l'issue (réussite, échec, annulation). Les tarifs se
+règlent dans le back-office, menu *Facturation* (admins).
 
 ### Connexion par SMS en local
 
@@ -91,12 +107,100 @@ dart run build_runner build -d
 flutter gen-l10n
 ```
 
+## Identité visuelle
+
+| Élément | Où |
+|---|---|
+| Couleurs (vert `#0B4A3C`, doré `#E6AD5E`, teintes des catégories) et thème Material | `app/lib/app/theme.dart` (`ZakaColors`, `ZakaPalette`) |
+| Police **Plus Jakarta Sans** (licence SIL OFL) | `app/assets/fonts/` |
+| Logo dans l'app (noir sur transparent, recoloré à l'affichage par `ZakaLogo`) | `app/assets/brand/` |
+| Sources de l'icône et de l'écran de démarrage | `app/branding/` (logo d'origine : `logo_source.jpg`) |
+| Composants communs (cartes d'annonce, en-tête des fiches, tuiles, menus) | `app/lib/core/widgets/listing_widgets.dart` |
+
+Après une modification du logo, régénérer l'icône et l'écran de démarrage (Android et web) :
+
+```bash
+cd app
+dart run flutter_launcher_icons
+dart run flutter_native_splash:create
+```
+
 ## Environnements
 
 | Flavor | Projet Firebase | Identifiant Android |
 |---|---|---|
-| `dev` | `demo-zaka` (émulateurs), puis `zaka-dev` | `com.zaka.app.dev` |
-| `staging` | `zaka-staging` | `com.zaka.app.staging` |
-| `prod` | `zaka-prod` | `com.zaka.app` |
+| `dev` | `demo-zaka` (émulateurs, par défaut) ou `zaka-dev-01` (`--dart-define=USE_EMULATORS=false`) | `com.zaka.app.dev` |
+| `staging` | `zaka-staging` (pas encore configuré) | `com.zaka.app.staging` |
+| `prod` | `zaka-prod-8c5c8` (pas encore configuré) | `com.zaka.app` |
 
 Brancher un vrai projet : voir `app/lib/app/firebase_options.dart`.
+
+Lancer l'app web en local sur `zaka-dev-01` plutôt que sur les émulateurs :
+
+```powershell
+flutter run -d chrome --web-port 5000 --dart-define=FLAVOR=dev --dart-define=USE_EMULATORS=false
+```
+
+### Clés d'API Firebase
+
+Les clés présentes dans `firebase_options_*.dart`, `google-services.json` et
+`web/firebase-messaging-sw.js` ne sont **pas des secrets** : elles identifient le projet
+et sont de toute façon lisibles dans le code de tout site web Firebase (voir
+https://firebase.google.com/docs/projects/api-keys). GitHub les signale quand même ; on
+ferme ces alertes avec « Won't fix ». Ce qui protège les données : les règles Firestore et
+Storage, les contrôles des Cloud Functions, puis App Check (phase 5). Chaque clé est
+restreinte dans Google Cloud (voir `docs/MISE_EN_PLACE.md`, « Clés d'API »).
+
+Les vrais secrets (comptes de service, clés CinetPay, mot de passe SMTP) ne vont jamais
+dans le dépôt : ils sont dans Secret Manager.
+
+### Sites de dev
+
+- App publique : https://zaka-dev-01.web.app
+- Back-office : https://zaka-admin-dev.web.app
+
+### Déployer sur zaka-dev-01 (PowerShell)
+
+Depuis la racine du dépôt :
+
+```powershell
+# Règles, index et Cloud Functions.
+# Le chargement du code des Functions dépasse parfois les 10 s par défaut sous Windows.
+$env:FUNCTIONS_DISCOVERY_TIMEOUT = "60"
+firebase deploy --only firestore,storage,functions -P dev
+```
+
+Sites web : compiler depuis `app/`, puis déployer depuis la racine. Les options du vrai projet
+dev (pas d'émulateurs, clé Web Push, adresse du site public) sont dans `app/config/dev.json` :
+uniquement des valeurs publiques, jamais de secret dans ce dossier.
+
+```powershell
+cd app
+flutter build web --dart-define-from-file=config/dev.json
+flutter build web -t lib/main_admin.dart --output build/web_admin --dart-define-from-file=config/dev.json
+cd ..
+firebase deploy --only hosting -P dev
+```
+
+### APK Android à partager (sans passer par le Play Store)
+
+Depuis `app/`. L'APK utilise zaka-dev-01, mais sans les marques du mode dev :
+l'option `ENV_MARKS=false` retire le bandeau « DEV », le nom « ZAKA Dev » et le suffixe
+« -dev » de la version. L'identifiant reste `com.zaka.app.dev` : il doit correspondre au
+`google-services.json` du flavor dev.
+
+```powershell
+cd app
+flutter build apk --release --flavor dev --dart-define-from-file=config/dev.json --dart-define=ENV_MARKS=false
+```
+
+Le fichier est `app/build/app/outputs/flutter-apk/app-dev-release.apk` : renommez-le
+(`ZAKA-<version>.apk`) avant de l'envoyer. Il est signé avec la clé de debug en attendant la clé
+du Play Store. À l'installation, Android demande d'autoriser les sources inconnues et Play Protect
+peut afficher un avertissement. Les paiements restent simulés (bandeau « Mode test » au paiement).
+
+Sans `ENV_MARKS=false` (les `flutter run` et les sites web de dev), les marques restent visibles
+pour ne pas confondre les environnements.
+
+Catalogues et rôle du premier admin sur un vrai projet : voir le mode d'emploi
+en tête de `functions/scripts/seed-catalog.mjs` et `functions/scripts/set-role.mjs`.

@@ -9,6 +9,7 @@ import 'package:intl/date_symbol_data_local.dart';
 
 import 'firebase_options.dart';
 import 'flavor.dart';
+import 'services.dart';
 
 /// Région des Cloud Functions (voir docs/PLAN_CONCEPTION.md).
 const functionsRegion = 'europe-west1';
@@ -20,6 +21,7 @@ Future<void> bootstrap(Widget app) async {
 
   await Firebase.initializeApp(options: firebaseOptionsFor(flavor));
   if (flavor.useEmulators) await _connectEmulators();
+  await activateAppCheck(flavor);
 
   await initializeDateFormatting('fr');
 
