@@ -1,3 +1,5 @@
+import java.util.Base64
+
 plugins {
     id("com.android.application")
     // START: FlutterFire Configuration
@@ -6,6 +8,21 @@ plugins {
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
+
+// Options --dart-define et --dart-define-from-file : Flutter les transmet à Gradle
+// encodées en base64 et séparées par des virgules.
+val dartDefines: Map<String, String> =
+    (findProperty("dart-defines") as String?)
+        ?.split(",")
+        ?.filter { it.isNotBlank() }
+        ?.map { String(Base64.getDecoder().decode(it)).split("=", limit = 2) }
+        ?.filter { it.size == 2 }
+        ?.associate { it[0] to it[1] }
+        ?: emptyMap()
+
+// APK à partager (--dart-define=ENV_MARKS=false) : nom « ZAKA » et version sans suffixe.
+// Le bandeau « DEV » est retiré côté Dart par la même option (lib/app/flavor.dart).
+val envMarks = dartDefines["ENV_MARKS"] != "false"
 
 android {
     namespace = "com.zaka.zaka"
@@ -37,17 +54,19 @@ android {
     // Lancer avec : flutter run --flavor dev --dart-define=FLAVOR=dev
     flavorDimensions += "env"
     productFlavors {
+        // L'identifiant (.dev, .staging) ne change pas avec ENV_MARKS : il doit
+        // correspondre au google-services.json du flavor.
         create("dev") {
             dimension = "env"
             applicationIdSuffix = ".dev"
-            versionNameSuffix = "-dev"
-            resValue("string", "app_name", "ZAKA Dev")
+            if (envMarks) versionNameSuffix = "-dev"
+            resValue("string", "app_name", if (envMarks) "ZAKA Dev" else "ZAKA")
         }
         create("staging") {
             dimension = "env"
             applicationIdSuffix = ".staging"
-            versionNameSuffix = "-staging"
-            resValue("string", "app_name", "ZAKA Test")
+            if (envMarks) versionNameSuffix = "-staging"
+            resValue("string", "app_name", if (envMarks) "ZAKA Test" else "ZAKA")
         }
         create("prod") {
             dimension = "env"

@@ -35,15 +35,26 @@ class ZakaApp extends ConsumerWidget {
       supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
-      // Bandeau visible hors production pour ne jamais confondre les environnements.
-      builder: (context, child) => flavor == Flavor.prod
-          ? child!
-          : Banner(
-              message: flavor.name.toUpperCase(),
-              location: BannerLocation.topEnd,
-              color: flavor == Flavor.dev ? Colors.green.shade700 : Colors.orange.shade800,
-              child: child!,
-            ),
+      builder: (context, child) => EnvBanner(flavor: flavor, child: child!),
     );
   }
+}
+
+/// Bandeau « DEV » ou « STAGING » pour ne jamais confondre les environnements.
+/// Absent en production et dans l'APK à partager (`ENV_MARKS=false`).
+class EnvBanner extends StatelessWidget {
+  const EnvBanner({super.key, required this.flavor, required this.child});
+
+  final Flavor flavor;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => !flavor.showsBanner
+      ? child
+      : Banner(
+          message: flavor.name.toUpperCase(),
+          location: BannerLocation.topEnd,
+          color: flavor == Flavor.dev ? Colors.green.shade700 : Colors.orange.shade800,
+          child: child,
+        );
 }

@@ -182,5 +182,25 @@ cd ..
 firebase deploy --only hosting -P dev
 ```
 
+### APK Android à partager (sans passer par le Play Store)
+
+Depuis `app/`. L'APK utilise zaka-dev-01, mais sans les marques du mode dev :
+l'option `ENV_MARKS=false` retire le bandeau « DEV », le nom « ZAKA Dev » et le suffixe
+« -dev » de la version. L'identifiant reste `com.zaka.app.dev` : il doit correspondre au
+`google-services.json` du flavor dev.
+
+```powershell
+cd app
+flutter build apk --release --flavor dev --dart-define-from-file=config/dev.json --dart-define=ENV_MARKS=false
+```
+
+Le fichier est `app/build/app/outputs/flutter-apk/app-dev-release.apk` : renommez-le
+(`ZAKA-<version>.apk`) avant de l'envoyer. Il est signé avec la clé de debug en attendant la clé
+du Play Store. À l'installation, Android demande d'autoriser les sources inconnues et Play Protect
+peut afficher un avertissement. Les paiements restent simulés (bandeau « Mode test » au paiement).
+
+Sans `ENV_MARKS=false` (les `flutter run` et les sites web de dev), les marques restent visibles
+pour ne pas confondre les environnements.
+
 Catalogues et rôle du premier admin sur un vrai projet : voir le mode d'emploi
 en tête de `functions/scripts/seed-catalog.mjs` et `functions/scripts/set-role.mjs`.
